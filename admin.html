@@ -997,7 +997,8 @@
         /* =====================================================
            ✦ طبقة التصميم الاحترافية - منصة المسار المهني v10
         ===================================================== */
-        :root{  --brand:#183b56;
+        :root{
+            --brand:#183b56;
             --brand-2:#245a7a;
             --brand-3:#2f7698;
             --accent:#d6a84f;
@@ -1995,7 +1996,8 @@ table{border-collapse:separate!important;border-spacing:0!important}thead th{bac
                 </select>
                 <select id="promotionStatusFilter" onchange="renderPromotionEmployees()">
                     <option value="all">كل الحالات</option><option value="eligible">مستوفٍ مبدئيًا</option><option value="not_eligible">غير مستوفٍ</option><option value="needs_review">يحتاج تحقق</option>
-                </select>               <button class="promotion-btn" onclick="loadPromotionModule()">🔄 تحديث البيانات</button>
+                </select>
+                <button class="promotion-btn" onclick="loadPromotionModule()">🔄 تحديث البيانات</button>
                 <button class="promotion-btn secondary" onclick="clearPromotionFilters()">مسح الفلاتر</button>
             </div>
 
@@ -2997,6 +2999,2155 @@ table{border-collapse:separate!important;border-spacing:0!important}thead th{bac
 
     }
 
+
+    // =====================================================
+    // التحقق من المستخدم والمسؤول
+    // =====================================================
+
+    async function checkAdminAccess() {
+
+        try {
+
+            const {
+                data: {
+                    session
+                },
+                error: sessionError
+            } = await db.auth.getSession();
+
+
+            if (sessionError) {
+
+                throw sessionError;
+
+            }
+
+
+            if (!session || !session.user) {
+
+                showError(
+                    "لا توجد جلسة تسجيل دخول. يرجى تسجيل الدخول أولًا."
+                );
+
+                return;
+
+            }
+
+
+            const user = session.user;
+
+
+            userEmail.textContent =
+                user.email || "المسؤول";
+
+
+            // التحقق من جدول user_roles
+
+            const {
+                data: adminData,
+                error: adminError
+            } = await db
+                .from("user_roles")
+                .select("role")
+                .eq("user_id", user.id)
+                .eq("role", "admin")
+                .maybeSingle();
+
+
+            if (adminError) {
+
+                throw adminError;
+
+            }
+
+
+            if (!adminData) {
+
+                await db.auth.signOut();
+
+                showError(
+                    "هذا الحساب لا يملك صلاحية المسؤول."
+                );
+
+                return;
+
+            }
+
+
+            showApp();
+
+            await loadStatistics();
+            runSmartBrainAnalysis(true);
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Admin access error:",
+                error
+            );
+
+            showError(
+                "حدث خطأ أثناء التحقق من صلاحيات الحساب."
+            );
+
+        }
+
+    }
+
+
+    // =====================================================
+    // تحميل الإحصائيات الرئيسية
+    // =====================================================
+
+    async function loadStatistics() {
+
+        try {
+
+            // إجمالي الموظفين
+
+            const {
+                count: employeesCount,
+                error: employeesError
+            } = await db
+                .from("employees")
+                .select("id", {
+                    count: "exact",
+                    head: true
+                });
+
+
+            if (!employeesError) {
+
+                document.getElementById(
+                    "employeesCount"
+                ).textContent =
+                    employeesCount ?? 0;
+
+            }
+
+
+            // الموظفون النشطون
+            // نعتمد على status بدل is_active
+
+            const {
+                count: activeCount,
+                error: activeError
+            } = await db
+                .from("employees")
+                .select("id", {
+                    count: "exact",
+                    head: true
+                })
+                .eq("status", "active");
+
+
+            if (!activeError) {
+
+                document.getElementById(
+                    "activeEmployeesCount"
+                ).textContent =
+                    activeCount ?? 0;
+
+            }
+
+
+            // ملفات الترقية
+
+            const {
+                count: promotionCount,
+                error: promotionError
+            } = await db
+                .from("promotion_cases")
+                .select("id", {
+                    count: "exact",
+                    head: true
+                });
+
+
+            if (!promotionError) {
+
+                document.getElementById(
+                    "promotionCasesCount"
+                ).textContent =
+                    promotionCount ?? 0;
+
+            }
+
+
+            // عدد ملفات التقاعد
+
+            const {
+                count: retirementCount,
+                error: retirementError
+            } = await db
+                .from("employee_retirement_profiles")
+                .select("id", {
+                    count: "exact",
+                    head: true
+                });
+
+
+            if (!retirementError) {
+
+                document.getElementById(
+                    "retirementAlertsCount"
+                ).textContent =
+                    retirementCount ?? 0;
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Statistics error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // =====================================================
+    // تحميل بيانات التقاعد
+    // =====================================================
+
+    async function loadRetirementData() {
+
+        const tbody =
+            document.getElementById(
+                "retirementTableBody"
+            );
+
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="11" style="text-align:center;padding:40px;">
+                    جارٍ تحميل بيانات التقاعد...
+                </td>
+            </tr>
+        `;
+
+
+        try {
+
+            const {
+                data,
+                error
+            } = await db
+                .from("retirement_dashboard")
+                .select("*");
+
+            if (error) {
+                throw error;
+            }
+
+            const {
+                data: rules,
+                error: rulesError
+            } = await db
+                .from("retirement_rules")
+                .select("id, rule_code, rule_name_ar, description_ar, legal_reference, minimum_age_years, minimum_service_months, south_bonus_enabled, south_bonus_months_per_12_months, active, valid_from, valid_to, notes")
+                .eq("active", true);
+
+            if (rulesError) {
+                throw rulesError;
+            }
+
+            const retirementRules = Array.isArray(rules) ? rules : [];
+            const today = new Date();
+            const todayIso = today.toISOString().slice(0, 10);
+
+            function isRuleValidForDate(rule, isoDate) {
+                if (!rule || rule.active !== true) return false;
+                if (rule.valid_from && isoDate < rule.valid_from) return false;
+                if (rule.valid_to && isoDate > rule.valid_to) return false;
+                return true;
+            }
+
+            const validRules = retirementRules
+                .filter(rule => isRuleValidForDate(rule, todayIso))
+                .sort((a, b) => String(b.valid_from || "0000-01-01").localeCompare(String(a.valid_from || "0000-01-01")));
+
+            retirementData = (Array.isArray(data) ? data : []).map(row => {
+                const matchedRule = retirementRules.find(rule =>
+                    (row.rule_code && rule.rule_code === row.rule_code)
+                ) || validRules[0] || null;
+
+                const enriched = {
+                    ...row,
+                    retirement_rule_id: matchedRule?.id || null,
+                    minimum_age_years: matchedRule?.minimum_age_years ?? row.minimum_age_years ?? null,
+                    minimum_service_months: matchedRule?.minimum_service_months ?? row.minimum_service_months ?? null,
+                    rule_name_ar: matchedRule?.rule_name_ar || row.rule_name_ar || null,
+                    legal_reference: matchedRule?.legal_reference || row.legal_reference || null,
+                    rule_description_ar: matchedRule?.description_ar || null,
+                    rule_notes: matchedRule?.notes || null,
+                    south_bonus_enabled: matchedRule?.south_bonus_enabled ?? false,
+                    south_bonus_months_per_12_months: matchedRule?.south_bonus_months_per_12_months ?? 0
+                };
+
+                const birth = row.employee_birth_date || row.birth_date;
+                const age = Number(enriched.minimum_age_years);
+                if (birth && Number.isFinite(age) && age > 0) {
+                    enriched.calculated_retirement_date = calculateRetirementDateFromRule(birth, age);
+                } else {
+                    enriched.calculated_retirement_date = null;
+                }
+
+                return enriched;
+            });
+
+            updateRetirementStatistics();
+
+            renderRetirementTable(
+                retirementData
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Retirement loading error:",
+                error
+            );
+
+
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="11">
+                        <div class="empty-state">
+                            <div class="empty-icon">⚠️</div>
+                            <p>
+                                تعذر تحميل بيانات التقاعد.
+                            </p>
+                            <p style="margin-top:8px;font-size:12px;">
+                                ${escapeHtml(error.message || "خطأ غير معروف")}
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+
+        }
+
+    }
+
+
+    // =====================================================
+    // إحصائيات التقاعد
+    // =====================================================
+
+    function updateRetirementStatistics() {
+
+        const now =
+            new Date();
+
+
+        let fiveYears = 0;
+
+        let twoYears = 0;
+
+        let due = 0;
+
+
+        retirementData.forEach(function(row) {
+
+            const retirementDate =
+                getRetirementDate(row);
+
+
+            if (!retirementDate) {
+
+                return;
+
+            }
+
+
+            const date =
+                new Date(retirementDate);
+
+
+            if (isNaN(date.getTime())) {
+
+                return;
+
+            }
+
+
+            const diffMs =
+                date.getTime() -
+                now.getTime();
+
+
+            const diffMonths =
+                diffMs /
+                (1000 * 60 * 60 * 24 * 30.4375);
+
+
+            if (diffMonths <= 0) {
+
+                due++;
+
+            }
+
+            else if (diffMonths <= 24) {
+
+                twoYears++;
+
+                fiveYears++;
+
+            }
+
+            else if (diffMonths <= 60) {
+
+                fiveYears++;
+
+            }
+
+        });
+
+
+        document.getElementById(
+            "retirementTotal"
+        ).textContent =
+            retirementData.length;
+
+
+        document.getElementById(
+            "retirementFiveYears"
+        ).textContent =
+            fiveYears;
+
+
+        document.getElementById(
+            "retirementTwoYears"
+        ).textContent =
+            twoYears;
+
+
+        document.getElementById(
+            "retirementDue"
+        ).textContent =
+            due;
+
+        renderRetirementAlerts();
+
+    }
+
+
+    // =====================================================
+    // المرحلة الرابعة: تنبيهات التقاعد
+    // =====================================================
+    function getRetirementAlertType(months) {
+        if (months === null || months === undefined || isNaN(months)) return null;
+        months = Number(months);
+        if (months <= 0) return { key: "due", label: "بلغ موعد التقاعد", priority: 0 };
+        if (months <= 12) return { key: "year", label: "التقاعد خلال سنة", priority: 1 };
+        if (months <= 24) return { key: "two", label: "التقاعد خلال سنتين", priority: 2 };
+        if (months <= 60) return { key: "five", label: "التقاعد خلال 5 سنوات", priority: 3 };
+        return null;
+    }
+
+    function setRetirementAlertFilter(filter) {
+        retirementAlertFilter = filter || "all";
+        document.querySelectorAll(".retirement-alert-filter").forEach(function(btn){
+            btn.classList.toggle("active", btn.dataset.alertFilter === retirementAlertFilter);
+        });
+        renderRetirementAlerts();
+    }
+
+    function getRetirementAlertRecords() {
+        return retirementData.map(function(row, index) {
+            const months = getRemainingMonths(row);
+            const alert = getRetirementAlertType(months);
+            return alert ? { row, index, months, alert } : null;
+        }).filter(Boolean).sort(function(a,b){
+            if (a.alert.priority !== b.alert.priority) return a.alert.priority - b.alert.priority;
+            return (a.months || 0) - (b.months || 0);
+        });
+    }
+
+    function renderRetirementAlerts() {
+        const container = document.getElementById("retirementAlertsList");
+        if (!container) return;
+        let records = getRetirementAlertRecords();
+        if (retirementAlertFilter !== "all") {
+            records = records.filter(item => item.alert.key === retirementAlertFilter);
+        }
+        if (!records.length) {
+            container.innerHTML = '<div class="retirement-alert-empty">لا توجد تنبيهات ضمن الفئة المحددة حاليًا.</div>';
+            return;
+        }
+        container.innerHTML = records.map(function(item){
+            const row = item.row;
+            const name = getFullName(row);
+            const rank = getRankName(row);
+            const date = getRetirementDate(row);
+            const remaining = formatRemainingMonths(item.months);
+            return `
+                <div class="retirement-alert-item ${item.alert.key}">
+                    <span class="retirement-alert-dot"></span>
+                    <div class="retirement-alert-main">
+                        <div class="retirement-alert-name">${escapeHtml(name)}</div>
+                        <div class="retirement-alert-meta">${escapeHtml(rank)} · تاريخ التقاعد: ${formatDate(date)} · ${escapeHtml(remaining)}</div>
+                    </div>
+                    <div class="retirement-alert-badge">${escapeHtml(item.alert.label)}</div>
+                </div>`;
+        }).join("");
+    }
+
+
+    // =====================================================
+    // عرض جدول التقاعد
+    // =====================================================
+
+    function renderRetirementTable(data) {
+
+        const tbody =
+            document.getElementById(
+                "retirementTableBody"
+            );
+
+
+        if (!data.length) {
+
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="11">
+                        <div class="empty-state">
+                            <div class="empty-icon">🧓</div>
+                            <p>
+                                لا توجد ملفات تقاعد متاحة حاليًا.
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+
+            return;
+
+        }
+
+
+        tbody.innerHTML =
+            data.map(function(row, index) {
+
+                const fullName =
+                    getFullName(row);
+
+
+                const rank =
+                    getRankName(row);
+
+
+                const birthDate =
+                    formatDate(
+                        row.employee_birth_date ||
+                        row.birth_date
+                    );
+
+
+                const recruitmentDate =
+                    formatDate(
+                        row.employee_recruitment_date ||
+                        row.recruitment_date
+                    );
+
+
+                const retirementDate =
+                    formatDate(
+                        getRetirementDate(row)
+                    );
+
+
+                const serviceMonths =
+                    getNumber(
+                        row.total_service_months ??
+                        row.actual_service_months
+                    );
+
+
+                const serviceText =
+                    formatServiceMonths(
+                        serviceMonths
+                    );
+
+
+                const retirementAge =
+                    getRetirementAge(row) ??
+                    "—";
+
+
+                const remainingMonths =
+                    getRemainingMonths(row);
+
+
+                const remainingText =
+                    formatRemainingMonths(
+                        remainingMonths
+                    );
+
+
+                const status =
+                    getRetirementStatus(
+                        remainingMonths
+                    );
+
+
+                return `
+                    <tr
+                        data-name="${escapeHtml(fullName.toLowerCase())}"
+                        data-number="${escapeHtml(String(row.employee_number || "").toLowerCase())}"
+                    >
+
+                        <td>
+                            <div class="employee-name">
+                                ${escapeHtml(fullName)}
+                            </div>
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                row.employee_number || "—"
+                            )}
+                        </td>
+
+                        <td>
+                            <div class="rank-name">
+                                ${escapeHtml(rank)}
+                            </div>
+                        </td>
+
+                        <td>
+                            ${birthDate}
+                        </td>
+
+                        <td>
+                            ${recruitmentDate}
+                        </td>
+
+                        <td>
+                            ${serviceText}
+                        </td>
+
+                        <td>
+                            ${escapeHtml(
+                                String(retirementAge)
+                            )}
+                        </td>
+
+                        <td>
+                            ${retirementDate}
+                        </td>
+
+                        <td>
+                            ${remainingText}
+                        </td>
+
+                        <td>
+                            <span class="status-badge ${status.className}">
+                                ${status.text}
+                            </span>
+                        </td>
+
+                        <td>
+
+                            <button
+                                class="details-btn"
+                                onclick="showRetirementDetails(${index})"
+                            >
+                                التفاصيل
+                            </button>
+
+                        </td>
+
+                    </tr>
+                `;
+
+            }).join("");
+
+    }
+
+
+    // =====================================================
+    // البحث في جدول التقاعد
+    // =====================================================
+
+    function filterRetirementTable() {
+
+        const search =
+            document
+                .getElementById("retirementSearch")
+                .value
+                .trim()
+                .toLowerCase();
+
+
+        const rows =
+            document.querySelectorAll(
+                "#retirementTableBody tr"
+            );
+
+
+        rows.forEach(function(row) {
+
+            const name =
+                row.dataset.name || "";
+
+
+            const number =
+                row.dataset.number || "";
+
+
+            if (
+                !search ||
+                name.includes(search) ||
+                number.includes(search)
+            ) {
+
+                row.style.display = "";
+
+            }
+
+            else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+    // =====================================================
+    // تفاصيل الموظف
+    // =====================================================
+
+    function showRetirementDetails(index) {
+
+        const row = retirementData[index];
+        if (!row) return;
+
+        const fullName = getFullName(row);
+        const rank = getRankName(row);
+        const employeeId = row.employee_id || row.employee_uuid || row.id;
+
+        if (!employeeId) {
+            alert("تعذر تحديد رقم الموظف داخل ملف التقاعد.");
+            return;
+        }
+
+        currentRetirementEmployeeId = employeeId;
+        currentRetirementRow = row;
+
+        const birthDate = formatDate(row.employee_birth_date || row.birth_date);
+        const recruitmentDate = formatDate(row.employee_recruitment_date || row.recruitment_date);
+        const retirementDate = formatDate(getRetirementDate(row));
+        const serviceMonths = getNumber(row.total_service_months ?? row.actual_service_months);
+        const actualMonths = getNumber(row.actual_service_months);
+        const southMonths = getNumber(row.south_service_months);
+        const otherMonths = getNumber(row.other_service_months);
+        const remainingMonths = getRemainingMonths(row);
+        const status = getRetirementStatus(remainingMonths);
+        const retirementAge = getRetirementAge(row) ?? "—";
+        const ruleName = row.rule_name_ar || row.applicable_rule_name_ar || "غير محددة";
+        const legalReference = row.legal_reference || row.applicable_legal_reference || "—";
+
+        const html = `
+            <div class="retirement-file-toolbar">
+                <button class="print-retirement-btn" onclick="printRetirementFile()">🖨️ طباعة ملف التقاعد</button>
+                <button class="secondary-btn" onclick="showAddServicePeriodForm()">➕ إضافة فترة خدمة</button>
+                <button class="secondary-btn" onclick="showRetirementSimulation()">📊 فتح المحاكاة</button>
+            </div>
+
+            <div class="profile-title">
+                <div>
+                    <h4>👤 ملف الموظف التقاعدي</h4>
+                    <small>بطاقة متابعة إلكترونية مستقلة عن ملف الموظف الأصلي</small>
+                </div>
+                <span class="status-badge ${status.className}">${status.text}</span>
+            </div>
+
+            <div class="employee-profile">
+                <div class="profile-item"><div class="label">اسم الموظف</div><div class="value">${escapeHtml(fullName)}</div></div>
+                <div class="profile-item"><div class="label">رقم الموظف</div><div class="value">${escapeHtml(row.employee_number || "—")}</div></div>
+                <div class="profile-item"><div class="label">الرتبة</div><div class="value">${escapeHtml(rank)}</div></div>
+                <div class="profile-item"><div class="label">مكان العمل</div><div class="value">${escapeHtml(row.work_place || "—")}</div></div>
+                <div class="profile-item"><div class="label">تاريخ الميلاد</div><div class="value">${birthDate}</div></div>
+                <div class="profile-item"><div class="label">تاريخ التوظيف</div><div class="value">${recruitmentDate}</div></div>
+                <div class="profile-item"><div class="label">سن التقاعد المعتمد</div><div class="value">${escapeHtml(String(retirementAge))}</div></div>
+                <div class="profile-item"><div class="label">تاريخ التقاعد المتوقع</div><div class="value">${retirementDate}</div></div>
+            </div>
+
+            <div class="retirement-result">
+                <h4>📊 ملخص الأقدمية والتقاعد</h4>
+                <div class="result-grid">
+                    <div class="result-item"><div class="label">الأقدمية الفعلية</div><div class="value">${formatServiceMonths(actualMonths)}</div></div>
+                    <div class="result-item"><div class="label">أقدمية الجنوب</div><div class="value">${formatServiceMonths(southMonths)}</div></div>
+                    <div class="result-item"><div class="label">أقدمية أخرى</div><div class="value">${formatServiceMonths(otherMonths)}</div></div>
+                    <div class="result-item"><div class="label">مجموع الأقدمية المحتسبة</div><div class="value">${formatServiceMonths(serviceMonths)}</div></div>
+                    <div class="result-item"><div class="label">المدة المتبقية</div><div class="value">${formatRemainingMonths(remainingMonths)}</div></div>
+                    <div class="result-item"><div class="label">حالة الملف</div><div class="value">${status.text}</div></div>
+                </div>
+            </div>
+
+            <div class="retirement-result" style="margin-top:15px;">
+                <h4>⚖️ القاعدة القانونية المطبقة</h4>
+                <p style="color:#4b5563;line-height:1.8;">${escapeHtml(ruleName)}</p>
+                <p style="color:#6b7280;font-size:12px;margin-top:7px;">المرجع: ${escapeHtml(legalReference)}</p>
+                <p style="color:#6b7280;font-size:12px;margin-top:5px;">الحد الأدنى للخدمة حسب القاعدة: ${row.minimum_service_months !== null && row.minimum_service_months !== undefined ? escapeHtml(formatServiceMonths(row.minimum_service_months)) : "غير محدد"}</p>
+                ${row.rule_description_ar ? `<p style="color:#6b7280;font-size:12px;margin-top:5px;line-height:1.8;">${escapeHtml(row.rule_description_ar)}</p>` : ""}
+            </div>
+
+            <div class="retirement-file-note">
+                ℹ️ هذا الملف يعرض البيانات والحسابات المتاحة حاليًا في النظام. أي تعديل على فترات الخدمة يتم تسجيله في جدول فترات الخدمة، بينما المحاكاة تبقى افتراضية ولا تغيّر بيانات الموظف الأصلية.
+            </div>
+
+            <div id="retirementRecordSection" class="retirement-record-section">
+                <div class="retirement-record-header">
+                    <h4>📁 سجل ملف التقاعد والمتابعة</h4>
+                    <span id="retirementRecordStatusBadge" class="status-badge status-warning">مسودة</span>
+                </div>
+                <div class="retirement-record-body" id="retirementRecordBody">
+                    جارٍ تجهيز سجل الملف...
+                </div>
+            </div>
+
+            <div class="retirement-actions">
+                <button id="btnAddService" class="retirement-action-btn" onclick="showAddServicePeriodForm()">➕ إضافة فترة خدمة</button>
+                <button id="btnServiceRecord" class="retirement-action-btn" onclick="focusServiceRecord()">📋 سجل الخدمة</button>
+                <button id="btnSouthService" class="retirement-action-btn" onclick="showSouthPeriods()">🏜️ أقدمية الجنوب</button>
+                <button id="btnSimulation" class="retirement-action-btn" onclick="showRetirementSimulation()">📊 محاكاة التقاعد</button>
+            </div>
+
+            <div id="serviceRecordPanel" class="service-panel">
+                <h4>📋 سجل فترات الخدمة</h4>
+                <div id="serviceRecordContent" class="service-loading">جارٍ تحميل فترات الخدمة...</div>
+            </div>
+
+            <div id="simulationPanel" class="service-panel" style="display:none;">
+                <h4>📊 محاكاة التقاعد</h4>
+                <p style="color:#6b7280;font-size:12px;line-height:1.8;margin-bottom:10px;">
+                    المحاكاة مستقلة عن الملف الأصلي: يمكنك تغيير الفرضيات وتجربة أكثر من سيناريو دون تعديل بيانات الموظف. ويمكن حفظ السيناريو في سجل المحاكاة إذا كانت صلاحيات قاعدة البيانات تسمح بذلك.
+                </p>
+                <div class="simulation-box">
+                    <div class="simulation-grid">
+                        <div class="form-field">
+                            <label>سن التقاعد في السيناريو</label>
+                            <input id="simulationAge" type="number" min="1" max="100" value="${escapeHtml(retirementAge === "—" ? "" : String(retirementAge))}">
+                        </div>
+                        <div class="form-field">
+                            <label>أشهر خدمة إضافية افتراضية</label>
+                            <input id="simulationExtraMonths" type="number" min="0" value="0">
+                        </div>
+                        <div class="form-field">
+                            <label>تاريخ مرجعي للمحاكاة</label>
+                            <input id="simulationReferenceDate" type="date" value="${new Date().toISOString().slice(0,10)}">
+                        </div>
+                        <div class="form-field">
+                            <label>تاريخ بداية الخدمة في السيناريو</label>
+                            <input id="simulationServiceStartDate" type="date" value="${escapeHtml(row.employee_recruitment_date || row.recruitment_date || "")}">
+                        </div>
+                    </div>
+                    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="primary-btn" onclick="runRetirementSimulation()">▶️ تشغيل المحاكاة</button>
+                        <button class="secondary-btn" onclick="saveRetirementSimulation()">💾 حفظ السيناريو</button>
+                        <button class="secondary-btn" onclick="hideRetirementSimulation()">إخفاء</button>
+                    </div>
+                    <div id="simulationResult" class="simulation-result" style="display:none;"></div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById("retirementModalBody").innerHTML = html;
+        document.getElementById("retirementModal").style.display = "flex";
+        renderRetirementFileRecord();
+        loadEmployeeServicePeriods(employeeId);
+    }
+
+
+    // =====================================================
+    // حالة الموظف الحالي في نافذة التقاعد
+    // =====================================================
+    let currentRetirementEmployeeId = null;
+    let currentRetirementRow = null;
+    let currentServicePeriods = [];
+
+
+    // =====================================================
+    // حساب أشهر الفترة
+    // =====================================================
+    function calculatePeriodMonths(startValue, endValue) {
+        if (!startValue) return 0;
+        const start = new Date(startValue + "T00:00:00");
+        const end = endValue ? new Date(endValue + "T00:00:00") : new Date();
+        if (isNaN(start.getTime()) || isNaN(end.getTime()) || end < start) return 0;
+
+        let months = (end.getFullYear() - start.getFullYear()) * 12 +
+                     (end.getMonth() - start.getMonth());
+
+        if (end.getDate() >= start.getDate()) months += 1;
+        return Math.max(1, months);
+    }
+
+
+    // =====================================================
+    // حساب الأشهر المحتسبة حسب نوع الفترة
+    // =====================================================
+    function calculateCreditedMonths(periodType, actualMonths) {
+        const months = Math.max(0, Math.round(Number(actualMonths) || 0));
+
+        if (periodType === "south") {
+            // أقدمية الجنوب: كل 12 شهرًا فعلية تمنح 6 أشهر إضافية.
+            return months + Math.floor(months / 12) * 6;
+        }
+
+        return months;
+    }
+
+
+    // =====================================================
+    // تحميل سجل الخدمة
+    // =====================================================
+    async function loadEmployeeServicePeriods(employeeId = currentRetirementEmployeeId) {
+        const container = document.getElementById("serviceRecordContent");
+        if (!container || !employeeId) return;
+
+        container.innerHTML = '<div class="service-loading">جارٍ تحميل فترات الخدمة...</div>';
+
+        try {
+            const { data, error } = await db
+                .from("employee_service_periods")
+                .select("id, employee_id, start_date, end_date, period_type, credited_months, is_credited, legal_reference, notes, created_at")
+                .eq("employee_id", employeeId)
+                .order("start_date", { ascending: true });
+
+            if (error) throw error;
+
+            currentServicePeriods = Array.isArray(data) ? data : [];
+            renderEmployeeServicePeriods(currentServicePeriods);
+        } catch (error) {
+            console.error("Service periods loading error:", error);
+            container.innerHTML = `
+                <div class="service-error">
+                    تعذر تحميل سجل الخدمة.<br>
+                    ${escapeHtml(error.message || "خطأ غير معروف")}
+                </div>
+            `;
+        }
+    }
+
+
+    // =====================================================
+    // عرض سجل الخدمة والحسابات
+    // =====================================================
+    function renderEmployeeServicePeriods(periods) {
+        const container = document.getElementById("serviceRecordContent");
+        if (!container) return;
+
+        let actualTotal = 0;
+        let southActual = 0;
+        let southCredited = 0;
+        let otherActual = 0;
+        let creditedTotal = 0;
+
+        periods.forEach(period => {
+            const actual = calculatePeriodMonths(period.start_date, period.end_date);
+            const credited = Number(period.credited_months) || 0;
+            const type = period.period_type || "actual";
+
+            if (type === "south") {
+                southActual += actual;
+                southCredited += period.is_credited ? credited : 0;
+            } else if (type === "other") {
+                otherActual += actual;
+            } else {
+                actualTotal += actual;
+            }
+
+            if (period.is_credited) creditedTotal += credited;
+        });
+
+        const totalActual = actualTotal + southActual + otherActual;
+        const southBonus = Math.max(0, southCredited - southActual);
+
+        const summary = `
+            <div class="service-summary">
+                <div class="service-summary-card"><div class="small-label">مجموع الخدمة الفعلية</div><div class="big-value">${formatServiceMonths(totalActual)}</div></div>
+                <div class="service-summary-card"><div class="small-label">فترات الجنوب الفعلية</div><div class="big-value">${formatServiceMonths(southActual)}</div></div>
+                <div class="service-summary-card"><div class="small-label">الزيادة المحتسبة للجنوب</div><div class="big-value">${formatServiceMonths(southBonus)}</div></div>
+                <div class="service-summary-card"><div class="small-label">مجموع الخدمة المحتسبة</div><div class="big-value">${formatServiceMonths(creditedTotal)}</div></div>
+            </div>
+        `;
+
+        if (!periods.length) {
+            container.innerHTML = summary + '<div class="service-empty">لا توجد فترات خدمة مسجلة لهذا الموظف حاليًا.</div>';
+            return;
+        }
+
+        const rows = periods.map(period => {
+            const actual = calculatePeriodMonths(period.start_date, period.end_date);
+            const credited = Number(period.credited_months) || 0;
+            const type = period.period_type || "actual";
+            const typeText = type === "south" ? "أقدمية الجنوب" : (type === "other" ? "خدمة أخرى" : "خدمة فعلية");
+            const typeClass = type === "south" ? "type-south" : (type === "other" ? "type-other" : "type-actual");
+            const southClass = type === "south" ? "south-highlight" : "";
+
+            return `
+                <tr class="${southClass}" data-period-id="${escapeHtml(period.id)}">
+                    <td>${formatDate(period.start_date)}</td>
+                    <td>${period.end_date ? formatDate(period.end_date) : "مفتوحة حتى الآن"}</td>
+                    <td><span class="type-badge ${typeClass}">${typeText}</span></td>
+                    <td>${formatServiceMonths(actual)}</td>
+                    <td>${formatServiceMonths(credited)}</td>
+                    <td>${period.is_credited ? "نعم" : "لا"}</td>
+                    <td>${escapeHtml(period.legal_reference || "—")}</td>
+                    <td>${escapeHtml(period.notes || "—")}</td>
+                    <td><button class="service-delete-btn" onclick="deleteServicePeriod('${escapeHtml(period.id)}')">حذف</button></td>
+                </tr>
+            `;
+        }).join("");
+
+        container.innerHTML = summary + `
+            <div class="service-table-wrapper">
+                <table class="service-table">
+                    <thead>
+                        <tr>
+                            <th>من</th><th>إلى</th><th>نوع الفترة</th><th>المدة الفعلية</th><th>المدة المحتسبة</th><th>محتسبة؟</th><th>المرجع</th><th>ملاحظات</th><th>إجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            </div>
+        `;
+    }
+
+
+    // =====================================================
+    // فتح نموذج إضافة فترة خدمة
+    // =====================================================
+    function showAddServicePeriodForm() {
+        const panel = document.getElementById("serviceRecordPanel");
+        const container = document.getElementById("serviceRecordContent");
+        if (!panel || !container) return;
+
+        panel.scrollIntoView({ behavior: "smooth", block: "start" });
+        document.querySelectorAll(".retirement-action-btn").forEach(btn => btn.classList.remove("active"));
+        const btn = document.getElementById("btnAddService");
+        if (btn) btn.classList.add("active");
+
+        const formId = "serviceAddForm";
+        if (document.getElementById(formId)) return;
+
+        container.insertAdjacentHTML("afterbegin", `
+            <div id="${formId}" class="service-add-form">
+                <div class="form-field">
+                    <label>تاريخ بداية الخدمة *</label>
+                    <input id="serviceStartDate" type="date" required>
+                </div>
+                <div class="form-field">
+                    <label>تاريخ نهاية الخدمة</label>
+                    <input id="serviceEndDate" type="date">
+                </div>
+                <div class="form-field">
+                    <label>نوع الفترة *</label>
+                    <select id="servicePeriodType">
+                        <option value="actual">خدمة فعلية</option>
+                        <option value="south">أقدمية الجنوب</option>
+                        <option value="other">خدمة أخرى</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label>الأشهر المحتسبة</label>
+                    <input id="serviceCreditedMonths" type="number" min="0" value="0" readonly>
+                </div>
+                <div class="form-field full">
+                    <label class="checkbox-row">
+                        <input id="serviceIsCredited" type="checkbox" checked>
+                        <span>احتساب هذه الفترة ضمن الأقدمية المحتسبة</span>
+                    </label>
+                </div>
+                <div class="form-field">
+                    <label>المرجع القانوني</label>
+                    <input id="serviceLegalReference" type="text" placeholder="مثال: النص أو المادة القانونية">
+                </div>
+                <div class="form-field">
+                    <label>ملاحظات</label>
+                    <textarea id="serviceNotes" placeholder="ملاحظات حول الفترة..." ></textarea>
+                </div>
+                <div class="form-actions">
+                    <button class="primary-btn" onclick="saveServicePeriod()">💾 حفظ الفترة</button>
+                    <button class="secondary-btn" onclick="cancelAddServicePeriodForm()">إلغاء</button>
+                </div>
+            </div>
+        `);
+
+        const recalc = () => {
+            const start = document.getElementById("serviceStartDate").value;
+            const end = document.getElementById("serviceEndDate").value;
+            const type = document.getElementById("servicePeriodType").value;
+            const months = calculatePeriodMonths(start, end);
+            document.getElementById("serviceCreditedMonths").value = calculateCreditedMonths(type, months);
+        };
+
+        document.getElementById("serviceStartDate").addEventListener("change", recalc);
+        document.getElementById("serviceEndDate").addEventListener("change", recalc);
+        document.getElementById("servicePeriodType").addEventListener("change", recalc);
+    }
+
+
+    function cancelAddServicePeriodForm() {
+        const form = document.getElementById("serviceAddForm");
+        if (form) form.remove();
+        const btn = document.getElementById("btnAddService");
+        if (btn) btn.classList.remove("active");
+    }
+
+
+    // =====================================================
+    // حفظ فترة خدمة
+    // =====================================================
+    async function saveServicePeriod() {
+        if (!currentRetirementEmployeeId) {
+            alert("لم يتم تحديد الموظف.");
+            return;
+        }
+
+        const startDate = document.getElementById("serviceStartDate")?.value;
+        const endDate = document.getElementById("serviceEndDate")?.value || null;
+        const periodType = document.getElementById("servicePeriodType")?.value || "actual";
+        const isCredited = document.getElementById("serviceIsCredited")?.checked ?? true;
+        const legalReference = document.getElementById("serviceLegalReference")?.value.trim() || null;
+        const notes = document.getElementById("serviceNotes")?.value.trim() || null;
+
+        if (!startDate) {
+            alert("يرجى إدخال تاريخ بداية الخدمة.");
+            return;
+        }
+
+        if (endDate && new Date(endDate) < new Date(startDate)) {
+            alert("تاريخ نهاية الخدمة لا يمكن أن يسبق تاريخ البداية.");
+            return;
+        }
+
+        const actualMonths = calculatePeriodMonths(startDate, endDate);
+        const creditedMonths = isCredited ? calculateCreditedMonths(periodType, actualMonths) : 0;
+
+        const payload = {
+            employee_id: currentRetirementEmployeeId,
+            start_date: startDate,
+            end_date: endDate,
+            period_type: periodType,
+            credited_months: creditedMonths,
+            is_credited: isCredited,
+            legal_reference: legalReference,
+            notes: notes
+        };
+
+        const saveButton = document.querySelector("#serviceAddForm .primary-btn");
+        if (saveButton) {
+            saveButton.disabled = true;
+            saveButton.textContent = "جارٍ الحفظ...";
+        }
+
+        try {
+            const { error } = await db
+                .from("employee_service_periods")
+                .insert(payload);
+
+            if (error) throw error;
+
+            cancelAddServicePeriodForm();
+            await loadEmployeeServicePeriods(currentRetirementEmployeeId);
+            alert("تم حفظ فترة الخدمة بنجاح.");
+        } catch (error) {
+            console.error("Service period save error:", error);
+            alert("تعذر حفظ فترة الخدمة:\n" + (error.message || "خطأ غير معروف"));
+            if (saveButton) {
+                saveButton.disabled = false;
+                saveButton.textContent = "💾 حفظ الفترة";
+            }
+        }
+    }
+
+
+    // =====================================================
+    // حذف فترة خدمة
+    // =====================================================
+    async function deleteServicePeriod(periodId) {
+        if (!periodId) return;
+        if (!confirm("هل أنت متأكد من حذف فترة الخدمة هذه؟")) return;
+
+        try {
+            const { error } = await db
+                .from("employee_service_periods")
+                .delete()
+                .eq("id", periodId)
+                .eq("employee_id", currentRetirementEmployeeId);
+
+            if (error) throw error;
+
+            await loadEmployeeServicePeriods(currentRetirementEmployeeId);
+            alert("تم حذف فترة الخدمة بنجاح.");
+        } catch (error) {
+            console.error("Service period delete error:", error);
+            alert("تعذر حذف فترة الخدمة:\n" + (error.message || "خطأ غير معروف"));
+        }
+    }
+
+
+    // =====================================================
+    // التركيز على سجل الخدمة
+    // =====================================================
+    function focusServiceRecord() {
+        document.querySelectorAll(".retirement-action-btn").forEach(btn => btn.classList.remove("active"));
+        const btn = document.getElementById("btnServiceRecord");
+        if (btn) btn.classList.add("active");
+        const panel = document.getElementById("serviceRecordPanel");
+        if (panel) panel.scrollIntoView({ behavior: "smooth", block: "start" });
+        loadEmployeeServicePeriods(currentRetirementEmployeeId);
+    }
+
+
+    // =====================================================
+    // عرض فترات الجنوب فقط
+    // =====================================================
+    function showSouthPeriods() {
+        document.querySelectorAll(".retirement-action-btn").forEach(btn => btn.classList.remove("active"));
+        const btn = document.getElementById("btnSouthService");
+        if (btn) btn.classList.add("active");
+
+        const panel = document.getElementById("serviceRecordPanel");
+        if (panel) panel.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        const southPeriods = currentServicePeriods.filter(p => (p.period_type || "actual") === "south");
+        if (!southPeriods.length) {
+            const container = document.getElementById("serviceRecordContent");
+            if (container) container.innerHTML = '<div class="service-empty">لا توجد فترات أقدمية جنوب مسجلة لهذا الموظف.</div>';
+            return;
+        }
+        renderEmployeeServicePeriods(southPeriods);
+    }
+
+
+    // =====================================================
+    // محاكاة التقاعد
+    // =====================================================
+    function showRetirementSimulation() {
+        document.querySelectorAll(".retirement-action-btn").forEach(btn => btn.classList.remove("active"));
+        const btn = document.getElementById("btnSimulation");
+        if (btn) btn.classList.add("active");
+        const panel = document.getElementById("simulationPanel");
+        if (panel) {
+            panel.style.display = "block";
+            panel.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    }
+
+
+    function hideRetirementSimulation() {
+        const panel = document.getElementById("simulationPanel");
+        if (panel) panel.style.display = "none";
+        const btn = document.getElementById("btnSimulation");
+        if (btn) btn.classList.remove("active");
+    }
+
+
+    function addYearsToDate(date, years) {
+        const result = new Date(date.getTime());
+        result.setFullYear(result.getFullYear() + Number(years || 0));
+        return result;
+    }
+
+
+    function parseLocalDate(value) {
+        if (!value) return null;
+        const d = new Date(value + "T00:00:00");
+        return isNaN(d.getTime()) ? null : d;
+    }
+
+
+    function monthsBetweenDates(start, end) {
+        if (!start || !end || end < start) return 0;
+        return Math.max(
+            0,
+            (end.getFullYear() - start.getFullYear()) * 12 +
+            (end.getMonth() - start.getMonth()) -
+            (end.getDate() < start.getDate() ? 1 : 0)
+        );
+    }
+
+
+    function getSimulationInputs() {
+        const birthValue = currentRetirementRow?.employee_birth_date || currentRetirementRow?.birth_date;
+        const birthDate = parseLocalDate(birthValue);
+        const age = Number(document.getElementById("simulationAge")?.value);
+        const extraMonths = Math.max(0, Math.round(Number(document.getElementById("simulationExtraMonths")?.value || 0)));
+        const referenceDate = parseLocalDate(document.getElementById("simulationReferenceDate")?.value) || new Date();
+        const serviceStartDate = parseLocalDate(document.getElementById("simulationServiceStartDate")?.value) ||
+            parseLocalDate(currentRetirementRow?.employee_recruitment_date || currentRetirementRow?.recruitment_date);
+
+        return { birthDate, age, extraMonths, referenceDate, serviceStartDate };
+    }
+
+
+    function calculateSimulationStatus(remainingMonths, serviceMonths, minimumServiceMonths) {
+        if (remainingMonths !== null && remainingMonths <= 0) return { text: "بلغ/حل تاريخ التقاعد", className: "status-danger" };
+        if (minimumServiceMonths !== null && serviceMonths < minimumServiceMonths) {
+            return { text: "لم يستوف شرط الخدمة", className: "status-warning" };
+        }
+        if (remainingMonths !== null && remainingMonths <= 24) return { text: "يقترب من التقاعد", className: "status-warning" };
+        if (remainingMonths !== null && remainingMonths <= 60) return { text: "خلال 5 سنوات", className: "status-warning" };
+        return { text: "بعيد عن التقاعد", className: "status-safe" };
+    }
+
+
+    function getCurrentSimulationRule() {
+        const row = currentRetirementRow || {};
+        return {
+            id: row.applicable_rule_id || row.rule_id || null,
+            code: row.rule_code || null,
+            name: row.rule_name_ar || row.applicable_rule_name_ar || "غير محددة",
+            reference: row.legal_reference || row.applicable_legal_reference || "—",
+            minimumServiceMonths: row.minimum_service_months !== null && row.minimum_service_months !== undefined
+                ? Number(row.minimum_service_months)
+                : null
+        };
+    }
+
+
+    function runRetirementSimulation() {
+        if (!currentRetirementRow || !currentRetirementEmployeeId) return;
+
+        const inputs = getSimulationInputs();
+        const result = document.getElementById("simulationResult");
+        const rule = getCurrentSimulationRule();
+
+        if (!inputs.birthDate || isNaN(inputs.birthDate.getTime())) {
+            alert("لا يوجد تاريخ ميلاد صالح لإجراء المحاكاة.");
+            return;
+        }
+        if (!inputs.age || inputs.age < 1 || inputs.age > 100) {
+            alert("يرجى إدخال سن تقاعد صحيح.");
+            return;
+        }
+        if (!inputs.serviceStartDate) {
+            alert("يرجى إدخال تاريخ بداية الخدمة في السيناريو.");
+            return;
+        }
+        if (inputs.serviceStartDate > inputs.referenceDate) {
+            alert("تاريخ بداية الخدمة لا يمكن أن يكون بعد التاريخ المرجعي.");
+            return;
+        }
+
+        const retirementDate = addYearsToDate(inputs.birthDate, inputs.age);
+        const currentCredited = currentServicePeriods.reduce((sum, period) =>
+            sum + (period.is_credited ? Number(period.credited_months || 0) : 0), 0);
+        const serviceFromStart = monthsBetweenDates(inputs.serviceStartDate, inputs.referenceDate);
+        const simulatedService = Math.max(currentCredited, serviceFromStart) + inputs.extraMonths;
+        const remainingMonths = monthsBetweenDates(inputs.referenceDate, retirementDate);
+        const status = calculateSimulationStatus(remainingMonths, simulatedService, rule.minimumServiceMonths);
+
+        // نحتفظ بنتيجة آخر محاكاة في متغير مستقل حتى يمكن حفظها لاحقًا دون إعادة الحساب.
+        window.lastRetirementSimulation = {
+            employeeId: currentRetirementEmployeeId,
+            ruleId: rule.id,
+            referenceDate: inputs.referenceDate,
+            birthDate: inputs.birthDate,
+            serviceStartDate: inputs.serviceStartDate,
+            actualServiceMonths: currentServicePeriods.reduce((sum, p) =>
+                sum + ((p.is_credited && (p.period_type || "actual") === "actual") ? Number(p.credited_months || 0) : 0), 0),
+            southBonusMonths: currentServicePeriods.reduce((sum, p) =>
+                sum + ((p.is_credited && (p.period_type || "actual") === "south") ? Number(p.credited_months || 0) : 0), 0),
+            otherCreditedMonths: currentServicePeriods.reduce((sum, p) =>
+                sum + ((p.is_credited && !["actual", "south"].includes(p.period_type || "actual")) ? Number(p.credited_months || 0) : 0), 0),
+            totalCreditedServiceMonths: simulatedService,
+            expectedRetirementDate: retirementDate,
+            remainingMonths,
+            resultStatus: status.className === "status-danger" ? "retired" :
+                (status.text === "لم يستوف شرط الخدمة" ? "unknown" :
+                (remainingMonths <= 24 ? "approaching" : "far")),
+            extraMonths: inputs.extraMonths,
+            retirementAge: inputs.age
+        };
+
+        result.style.display = "block";
+        result.innerHTML = `
+            <div class="retirement-result">
+                <h4>📊 نتيجة السيناريو</h4>
+                <div class="result-grid">
+                    <div class="result-item"><div class="label">سن التقاعد في السيناريو</div><div class="value">${escapeHtml(String(inputs.age))} سنة</div></div>
+                    <div class="result-item"><div class="label">تاريخ التقاعد الافتراضي</div><div class="value">${formatDate(retirementDate)}</div></div>
+                    <div class="result-item"><div class="label">الأقدمية الحالية المحتسبة</div><div class="value">${formatServiceMonths(currentCredited)}</div></div>
+                    <div class="result-item"><div class="label">الخدمة من تاريخ البداية</div><div class="value">${formatServiceMonths(serviceFromStart)}</div></div>
+                    <div class="result-item"><div class="label">الخدمة الإضافية</div><div class="value">${formatServiceMonths(inputs.extraMonths)}</div></div>
+                    <div class="result-item"><div class="label">مجموع الخدمة في السيناريو</div><div class="value">${formatServiceMonths(simulatedService)}</div></div>
+                    <div class="result-item"><div class="label">المدة المتبقية</div><div class="value">${formatRemainingMonths(remainingMonths)}</div></div>
+                    <div class="result-item"><div class="label">حالة السيناريو</div><div class="value"><span class="status-badge ${status.className}">${status.text}</span></div></div>
+                </div>
+                <div style="margin-top:12px;padding:10px;background:#f8fafc;border-radius:10px;line-height:1.9;">
+                    <strong>⚖️ القاعدة:</strong> ${escapeHtml(rule.name)}<br>
+                    <strong>المرجع:</strong> ${escapeHtml(rule.reference)}<br>
+                    <strong>الحد الأدنى للخدمة:</strong> ${rule.minimumServiceMonths !== null ? formatServiceMonths(rule.minimumServiceMonths) : "غير محدد"}
+                </div>
+            </div>
+        `;
+    }
+
+
+    async function saveRetirementSimulation() {
+        if (!window.lastRetirementSimulation) {
+            runRetirementSimulation();
+        }
+        const simulation = window.lastRetirementSimulation;
+        if (!simulation) return;
+
+        const payload = {
+            employee_id: simulation.employeeId,
+            rule_id: simulation.ruleId,
+            simulation_date: new Date().toISOString().slice(0, 10),
+            reference_date: simulation.referenceDate.toISOString().slice(0, 10),
+            birth_date: simulation.birthDate.toISOString().slice(0, 10),
+            service_start_date: simulation.serviceStartDate.toISOString().slice(0, 10),
+            actual_service_months: simulation.actualServiceMonths,
+            south_bonus_months: simulation.southBonusMonths,
+            other_credited_months: simulation.otherCreditedMonths + simulation.extraMonths,
+            total_credited_service_months: simulation.totalCreditedServiceMonths,
+            expected_retirement_date: simulation.expectedRetirementDate.toISOString().slice(0, 10),
+            remaining_months: simulation.remainingMonths,
+            result_status: simulation.resultStatus,
+            notes: `محاكاة مستقلة: سن التقاعد=${simulation.retirementAge} سنة، خدمة إضافية=${simulation.extraMonths} شهر.`
+        };
+
+        try {
+            const { error } = await db.from("retirement_simulations").insert(payload);
+            if (error) throw error;
+            alert("تم حفظ سيناريو المحاكاة بنجاح دون تعديل ملف الموظف الأصلي.");
+        } catch (error) {
+            console.error("Retirement simulation save error:", error);
+            alert("تعذر حفظ السيناريو في قاعدة البيانات.\n\nيمكنك الاستمرار في استخدام المحاكاة دون حفظ.\n\nالتفاصيل: " + (error.message || "خطأ غير معروف"));
+        }
+    }
+
+
+
+    // =====================================================
+    // سجل ملف التقاعد والمتابعة - المرحلة السادسة
+    // =====================================================
+    const RETIREMENT_FILE_STATUSES = [
+        { value: "draft", label: "مسودة" },
+        { value: "review", label: "قيد المراجعة" },
+        { value: "incomplete", label: "يحتاج وثائق" },
+        { value: "complete", label: "مكتمل" },
+        { value: "ready", label: "جاهز للمتابعة" },
+        { value: "closed", label: "مغلق" }
+    ];
+
+    const RETIREMENT_REQUIRED_DOCUMENTS = [
+        ["appointment", "قرار التعيين"],
+        ["birth", "شهادة/وثيقة الميلاد"],
+        ["promotions", "قرارات الترقية"],
+        ["south", "شهادات أو قرارات أقدمية الجنوب"],
+        ["service", "شهادة الخدمة"],
+        ["career", "كشف المسار المهني"],
+        ["other_service", "وثائق فترات الخدمة الأخرى"],
+        ["retirement", "وثائق مرتبطة بالتقاعد حسب الحالة"]
+    ];
+
+    function getRetirementRecordKey() {
+        return currentRetirementEmployeeId ? `retirement_file_record_${currentRetirementEmployeeId}` : null;
+    }
+
+    function getDefaultRetirementRecord() {
+        const docs = {};
+        RETIREMENT_REQUIRED_DOCUMENTS.forEach(([key]) => docs[key] = false);
+        return {
+            status: "draft",
+            documents: docs,
+            notes: "",
+            followups: [],
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+    }
+
+    function getRetirementFileRecord() {
+        const key = getRetirementRecordKey();
+        if (!key) return getDefaultRetirementRecord();
+        try {
+            const raw = localStorage.getItem(key);
+            if (!raw) return getDefaultRetirementRecord();
+            const parsed = JSON.parse(raw);
+            const record = Object.assign(getDefaultRetirementRecord(), parsed || {});
+            record.documents = Object.assign(getDefaultRetirementRecord().documents, parsed.documents || {});
+            record.followups = Array.isArray(parsed.followups) ? parsed.followups : [];
+            return record;
+        } catch (e) {
+            console.warn("Retirement record load error:", e);
+            return getDefaultRetirementRecord();
+        }
+    }
+
+    function saveRetirementFileRecord(record) {
+        const key = getRetirementRecordKey();
+        if (!key) return false;
+        try {
+            record.updatedAt = new Date().toISOString();
+            localStorage.setItem(key, JSON.stringify(record));
+            return true;
+        } catch (e) {
+            console.warn("Retirement record save error:", e);
+            return false;
+        }
+    }
+
+    function getRetirementStatusLabel(value) {
+        const item = RETIREMENT_FILE_STATUSES.find(x => x.value === value);
+        return item ? item.label : "مسودة";
+    }
+
+    function renderRetirementFileRecord() {
+        const container = document.getElementById("retirementRecordBody");
+        if (!container) return;
+
+        const record = getRetirementFileRecord();
+        const completed = RETIREMENT_REQUIRED_DOCUMENTS.filter(([key]) => !!record.documents[key]).length;
+        const total = RETIREMENT_REQUIRED_DOCUMENTS.length;
+        const percent = Math.round((completed / total) * 100);
+
+        const statusOptions = RETIREMENT_FILE_STATUSES.map(item =>
+            `<option value="${item.value}" ${record.status === item.value ? "selected" : ""}>${item.label}</option>`
+        ).join("");
+
+        const docsHtml = RETIREMENT_REQUIRED_DOCUMENTS.map(([key, label]) =>
+            `<label class="document-check"><input type="checkbox" data-retirement-doc="${key}" ${record.documents[key] ? "checked" : ""} onchange="toggleRetirementDocument('${key}', this.checked)"><span>${escapeHtml(label)}</span></label>`
+        ).join("");
+
+        const followups = record.followups || [];
+        const followupsHtml = followups.length ? followups.slice().reverse().map(item =>
+            `<div class="followup-item"><div class="meta">${escapeHtml(formatDate(item.date))} — ${escapeHtml(item.type || "متابعة")}</div><div class="text">${escapeHtml(item.text || "")}</div></div>`
+        ).join("") : `<div class="empty-record">لا توجد متابعات مسجلة بعد.</div>`;
+
+        container.innerHTML = `
+            <div class="file-status-grid">
+                <div class="file-status-card">
+                    <label>حالة ملف التقاعد</label>
+                    <select id="retirementFileStatus" class="file-status-select" onchange="updateRetirementFileStatus(this.value)">${statusOptions}</select>
+                    <div class="record-message">هذه الحالة تخص سجل المتابعة الإداري ولا تغيّر حالة الموظف في قاعدة بيانات التقاعد.</div>
+                </div>
+                <div class="file-status-card">
+                    <label>ملخص الوثائق</label>
+                    <div style="font-size:22px;font-weight:bold;color:#183b56;">${completed} / ${total}</div>
+                    <div class="document-progress">نسبة استكمال الوثائق: ${percent}%</div>
+                    <div class="progress-bar"><span style="width:${percent}%"></span></div>
+                </div>
+            </div>
+
+            <div class="document-card" style="margin-top:12px;">
+                <span class="section-label">📄 قائمة الوثائق المطلوبة</span>
+                <div class="documents-grid">${docsHtml}</div>
+                <div class="record-actions">
+                    <button class="save-record-btn" onclick="saveRetirementFileRecordFromUI()">💾 حفظ سجل الملف</button>
+                </div>
+            </div>
+
+            <div class="document-card" style="margin-top:12px;">
+                <span class="section-label">📝 ملاحظات الملف</span>
+                <textarea id="retirementFileNotes" class="record-textarea" placeholder="اكتب ملاحظات المتابعة الإدارية هنا...">${escapeHtml(record.notes || "")}</textarea>
+                <div class="record-actions"><button class="save-record-btn" onclick="saveRetirementFileRecordFromUI()">💾 حفظ الملاحظات</button></div>
+            </div>
+
+            <div class="followup-card" style="margin-top:12px;">
+                <span class="section-label">🕒 سجل المتابعة</span>
+                <div class="record-actions" style="margin-top:0;margin-bottom:8px;"><button class="add-followup-btn" onclick="addRetirementFollowup()">➕ إضافة متابعة</button></div>
+                <div class="followup-list">${followupsHtml}</div>
+            </div>
+        `;
+        updateRetirementRecordBadge(record.status);
+    }
+
+    function updateRetirementRecordBadge(status) {
+        const badge = document.getElementById("retirementRecordStatusBadge");
+        if (!badge) return;
+        badge.textContent = getRetirementStatusLabel(status);
+        badge.className = "status-badge " + (
+            status === "complete" || status === "ready" ? "status-safe" :
+            status === "incomplete" ? "status-danger" : "status-warning"
+        );
+    }
+
+    function updateRetirementFileStatus(status) {
+        const record = getRetirementFileRecord();
+        record.status = RETIREMENT_FILE_STATUSES.some(x => x.value === status) ? status : "draft";
+        saveRetirementFileRecord(record);
+        updateRetirementRecordBadge(record.status);
+    }
+
+    function toggleRetirementDocument(key, checked) {
+        const record = getRetirementFileRecord();
+        record.documents[key] = !!checked;
+        saveRetirementFileRecord(record);
+        renderRetirementFileRecord();
+    }
+
+    function saveRetirementFileRecordFromUI() {
+        const record = getRetirementFileRecord();
+        const status = document.getElementById("retirementFileStatus");
+        const notes = document.getElementById("retirementFileNotes");
+        if (status) record.status = status.value;
+        if (notes) record.notes = notes.value || "";
+        if (saveRetirementFileRecord(record)) {
+            renderRetirementFileRecord();
+            alert("تم حفظ سجل ملف التقاعد محليًا على هذا الجهاز بنجاح.");
+        } else {
+            alert("تعذر حفظ سجل الملف على هذا الجهاز.");
+        }
+    }
+
+    function addRetirementFollowup() {
+        const record = getRetirementFileRecord();
+        const type = prompt("نوع المتابعة:", "مراجعة الملف");
+        if (type === null) return;
+        const text = prompt("اكتب تفاصيل المتابعة:", "");
+        if (text === null) return;
+        if (!text.trim()) {
+            alert("يرجى إدخال تفاصيل المتابعة.");
+            return;
+        }
+        record.followups.push({
+            id: Date.now().toString(),
+            date: new Date().toISOString().slice(0, 10),
+            type: type.trim() || "متابعة",
+            text: text.trim()
+        });
+        saveRetirementFileRecord(record);
+        renderRetirementFileRecord();
+    }
+
+    // =====================================================
+    // طباعة ملف الموظف التقاعدي - المرحلة الخامسة
+    // =====================================================
+    function printRetirementFile() {
+        const row = currentRetirementRow;
+        if (!row) {
+            alert("لم يتم تحديد ملف موظف للطباعة.");
+            return;
+        }
+
+        const fullName = getFullName(row);
+        const rank = getRankName(row);
+        const employeeNumber = row.employee_number || "—";
+        const birthDate = formatDate(row.employee_birth_date || row.birth_date);
+        const recruitmentDate = formatDate(row.employee_recruitment_date || row.recruitment_date);
+        const retirementDate = formatDate(getRetirementDate(row));
+        const retirementAge = getRetirementAge(row) ?? "—";
+        const remainingMonths = getRemainingMonths(row);
+        const status = getRetirementStatus(remainingMonths);
+        const ruleName = row.rule_name_ar || row.applicable_rule_name_ar || "غير محددة";
+        const legalReference = row.legal_reference || row.applicable_legal_reference || "—";
+        const minimumService = row.minimum_service_months !== null && row.minimum_service_months !== undefined
+            ? formatServiceMonths(row.minimum_service_months) : "غير محدد";
+
+        let actualTotal = 0, southActual = 0, southCredited = 0, otherActual = 0, creditedTotal = 0;
+        (currentServicePeriods || []).forEach(period => {
+            const actual = calculatePeriodMonths(period.start_date, period.end_date);
+            const credited = Number(period.credited_months) || 0;
+            const type = period.period_type || "actual";
+            if (type === "south") {
+                southActual += actual;
+                if (period.is_credited) southCredited += credited;
+            } else if (type === "other") {
+                otherActual += actual;
+            } else {
+                actualTotal += actual;
+            }
+            if (period.is_credited) creditedTotal += credited;
+        });
+
+        const totalActual = actualTotal + southActual + otherActual;
+        const southBonus = Math.max(0, southCredited - southActual);
+        const serviceTotal = creditedTotal || getNumber(row.total_service_months ?? row.actual_service_months);
+
+        const periodRows = (currentServicePeriods || []).map(period => {
+            const type = period.period_type || "actual";
+            const typeText = type === "south" ? "أقدمية الجنوب" : type === "other" ? "خدمة أخرى" : type === "military" ? "خدمة عسكرية" : type === "leave" ? "إجازة" : type === "secondment" ? "انتداب" : "خدمة فعلية";
+            const actual = calculatePeriodMonths(period.start_date, period.end_date);
+            const credited = Number(period.credited_months) || 0;
+            return `<tr><td>${formatDate(period.start_date)}</td><td>${period.end_date ? formatDate(period.end_date) : "حتى الآن"}</td><td>${escapeHtml(typeText)}</td><td>${formatServiceMonths(actual)}</td><td>${formatServiceMonths(credited)}</td><td>${period.is_credited ? "نعم" : "لا"}</td><td>${escapeHtml(period.legal_reference || "—")}</td></tr>`;
+        }).join("");
+
+        const report = `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ملف التقاعد - ${escapeHtml(fullName)}</title>
+        <style>
+            *{box-sizing:border-box} body{font-family:"Tahoma","Arial",sans-serif;margin:0;padding:28px;color:#182b3a;background:#fff;line-height:1.7} .page{max-width:1000px;margin:auto}.head{text-align:center;border-bottom:3px solid #183b56;padding-bottom:16px;margin-bottom:20px}.head h1{margin:0;color:#183b56;font-size:23px}.head p{margin:4px 0;color:#667085;font-size:12px}.section{margin-top:18px;border:1px solid #dce5eb;border-radius:10px;overflow:hidden}.section h2{margin:0;padding:11px 14px;background:#f1f6f9;color:#183b56;font-size:16px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:14px}.item{border:1px solid #e5ebef;border-radius:7px;padding:9px}.label{font-size:11px;color:#667085}.value{font-weight:bold;color:#183b56}.status{display:inline-block;padding:4px 10px;border-radius:6px;background:#eef3f7;font-weight:bold}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px}.stat{padding:12px;border:1px solid #e5ebef;border-radius:8px;text-align:center}.stat b{display:block;font-size:15px;color:#183b56}.table-wrap{overflow:hidden;padding:14px}table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #dce5eb;padding:7px;text-align:center}th{background:#f1f6f9;color:#183b56}.note{margin-top:18px;padding:10px;border:1px solid #eadca9;background:#fff9e8;color:#6d5a1a;font-size:11px;border-radius:7px}.footer{margin-top:25px;padding-top:10px;border-top:1px solid #ddd;text-align:center;color:#777;font-size:10px}@media print{body{padding:0}.page{max-width:none}.no-print{display:none!important}}@media(max-width:700px){.grid,.stats{grid-template-columns:1fr}}
+    
+
+        /* =========================================================
+           وحدة المسار المهني والترقيات - المرحلة الأولى
+        ========================================================= */
+        .promotion-section{display:none}
+        .promotion-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}
+        .promotion-header h2{font-size:24px;margin-bottom:7px}
+        .promotion-header p{color:#6b7280;font-size:13px;line-height:1.8}
+        .promotion-toolbar{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:15px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:18px;box-shadow:0 4px 14px rgba(0,0,0,.04)}
+        .promotion-toolbar input,.promotion-toolbar select{border:1px solid #d1d5db;border-radius:9px;padding:10px 12px;background:#fff;min-width:210px;font-family:inherit;outline:none}
+        .promotion-toolbar input:focus,.promotion-toolbar select:focus{border-color:#183b56;box-shadow:0 0 0 3px rgba(24,59,86,.08)}
+        .promotion-btn{border:0;border-radius:9px;padding:10px 15px;cursor:pointer;font-family:inherit;font-weight:bold;background:#183b56;color:#fff}
+        .promotion-btn.secondary{background:#eef3f7;color:#183b56}
+        .promotion-btn.success{background:#166534}
+        .promotion-btn.warning{background:#a16207}
+        .promotion-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
+        .promotion-stat{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px;box-shadow:0 4px 14px rgba(0,0,0,.04)}
+        .promotion-stat .label{font-size:12px;color:#6b7280}.promotion-stat .value{font-size:25px;font-weight:bold;color:#183b56;margin-top:7px}
+        .promotion-layout{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:start}
+        .promotion-panel{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px;box-shadow:0 4px 14px rgba(0,0,0,.04);margin-bottom:18px}
+        .promotion-panel h3{font-size:17px;margin-bottom:12px;color:#183b56}
+        .promotion-table-wrap{overflow:auto}.promotion-table{width:100%;border-collapse:collapse;min-width:780px}.promotion-table th,.promotion-table td{padding:11px 9px;border-bottom:1px solid #edf0f2;text-align:right;font-size:12px;vertical-align:middle}.promotion-table th{background:#f7f9fb;color:#475569;white-space:nowrap}
+        .promotion-badge{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:bold;white-space:nowrap}.promotion-badge.ok{background:#dcfce7;color:#166534}.promotion-badge.no{background:#fee2e2;color:#991b1b}.promotion-badge.review{background:#fef3c7;color:#92400e}.promotion-badge.info{background:#e0f2fe;color:#075985}
+        .employee-card{background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:14px;margin-bottom:14px}.employee-card .name{font-weight:bold;color:#183b56;font-size:17px}.employee-card .meta{font-size:12px;color:#64748b;margin-top:6px;line-height:1.9}
+        .eligibility-card{border:1px solid #e5e7eb;border-radius:12px;padding:14px;margin-top:12px}.eligibility-card h4{margin-bottom:9px;color:#183b56}.eligibility-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed #e5e7eb;font-size:12px}.eligibility-row:last-child{border-bottom:0}.eligibility-row .criterion{font-weight:bold}.eligibility-reasons{margin-top:10px;padding:10px;border-radius:9px;background:#f8fafc;font-size:12px;line-height:1.9}
+        .promotion-empty{text-align:center;padding:35px 15px;color:#6b7280}.promotion-loading{text-align:center;padding:30px;color:#64748b}
+        .promotion-note{font-size:11px;color:#64748b;background:#f8fafc;border-right:3px solid #183b56;padding:10px 12px;line-height:1.8;margin-top:12px}
+        .promotion-actions{display:flex;gap:7px;flex-wrap:wrap}.promotion-mini-btn{border:0;border-radius:7px;padding:7px 9px;cursor:pointer;font-family:inherit;font-size:11px;background:#eef3f7;color:#183b56;font-weight:bold}
+        .promotion-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.promotion-detail-item{background:#f8fafc;border:1px solid #edf0f2;border-radius:9px;padding:10px}.promotion-detail-item .k{font-size:10px;color:#64748b}.promotion-detail-item .v{font-size:12px;font-weight:bold;margin-top:4px;color:#1f2937}
+        .promotion-file-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.promotion-subtext{font-size:11px;color:#64748b;line-height:1.8;margin-top:-6px}.promotion-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.promotion-form-grid label{display:block;font-size:11px;font-weight:bold;color:#475569}.promotion-form-grid input,.promotion-form-grid select,.promotion-form-grid textarea{width:100%;margin-top:5px;border:1px solid #d1d5db;border-radius:8px;padding:9px;font-family:inherit;background:#fff;box-sizing:border-box}.promotion-form-grid textarea{min-height:85px;resize:vertical}.promotion-criteria{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}.promotion-criterion{border:1px solid #edf0f2;border-radius:9px;padding:9px;background:#fafafa}.promotion-criterion .k{font-size:10px;color:#64748b}.promotion-criterion .v{font-size:12px;font-weight:bold;margin-top:3px}.promotion-file-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.promotion-draft{border-top:1px solid #edf0f2;margin-top:14px;padding-top:12px}.promotion-draft-row{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #f0f2f4;font-size:11px}.promotion-draft-row button{border:0;background:#eef3f7;border-radius:7px;padding:5px 8px;cursor:pointer;font-family:inherit}.promotion-warning{background:#fff7ed;border-right:3px solid #c2410c;padding:10px;font-size:11px;line-height:1.8;color:#7c2d12;border-radius:8px;margin-top:10px}
+
+
+        .promotion-workflow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:18px}.promotion-step{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:11px 10px;display:flex;align-items:center;gap:9px;box-shadow:0 3px 10px rgba(0,0,0,.03)}.promotion-step .num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#183b56;color:#fff;font-weight:bold;font-size:12px;flex:0 0 auto}.promotion-step .txt{font-size:11px;color:#334155;font-weight:bold}.promotion-step small{display:block;color:#94a3b8;font-weight:normal;margin-top:2px}.promotion-command{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.promotion-status-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:18px}.promotion-status-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center}.promotion-status-card .n{font-size:21px;font-weight:800;color:#183b56}.promotion-status-card .t{font-size:11px;color:#64748b}.promotion-progress{height:7px;background:#edf2f7;border-radius:99px;overflow:hidden;margin-top:8px;min-width:130px}.promotion-progress span{display:block;height:100%;background:#183b56;border-radius:99px}.promotion-section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.promotion-section-title h3{margin:0}.promotion-counter{font-size:10px;background:#eef3f7;color:#183b56;padding:5px 8px;border-radius:999px;font-weight:bold}.promotion-employee-selected{background:#f8fafc;border:1px solid #dfe7ee;border-radius:12px;padding:12px;margin-bottom:12px;display:flex;justify-content:space-between;gap:12px;align-items:center}.promotion-employee-selected .name{font-weight:800;color:#183b56}.promotion-employee-selected .meta{font-size:11px;color:#64748b;line-height:1.8}@media(max-width:900px){.promotion-workflow{grid-template-columns:repeat(3,minmax(0,1fr))}.promotion-status-grid{grid-template-columns:1fr}}@media(max-width:600px){.promotion-workflow{grid-template-columns:1fr 1fr}.promotion-employee-selected{align-items:flex-start;flex-direction:column}}
+
+        @media(max-width:1000px){.promotion-layout{grid-template-columns:1fr}.promotion-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+        @media(max-width:650px){.promotion-grid{grid-template-columns:1fr}.promotion-header{flex-direction:column}.promotion-detail-grid{grid-template-columns:1fr}.promotion-form-grid,.promotion-criteria{grid-template-columns:1fr}.promotion-toolbar input,.promotion-toolbar select{width:100%;min-width:0}}
+
+    </style></head><body><div class="page">
+        <div class="head"><h1>ملف الموظف التقاعدي</h1><p>نظام متابعة التقاعد الإلكتروني</p><p>تاريخ استخراج الملف: ${formatDate(new Date())}</p></div>
+        <div class="section"><h2>👤 البيانات الأساسية</h2><div class="grid">
+        <div class="item"><div class="label">اسم الموظف</div><div class="value">${escapeHtml(fullName)}</div></div><div class="item"><div class="label">رقم الموظف</div><div class="value">${escapeHtml(employeeNumber)}</div></div>
+        <div class="item"><div class="label">الرتبة</div><div class="value">${escapeHtml(rank)}</div></div><div class="item"><div class="label">مكان العمل</div><div class="value">${escapeHtml(row.work_place || "—")}</div></div>
+        <div class="item"><div class="label">تاريخ الميلاد</div><div class="value">${birthDate}</div></div><div class="item"><div class="label">تاريخ التوظيف</div><div class="value">${recruitmentDate}</div></div></div></div>
+        <div class="section"><h2>📊 وضعية التقاعد</h2><div class="grid">
+        <div class="item"><div class="label">سن التقاعد المعتمد</div><div class="value">${escapeHtml(String(retirementAge))}</div></div><div class="item"><div class="label">تاريخ التقاعد المتوقع</div><div class="value">${retirementDate}</div></div>
+        <div class="item"><div class="label">المدة المتبقية</div><div class="value">${formatRemainingMonths(remainingMonths)}</div></div><div class="item"><div class="label">الحالة</div><div class="value"><span class="status">${escapeHtml(status.text)}</span></div></div></div></div>
+        <div class="section"><h2>🧮 ملخص الخدمة</h2><div class="stats"><div class="stat"><div class="label">الخدمة الفعلية</div><b>${formatServiceMonths(totalActual)}</b></div><div class="stat"><div class="label">أقدمية الجنوب</div><b>${formatServiceMonths(southBonus)}</b></div><div class="stat"><div class="label">مجموع الخدمة المحتسبة</div><b>${formatServiceMonths(serviceTotal)}</b></div></div></div>
+        <div class="section"><h2>⚖️ القاعدة القانونية</h2><div class="grid"><div class="item"><div class="label">القاعدة</div><div class="value">${escapeHtml(ruleName)}</div></div><div class="item"><div class="label">المرجع القانوني</div><div class="value">${escapeHtml(legalReference)}</div></div><div class="item"><div class="label">الحد الأدنى للخدمة</div><div class="value">${escapeHtml(minimumService)}</div></div></div></div>
+        <div class="section"><h2>📋 سجل فترات الخدمة</h2><div class="table-wrap"><table><thead><tr><th>من</th><th>إلى</th><th>النوع</th><th>المدة الفعلية</th><th>المدة المحتسبة</th><th>محتسبة</th><th>المرجع</th></tr></thead><tbody>${periodRows || '<tr><td colspan="7">لا توجد فترات خدمة مسجلة.</td></tr>'}</tbody></table></div></div>
+        <div class="section"><h2>📁 سجل ملف التقاعد</h2><div class="grid"><div class="item"><div class="label">حالة ملف المتابعة</div><div class="value">${escapeHtml(getRetirementStatusLabel(getRetirementFileRecord().status))}</div></div><div class="item"><div class="label">استكمال الوثائق</div><div class="value">${RETIREMENT_REQUIRED_DOCUMENTS.filter(([key]) => !!getRetirementFileRecord().documents[key]).length} / ${RETIREMENT_REQUIRED_DOCUMENTS.length}</div></div><div class="item" style="grid-column:1/-1"><div class="label">ملاحظات الملف</div><div class="value">${escapeHtml(getRetirementFileRecord().notes || "لا توجد ملاحظات.")}</div></div></div></div>
+        <div class="note">هذا التقرير للاستخدام الإداري والمتابعة الداخلية. الحسابات المعروضة تعتمد على البيانات والقواعد القانونية المفعلة في النظام، ويجب التحقق النهائي من الوضعية القانونية قبل اعتماد أي قرار إداري.</div>
+        <div class="footer">ملف تقاعد إلكتروني — تم إنشاؤه من وحدة التقاعد</div></div></body></html>`;
+
+        const printWindow = window.open("", "_blank", "width=1100,height=800");
+        if (!printWindow) {
+            alert("تعذر فتح نافذة الطباعة. يرجى السماح بالنوافذ المنبثقة لهذا الموقع.");
+            return;
+        }
+        printWindow.document.open();
+        printWindow.document.write(report);
+        printWindow.document.close();
+        printWindow.onload = function() { printWindow.focus(); printWindow.print(); };
+    }
+
+
+    // =====================================================
+    // إغلاق النافذة
+    // =====================================================
+
+    function closeRetirementModal() {
+        document.getElementById("retirementModal").style.display = "none";
+        currentRetirementEmployeeId = null;
+        currentRetirementRow = null;
+        currentServicePeriods = [];
+    }
+
+
+    function closeModalOutside(event) {
+
+        if (
+            event.target.id ===
+            "retirementModal"
+        ) {
+
+            closeRetirementModal();
+
+        }
+
+    }
+
+
+    // =====================================================
+    // الحصول على اسم الموظف
+    // =====================================================
+
+    function getFullName(row) {
+
+        const firstName =
+            row.first_name_ar ||
+            row.employee_first_name_ar ||
+            "";
+
+
+        const lastName =
+            row.last_name_ar ||
+            row.employee_last_name_ar ||
+            "";
+
+
+        const fullName =
+            (
+                firstName +
+                " " +
+                lastName
+            ).trim();
+
+
+        return fullName ||
+               row.employee_name_ar ||
+               "موظف بدون اسم";
+
+    }
+
+
+    // =====================================================
+    // اسم الرتبة
+    // =====================================================
+
+    function getRankName(row) {
+
+        return (
+            row.current_rank_name ||
+            row.rank_name_ar ||
+            row.target_rank_name ||
+            "غير محددة"
+        );
+
+    }
+
+
+    // =====================================================
+    // حساب تاريخ التقاعد انطلاقًا من قاعدة retirement_rules
+    // =====================================================
+
+    function calculateRetirementDateFromRule(birthDateValue, ageYears) {
+        if (!birthDateValue || !Number.isFinite(Number(ageYears)) || Number(ageYears) <= 0) {
+            return null;
+        }
+
+        const birth = new Date(String(birthDateValue) + "T00:00:00");
+        if (isNaN(birth.getTime())) return null;
+
+        const age = Number(ageYears);
+        const wholeYears = Math.floor(age);
+        const fractionalYears = age - wholeYears;
+        const extraMonths = Math.round(fractionalYears * 12);
+
+        const result = new Date(birth);
+        result.setFullYear(result.getFullYear() + wholeYears);
+        if (extraMonths) result.setMonth(result.getMonth() + extraMonths);
+
+        return result.toISOString().slice(0, 10);
+    }
+
+
+    function getRetirementAge(row) {
+        const value =
+            row.minimum_age_years ??
+            row.retirement_age ??
+            row.applicable_retirement_age ??
+            null;
+
+        if (value === null || value === undefined || value === "") return null;
+
+        const number = Number(value);
+        return Number.isFinite(number) && number > 0 ? number : null;
+    }
+
+
+    // =====================================================
+    // تاريخ التقاعد
+    // =====================================================
+
+    function getRetirementDate(row) {
+
+        const ruleAge = getRetirementAge(row);
+        const birthDate = row.employee_birth_date || row.birth_date;
+
+        if (birthDate && ruleAge !== null) {
+            const calculated = calculateRetirementDateFromRule(birthDate, ruleAge);
+            if (calculated) return calculated;
+        }
+
+        return (
+            row.expected_retirement_date ||
+            row.retirement_expected_date ||
+            row.calculated_retirement_date ||
+            row.retirement_date ||
+            null
+        );
+
+    }
+
+
+    // =====================================================
+    // المدة المتبقية
+    // =====================================================
+
+    function getRemainingMonths(row) {
+
+        const value =
+            row.remaining_months ??
+            row.retirement_remaining_months ??
+            null;
+
+
+        if (
+            value !== null &&
+            value !== undefined &&
+            value !== ""
+        ) {
+
+            const number =
+                Number(value);
+
+
+            if (!isNaN(number)) {
+
+                return number;
+
+            }
+
+        }
+
+
+        const retirementDate =
+            getRetirementDate(row);
+
+
+        if (!retirementDate) {
+
+            return null;
+
+        }
+
+
+        const now =
+            new Date();
+
+
+        const target =
+            new Date(retirementDate);
+
+
+        if (isNaN(target.getTime())) {
+
+            return null;
+
+        }
+
+
+        return (
+            (target.getFullYear() -
+             now.getFullYear()) *
+            12
+            +
+            (
+                target.getMonth() -
+                now.getMonth()
+            )
+        );
+
+    }
+
+
+    // =====================================================
+    // حالة التقاعد
+    // =====================================================
+
+    function getRetirementStatus(months) {
+
+        if (months === null) {
+
+            return {
+                text: "غير محددة",
+                className: "status-neutral"
+            };
+
+        }
+
+
+        if (months <= 0) {
+
+            return {
+                text: "بلغ تاريخ التقاعد",
+                className: "status-danger"
+            };
+
+        }
+
+
+        if (months <= 24) {
+
+            return {
+                text: "يقترب من التقاعد",
+                className: "status-warning"
+            };
+
+        }
+
+
+        if (months <= 60) {
+
+            return {
+                text: "خلال 5 سنوات",
+                className: "status-warning"
+            };
+
+        }
+
+
+        return {
+            text: "بعيد عن التقاعد",
+            className: "status-safe"
+        };
+
+    }
+
+
+    // =====================================================
+    // تنسيق الأشهر
+    // =====================================================
+
+    function formatServiceMonths(months) {
+
+        if (
+            months === null ||
+            months === undefined ||
+            isNaN(months)
+        ) {
+
+            return "—";
+
+        }
+
+
+        months =
+            Math.max(
+                0,
+                Math.round(Number(months))
+            );
+
+
+        const years =
+            Math.floor(
+                months / 12
+            );
+
+
+        const remaining =
+            months % 12;
+
+
+        if (years === 0) {
+
+            return (
+                remaining +
+                " شهر"
+            );
+
+        }
+
+
+        if (remaining === 0) {
+
+            return (
+                years +
+                " سنة"
+            );
+
+        }
+
+
+        return (
+            years +
+            " سنة و " +
+            remaining +
+            " شهر"
+        );
+
+    }
+
+
+    // =====================================================
+    // تنسيق المدة المتبقية
+    // =====================================================
+
+    function formatRemainingMonths(months) {
+
+        if (
+            months === null ||
+            months === undefined ||
+            isNaN(months)
+        ) {
+
+            return "—";
+
+        }
+
+
+        months =
+            Math.round(
+                Number(months)
+            );
+
+
+        if (months <= 0) {
+
+            return "حان موعد التقاعد";
+
+        }
+
+
+        const years =
+            Math.floor(
+                months / 12
+            );
+
+
+        const remaining =
+            months % 12;
+
+
+        if (years === 0) {
+
+            return (
+                remaining +
+                " شهر"
+            );
+
+        }
+
+
+        if (remaining === 0) {
+
+            return (
+                years +
+                " سنة"
+            );
+
+        }
+
+
+        return (
+            years +
+            " سنة و " +
+            remaining +
+            " شهر"
+        );
+
+    }
 
 
     // =====================================================
