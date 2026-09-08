@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -44,19 +43,38 @@ body {
     min-height: 100vh;
     font-family: Arial, Tahoma, "Segoe UI", sans-serif;
     color: var(--text);
+
     background:
-        radial-gradient(circle at 15% 15%, rgba(44,122,159,.12), transparent 30%),
-        radial-gradient(circle at 85% 85%, rgba(23,63,95,.14), transparent 32%),
-        linear-gradient(135deg, #eef5f8 0%, #e6edf2 50%, #dce7ed 100%);
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(44,122,159,.12),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 85%,
+            rgba(23,63,95,.14),
+            transparent 32%
+        ),
+        linear-gradient(
+            135deg,
+            #eef5f8 0%,
+            #e6edf2 50%,
+            #dce7ed 100%
+        );
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     padding: 30px 20px;
+
     position: relative;
     overflow: hidden;
 }
 
-/* خلفيات زخرفية */
+/* =========================================================
+   خلفيات زخرفية
+   ========================================================= */
 
 body::before,
 body::after {
@@ -70,16 +88,20 @@ body::after {
 body::before {
     width: 320px;
     height: 320px;
+
     top: -150px;
     right: -120px;
+
     background: rgba(44,122,159,.10);
 }
 
 body::after {
     width: 280px;
     height: 280px;
+
     bottom: -140px;
     left: -110px;
+
     background: rgba(23,63,95,.10);
 }
 
@@ -91,6 +113,7 @@ body::after {
 .login-container {
     width: 100%;
     max-width: 455px;
+
     position: relative;
     z-index: 1;
 }
@@ -102,18 +125,25 @@ body::after {
 
 .login-card {
     background: rgba(255,255,255,.96);
+
     border: 1px solid rgba(255,255,255,.8);
+
     border-radius: 26px;
+
     padding: 38px 38px 30px;
+
     box-shadow:
         0 25px 70px rgba(15,47,73,.16),
         0 5px 18px rgba(15,47,73,.06);
+
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+
     animation: cardAppear .55s ease-out;
 }
 
 @keyframes cardAppear {
+
     from {
         opacity: 0;
         transform: translateY(18px);
@@ -123,6 +153,7 @@ body::after {
         opacity: 1;
         transform: translateY(0);
     }
+
 }
 
 
@@ -133,39 +164,38 @@ body::after {
 .logo-wrapper {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
-}
-
-.logo {
-    width: 82px;
-    height: 82px;
-    border-radius: 23px;
-
-    background:
-        linear-gradient(145deg, #1d557b, #123852);
-
-    color: #ffffff;
-
-    display: flex;
     align-items: center;
-    justify-content: center;
 
-    font-size: 34px;
-    font-weight: 800;
+    margin-bottom: 20px;
 
-    box-shadow:
-        0 12px 25px rgba(23,63,95,.24),
-        inset 0 1px 0 rgba(255,255,255,.22);
-
-    position: relative;
+    min-height: 100px;
 }
 
-.logo::after {
-    content: "";
-    position: absolute;
-    inset: 6px;
+.logo-image {
+    width: 100px;
+    height: 100px;
+
+    object-fit: contain;
+
+    display: block;
+
     border-radius: 18px;
-    border: 1px solid rgba(255,255,255,.14);
+
+    filter: drop-shadow(
+        0 10px 18px rgba(23,63,95,.16)
+    );
+
+    transition:
+        transform .25s ease,
+        filter .25s ease;
+}
+
+.logo-image:hover {
+    transform: translateY(-2px);
+
+    filter: drop-shadow(
+        0 13px 22px rgba(23,63,95,.20)
+    );
 }
 
 
@@ -175,18 +205,27 @@ body::after {
 
 h1 {
     text-align: center;
+
     color: var(--primary);
+
     font-size: 27px;
+
     font-weight: 800;
+
     margin-bottom: 9px;
+
     letter-spacing: -.3px;
 }
 
 .subtitle {
     text-align: center;
+
     color: var(--muted);
+
     font-size: 14.5px;
+
     line-height: 1.9;
+
     margin-bottom: 30px;
 }
 
@@ -205,9 +244,13 @@ h1 {
 
 label {
     display: block;
+
     margin-bottom: 8px;
+
     color: #344054;
+
     font-size: 14px;
+
     font-weight: 700;
 }
 
@@ -217,29 +260,40 @@ label {
 
 .input-icon {
     position: absolute;
+
     top: 50%;
     right: 14px;
+
     transform: translateY(-50%);
+
     color: #8293a1;
+
     font-size: 17px;
+
     pointer-events: none;
 }
 
 input {
     width: 100%;
+
     height: 52px;
+
     padding: 13px 45px 13px 14px;
 
     border: 1px solid var(--border);
+
     border-radius: 13px;
 
     background: #f9fbfc;
+
     color: var(--text);
 
     font-family: inherit;
+
     font-size: 15px;
 
     outline: none;
+
     transition:
         border-color .2s ease,
         box-shadow .2s ease,
@@ -257,8 +311,11 @@ input:hover {
 
 input:focus {
     background: #ffffff;
+
     border-color: var(--accent);
-    box-shadow: 0 0 0 4px rgba(44,122,159,.11);
+
+    box-shadow:
+        0 0 0 4px rgba(44,122,159,.11);
 }
 
 
@@ -268,20 +325,28 @@ input:focus {
 
 button {
     width: 100%;
+
     height: 53px;
 
     margin-top: 5px;
 
     border: none;
+
     border-radius: 13px;
 
     background:
-        linear-gradient(135deg, #194a6e, #123852);
+        linear-gradient(
+            135deg,
+            #194a6e,
+            #123852
+        );
 
     color: #ffffff;
 
     font-family: inherit;
+
     font-size: 16px;
+
     font-weight: 700;
 
     cursor: pointer;
@@ -297,7 +362,11 @@ button {
 
 button:hover {
     background:
-        linear-gradient(135deg, #153f60, #0d2d45);
+        linear-gradient(
+            135deg,
+            #153f60,
+            #0d2d45
+        );
 
     transform: translateY(-1px);
 
@@ -311,8 +380,11 @@ button:active {
 
 button:disabled {
     opacity: .65;
+
     cursor: not-allowed;
+
     transform: none;
+
     box-shadow: none;
 }
 
@@ -323,6 +395,7 @@ button:disabled {
 
 .message {
     margin-top: 18px;
+
     padding: 13px 15px;
 
     border-radius: 12px;
@@ -330,14 +403,18 @@ button:disabled {
     display: none;
 
     line-height: 1.7;
+
     text-align: center;
+
     font-size: 14px;
+
     font-weight: 600;
 
     animation: messageAppear .25s ease-out;
 }
 
 @keyframes messageAppear {
+
     from {
         opacity: 0;
         transform: translateY(-4px);
@@ -347,17 +424,22 @@ button:disabled {
         opacity: 1;
         transform: translateY(0);
     }
+
 }
 
 .error {
     background: var(--danger-bg);
+
     color: var(--danger-text);
+
     border: 1px solid #fecdd3;
 }
 
 .success {
     background: var(--success-bg);
+
     color: var(--success-text);
+
     border: 1px solid #bbf7d0;
 }
 
@@ -368,27 +450,37 @@ button:disabled {
 
 .footer {
     margin-top: 25px;
+
     padding-top: 18px;
 
     border-top: 1px solid #edf0f2;
 
     text-align: center;
+
     color: #98a2b3;
+
     font-size: 12.5px;
 }
 
 .footer-badge {
     display: inline-flex;
+
     align-items: center;
+
     gap: 6px;
 }
 
 .footer-dot {
     width: 7px;
+
     height: 7px;
+
     border-radius: 50%;
+
     background: #36a269;
-    box-shadow: 0 0 0 3px rgba(54,162,105,.10);
+
+    box-shadow:
+        0 0 0 3px rgba(54,162,105,.10);
 }
 
 
@@ -404,14 +496,21 @@ button:disabled {
 
     .login-card {
         padding: 30px 22px 24px;
+
         border-radius: 22px;
     }
 
-    .logo {
-        width: 74px;
-        height: 74px;
-        border-radius: 20px;
-        font-size: 30px;
+    .logo-wrapper {
+        min-height: 82px;
+
+        margin-bottom: 18px;
+    }
+
+    .logo-image {
+        width: 82px;
+        height: 82px;
+
+        border-radius: 16px;
     }
 
     h1 {
@@ -420,6 +519,7 @@ button:disabled {
 
     .subtitle {
         font-size: 13.5px;
+
         margin-bottom: 25px;
     }
 
@@ -430,6 +530,7 @@ button:disabled {
     button {
         height: 51px;
     }
+
 }
 
 
@@ -442,10 +543,14 @@ button:disabled {
     *,
     *::before,
     *::after {
+
         animation-duration: .01ms !important;
+
         animation-iteration-count: 1 !important;
+
         transition-duration: .01ms !important;
     }
+
 }
 </style>
 </head>
@@ -456,17 +561,44 @@ button:disabled {
 
     <div class="login-card">
 
+        <!-- =================================================
+             الشعار
+             ================================================= -->
+
         <div class="logo-wrapper">
-            <div class="logo">م</div>
+
+            <img
+                src="logo (2).png"
+                alt="شعار منصة المسار المهني"
+                class="logo-image"
+            >
+
         </div>
 
-        <h1>منصة المسار المهني</h1>
+
+        <!-- =================================================
+             العنوان
+             ================================================= -->
+
+        <h1>
+            منصة المسار المهني
+        </h1>
+
 
         <p class="subtitle">
+
             نظام متابعة المسار المهني والترقيات
+
             <br>
+
             المؤسسة العمومية الإستشفائية بأولف
+
         </p>
+
+
+        <!-- =================================================
+             نموذج تسجيل الدخول
+             ================================================= -->
 
         <form id="loginForm">
 
@@ -478,7 +610,9 @@ button:disabled {
 
                 <div class="input-wrapper">
 
-                    <span class="input-icon">✉</span>
+                    <span class="input-icon">
+                        ✉
+                    </span>
 
                     <input
                         type="email"
@@ -501,7 +635,9 @@ button:disabled {
 
                 <div class="input-wrapper">
 
-                    <span class="input-icon">🔒</span>
+                    <span class="input-icon">
+                        🔒
+                    </span>
 
                     <input
                         type="password"
@@ -516,21 +652,38 @@ button:disabled {
             </div>
 
 
-            <button type="submit" id="loginButton">
+            <button
+                type="submit"
+                id="loginButton"
+            >
                 تسجيل الدخول
             </button>
 
         </form>
 
 
-        <div id="message" class="message"></div>
+        <!-- =================================================
+             الرسائل
+             ================================================= -->
 
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+
+        <!-- =================================================
+             التذييل
+             ================================================= -->
 
         <div class="footer">
 
             <span class="footer-badge">
+
                 <span class="footer-dot"></span>
+
                 منصة إدارية داخلية
+
             </span>
 
         </div>
@@ -543,114 +696,305 @@ button:disabled {
 <script>
 "use strict";
 
-const loginForm=document.getElementById("loginForm");
-const loginButton=document.getElementById("loginButton");
-const message=document.getElementById("message");
 
-function getSupabaseClient(){
-    if(typeof db!=="undefined"&&db&&db.auth&&typeof db.auth.signInWithPassword==="function") return db;
-    throw new Error("تعذر الاتصال بإعدادات Supabase. يرجى التأكد من ملف config.js.");
+/* =========================================================
+   عناصر الصفحة
+   ========================================================= */
+
+const loginForm =
+    document.getElementById("loginForm");
+
+const loginButton =
+    document.getElementById("loginButton");
+
+const message =
+    document.getElementById("message");
+
+
+/* =========================================================
+   الاتصال بـ Supabase
+   ========================================================= */
+
+function getSupabaseClient() {
+
+    if (
+        typeof db !== "undefined" &&
+        db &&
+        db.auth &&
+        typeof db.auth.signInWithPassword === "function"
+    ) {
+
+        return db;
+
+    }
+
+    throw new Error(
+        "تعذر الاتصال بإعدادات Supabase. يرجى التأكد من ملف config.js."
+    );
+
 }
 
-function showMessage(text,type){
-    message.textContent=text;
-    message.className="message "+type;
-    message.style.display="block";
+
+/* =========================================================
+   عرض الرسائل
+   ========================================================= */
+
+function showMessage(text, type) {
+
+    message.textContent = text;
+
+    message.className =
+        "message " + type;
+
+    message.style.display =
+        "block";
+
 }
 
-function getLoginErrorMessage(error){
-    if(!error) return "حدث خطأ أثناء تسجيل الدخول.";
 
-    const msg=String(error.message||"").toLowerCase();
+/* =========================================================
+   معالجة أخطاء تسجيل الدخول
+   ========================================================= */
 
-    if(msg.includes("invalid login credentials")||msg.includes("invalid credentials"))
+function getLoginErrorMessage(error) {
+
+    if (!error) {
+
+        return "حدث خطأ أثناء تسجيل الدخول.";
+
+    }
+
+
+    const msg =
+        String(
+            error.message || ""
+        ).toLowerCase();
+
+
+    if (
+        msg.includes("invalid login credentials") ||
+        msg.includes("invalid credentials")
+    ) {
+
         return "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
 
-    if(msg.includes("email not confirmed"))
+    }
+
+
+    if (
+        msg.includes("email not confirmed")
+    ) {
+
         return "يجب تأكيد البريد الإلكتروني قبل تسجيل الدخول.";
 
-    if(msg.includes("too many requests"))
+    }
+
+
+    if (
+        msg.includes("too many requests")
+    ) {
+
         return "تم تجاوز عدد محاولات الدخول. يرجى الانتظار قليلًا ثم المحاولة مرة أخرى.";
 
-    return error.message||"حدث خطأ أثناء تسجيل الدخول.";
+    }
+
+
+    return (
+        error.message ||
+        "حدث خطأ أثناء تسجيل الدخول."
+    );
+
 }
 
-loginForm.addEventListener("submit",async function(event){
 
-    event.preventDefault();
+/* =========================================================
+   تسجيل الدخول
+   ========================================================= */
 
-    const email=document.getElementById("email").value.trim();
-    const password=document.getElementById("password").value;
+loginForm.addEventListener(
+    "submit",
+    async function(event) {
 
-    if(!email||!password){
-        showMessage("يرجى إدخال البريد الإلكتروني وكلمة المرور.","error");
-        return;
-    }
+        event.preventDefault();
 
-    loginButton.disabled=true;
-    loginButton.textContent="جارٍ تسجيل الدخول...";
-    message.style.display="none";
 
-    try{
+        const email =
+            document
+                .getElementById("email")
+                .value
+                .trim();
 
-        const supabaseClient=getSupabaseClient();
 
-        const {data,error}=await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-        });
+        const password =
+            document
+                .getElementById("password")
+                .value;
 
-        if(error) throw error;
 
-        if(!data||!data.user)
-            throw new Error("تعذر الحصول على بيانات المستخدم.");
+        /* التحقق من الحقول */
 
-        const {data:adminData,error:adminError}=await supabaseClient
-            .from("user_roles")
-            .select("role")
-            .eq("user_id",data.user.id)
-            .eq("role","admin")
-            .maybeSingle();
+        if (!email || !password) {
 
-        if(adminError) throw adminError;
-
-        if(!adminData){
-
-            await supabaseClient.auth.signOut();
-
-            throw new Error(
-                "هذا الحساب غير مصرح له بالدخول إلى لوحة المسؤول."
+            showMessage(
+                "يرجى إدخال البريد الإلكتروني وكلمة المرور.",
+                "error"
             );
+
+            return;
+
         }
 
-        showMessage(
-            "تم تسجيل الدخول بنجاح. جاري فتح لوحة المسؤول...",
-            "success"
-        );
 
-        setTimeout(function(){
-            window.location.href="admin.html";
-        },800);
+        /* تعطيل الزر أثناء المعالجة */
 
-    }catch(error){
+        loginButton.disabled = true;
 
-        console.error("Login error:",error);
+        loginButton.textContent =
+            "جارٍ تسجيل الدخول...";
 
-        showMessage(
-            getLoginErrorMessage(error),
-            "error"
-        );
+        message.style.display =
+            "none";
 
-    }finally{
 
-        loginButton.disabled=false;
-        loginButton.textContent="تسجيل الدخول";
+        try {
+
+            const supabaseClient =
+                getSupabaseClient();
+
+
+            /* =================================================
+               تسجيل الدخول في Supabase
+               ================================================= */
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient.auth.signInWithPassword({
+
+                    email,
+
+                    password
+
+                });
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            if (
+                !data ||
+                !data.user
+            ) {
+
+                throw new Error(
+                    "تعذر الحصول على بيانات المستخدم."
+                );
+
+            }
+
+
+            /* =================================================
+               التحقق من صلاحية المسؤول
+               ================================================= */
+
+            const {
+                data: adminData,
+                error: adminError
+            } =
+                await supabaseClient
+
+                    .from("user_roles")
+
+                    .select("role")
+
+                    .eq(
+                        "user_id",
+                        data.user.id
+                    )
+
+                    .eq(
+                        "role",
+                        "admin"
+                    )
+
+                    .maybeSingle();
+
+
+            if (adminError) {
+
+                throw adminError;
+
+            }
+
+
+            /* =================================================
+               الحساب ليس مسؤولًا
+               ================================================= */
+
+            if (!adminData) {
+
+                await supabaseClient.auth.signOut();
+
+                throw new Error(
+                    "هذا الحساب غير مصرح له بالدخول إلى لوحة المسؤول."
+                );
+
+            }
+
+
+            /* =================================================
+               نجاح تسجيل الدخول
+               ================================================= */
+
+            showMessage(
+                "تم تسجيل الدخول بنجاح. جاري فتح لوحة المسؤول...",
+                "success"
+            );
+
+
+            setTimeout(
+                function() {
+
+                    window.location.href =
+                        "admin.html";
+
+                },
+                800
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Login error:",
+                error
+            );
+
+
+            showMessage(
+                getLoginErrorMessage(error),
+                "error"
+            );
+
+
+        } finally {
+
+            loginButton.disabled =
+                false;
+
+            loginButton.textContent =
+                "تسجيل الدخول";
+
+        }
 
     }
-
-});
+);
 </script>
 
 </body>
 </html>
-```
