@@ -1,0 +1,21 @@
+{
+  "name": "منصة المسار المهني",
+  "short_name": "المسار المهني",
+  "description": "منصة المسار المهني لإدارة الملف المهني والطلبات والإشعارات وأقدمية الجنوب.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#6d4aff",
+  "icons": [
+    {
+      "src": "./logo%20(2).png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
