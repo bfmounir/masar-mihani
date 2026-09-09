@@ -26,6 +26,7 @@ button,input,select,textarea{font:inherit}.topbar{height:70px;background:rgba(25
 .notice-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.notice-head strong{display:flex;align-items:center;gap:8px;color:#57466A}.notice-list{display:grid;gap:9px}.notice-item{padding:13px;border-radius:12px;background:var(--surface-soft);border-right:3px solid var(--gold);line-height:1.8}.notice-item .date{font-size:10px;color:#968D9D;margin-top:6px}.notice-item .delete-notice{float:left;padding:5px 8px;font-size:10px}
 .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-weight:800;color:#51475A;font-size:12px}.field input,.field select,.field textarea{width:100%;padding:12px 13px;border:1px solid #DDD5E5;border-radius:11px;font:inherit;background:#FEFDFF;color:#302A38;outline:none;transition:.2s}.field input:focus,.field select:focus,.field textarea:focus{border-color:#9B84BD;box-shadow:0 0 0 3px rgba(111,82,163,.08);background:#fff}.field small{color:#8B8292;line-height:1.6}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.btn{border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:900;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;justify-content:center;gap:7px}.btn svg{width:16px;height:16px}.btn:hover{transform:translateY(-1px)}.btn.primary{background:var(--primary);color:#fff;box-shadow:0 6px 15px rgba(111,82,163,.18)}.btn.primary:hover{background:#634692}.btn.secondary{background:#F2EEF6;color:var(--primary-dark)}.btn.secondary:hover{background:#EAE3F0}.btn.danger{background:var(--danger-soft);color:#A24D55}.btn.gold{background:var(--gold-soft);color:#80641A}.result{margin-top:16px}.status{padding:12px;border-radius:11px;background:#F8F5FA;color:#665B70;line-height:1.8;border:1px solid #ECE5F0}.status.ok{background:var(--success-soft);color:#2E704D;border-color:#CFE9D9}.status.error{background:var(--danger-soft);color:#A24D55;border-color:#F0D0D4}.empty{text-align:center;color:#93899B;padding:30px 15px}.employee-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:14px;overflow:hidden;border:1px solid var(--border);border-radius:12px}.employee-table th,.employee-table td{padding:11px;border-bottom:1px solid #EFEAF2;text-align:right;font-size:12px}.employee-table th{background:#F4F0F8;color:#5C4775;font-weight:900}.employee-table tbody tr:last-child td{border-bottom:0}.employee-table tbody tr:hover{background:#FCFAFE}.badge{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;background:#F4F0F8;color:#675477;font-size:10px;font-weight:900}.calc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:15px}.metric{background:#FCFBFD;border:1px solid var(--border);border-radius:13px;padding:14px}.metric .label{font-size:11px;color:#7F7487}.metric .value{font-size:18px;font-weight:900;color:#5B4474;margin-top:5px}.warning{color:#80641A;background:var(--warning-soft);border:1px solid #F0DEAA;padding:12px;border-radius:11px;line-height:1.8}.loading{position:fixed;inset:0;background:#F8F6FB;display:grid;place-items:center;z-index:100;font-weight:900;color:#65498A;padding:20px;text-align:center}.loading-inner{text-align:center}.spinner{width:32px;height:32px;border:3px solid #E5DDF0;border-top-color:#8064B2;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}@keyframes spin{to{transform:rotate(360deg)}}.hidden{display:none!important}.section-note{display:flex;align-items:flex-start;gap:9px;padding:12px 13px;background:#F9F7FC;border:1px solid var(--border);border-radius:12px;color:#756A80;line-height:1.8;margin-bottom:14px}.section-note svg{width:18px;flex:none;color:var(--primary);margin-top:2px}
 .request-card{background:#fff;border:1px solid var(--border);border-radius:15px;padding:17px;margin-bottom:11px;box-shadow:var(--shadow)}.request-card.pending{border-right:4px solid var(--gold)}.request-card.resolved{border-right:4px solid var(--success)}.request-card.rejected{border-right:4px solid var(--danger)}.request-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.request-title{font-size:14px;font-weight:900;color:#57446D}.request-meta{font-size:10px;color:#948A9D;margin-top:5px}.request-message{background:#FAF8FC;border:1px solid #EEE8F3;border-radius:11px;padding:11px;margin:12px 0;line-height:1.8;color:#62596A}.request-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.request-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.mini-label{font-size:10px;font-weight:900;color:#6D6275;margin-bottom:4px}.request-card input,.request-card textarea{width:100%;padding:10px;border:1px solid #DDD5E5;border-radius:9px;background:#FEFDFF;outline:none}.request-card input:focus,.request-card textarea:focus{border-color:#9B84BD;box-shadow:0 0 0 3px rgba(128,100,178,.08)}
+.app-notification{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;border:1px solid var(--border);border-radius:13px;background:#fff;margin-bottom:9px;box-shadow:var(--shadow)}.app-notification.unread{background:#FBF8FF;border-right:4px solid var(--primary)}.app-notification .ni{width:38px;height:38px;border-radius:11px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;flex:none}.app-notification .ni svg{width:18px}.app-notification strong{color:#55406F;font-size:12px}.app-notification p{margin:4px 0 0;color:#6F6677;font-size:11px;line-height:1.7}.app-notification time{display:block;color:#9A91A3;font-size:9px;margin-top:5px}.notification-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.notification-count{background:#FCEDEF;color:#A24D55;border-radius:999px;padding:3px 7px;font-size:9px;font-weight:900}
 @media(max-width:1050px){.stats-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:900px){.sidebar{width:210px}.content{margin-right:210px}.form-grid{grid-template-columns:1fr}.calc-grid{grid-template-columns:1fr 1fr}}@media(max-width:650px){.sidebar{position:static;width:100%;height:auto;border-left:0;border-bottom:1px solid var(--border);display:flex;overflow:auto;gap:5px;padding:8px;box-shadow:none}.sidebar .menu-title{display:none}.menu-item{min-width:max-content;justify-content:center}.content{margin-right:0;padding:145px 12px 25px}.topbar{height:62px;padding:0 12px}.brand h1{font-size:14px}.brand small{font-size:9px}.user-chip{display:none}.logout span{display:none}.stats-grid{grid-template-columns:1fr 1fr}.calc-grid{grid-template-columns:1fr}.header h2{font-size:21px}.notice-head{align-items:flex-start;flex-direction:column}}@media(max-width:420px){.stats-grid{grid-template-columns:1fr}.btn{width:100%}}
 </style>
 </head>
@@ -37,7 +38,7 @@ button,input,select,textarea{font:inherit}.topbar{height:70px;background:rgba(25
 </header>
 <aside class="sidebar">
   <div class="menu-title">الرئيسية</div>
-  <button class="menu-item active" data-section="homeSection"><i data-lucide="bell-ring"></i><span>التنبيهات الداخلية</span></button>
+  <button class="menu-item active" data-section="homeSection"><i data-lucide="bell-ring"></i><span>التنبيهات الداخلية <span id="unreadNotifBadge" class="notification-count" style="margin-right:4px">0</span></span></button>
   <button class="menu-item" data-section="requestsSection"><i data-lucide="inbox"></i><span>طلبات الموظفين <span id="pendingBadge" class="badge" style="margin-right:4px">0</span></span></button>
   <div class="menu-title">المتابعة</div>
   <button class="menu-item" data-section="employeesSection"><i data-lucide="user-round-plus"></i><span>إضافة موظف</span></button>
@@ -52,6 +53,10 @@ button,input,select,textarea{font:inherit}.topbar{height:70px;background:rgba(25
     <div class="stat-card"><div class="stat-icon gold"><i data-lucide="bell"></i></div><div><div class="stat-label">التنبيهات الحالية</div><div class="stat-value" id="statNotices">0</div></div></div>
     <div class="stat-card"><div class="stat-icon" style="background:#F2EDF8;color:#8064B2"><i data-lucide="inbox"></i></div><div><div class="stat-label">طلبات قيد الدراسة</div><div class="stat-value" id="statRequests">0</div></div></div>
     <div class="stat-card"><div class="stat-icon green"><i data-lucide="hourglass"></i></div><div><div class="stat-label">متابعة الأقدمية</div><div class="stat-value">مفعلة</div></div></div>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="notice-head"><strong><i data-lucide="bell-dot"></i> إشعارات النظام</strong><div class="notification-actions"><button class="btn secondary" id="refreshNotificationsBtn"><i data-lucide="refresh-cw"></i>تحديث</button><button class="btn secondary" id="markNotificationsBtn"><i data-lucide="check-check"></i>تعيين الكل كمقروء</button></div></div>
+    <div id="systemNotifications"><div class="empty">جارٍ تحميل إشعارات النظام...</div></div>
   </div>
   <div class="notice">
     <div class="notice-head"><strong><i data-lucide="megaphone"></i> التنبيهات</strong><button class="btn primary" id="addNoticeBtn"><i data-lucide="plus"></i>إضافة تنبيه</button></div>
@@ -110,6 +115,7 @@ let db=window.db||null;
 let currentUser=null;
 let employees=[];
 let requests=[];
+let notifications=[];
 const MANUAL_IDS_KEY='career_platform_manual_employee_ids_v2';
 const NOTICE_KEY='career_internal_notices_v2';
 const SOUTH_MONTHS_PER_FULL_YEAR=6;
@@ -150,6 +156,28 @@ function showSection(id){document.querySelectorAll('.section').forEach(s=>s.clas
 document.querySelectorAll('.menu-item').forEach(b=>b.addEventListener('click',()=>showSection(b.dataset.section)));
 if(window.lucide)lucide.createIcons();
 
+async function loadNotifications(){
+  const box=$('systemNotifications');
+  if(!box)return;
+  try{
+    const r=await db.from('career_notifications').select('*').order('created_at',{ascending:false}).limit(30);
+    if(r.error)throw r.error;
+    notifications=Array.isArray(r.data)?r.data:[];
+    const unread=notifications.filter(n=>!n.is_read).length;
+    if($('unreadNotifBadge'))$('unreadNotifBadge').textContent=String(unread);
+    if(!notifications.length){box.innerHTML='<div class="empty">لا توجد إشعارات نظام حاليًا.</div>';}
+    else{box.innerHTML=notifications.map(n=>`<div class="app-notification ${n.is_read?'':'unread'}"><div class="ni"><i data-lucide="${esc(n.icon||'bell')}"></i></div><div style="flex:1"><strong>${esc(n.title||'إشعار')}</strong><p>${esc(n.message||'')}</p><time>${esc(new Date(n.created_at).toLocaleString('ar-DZ'))}${n.is_read?'':' — جديد'}</time></div></div>`).join('');}
+    if($('statNotices'))$('statNotices').textContent=String(notifications.filter(n=>!n.is_read).length);
+    if(window.lucide)lucide.createIcons();
+  }catch(e){console.warn('Notifications unavailable:',e.message);box.innerHTML='<div class="empty">إشعارات النظام ستظهر بعد تنفيذ ملف SQL المحدث.</div>'}
+}
+async function markNotificationsRead(){
+  const ids=notifications.filter(n=>!n.is_read).map(n=>n.id);
+  if(!ids.length)return;
+  const r=await db.from('career_notifications').update({is_read:true,read_at:new Date().toISOString()}).in('id',ids);
+  if(r.error){alert('تعذر تحديث الإشعارات: '+r.error.message);return}
+  await loadNotifications();
+}
 function renderNotices(){const list=$('noticeList');let notices=[];try{notices=JSON.parse(localStorage.getItem(NOTICE_KEY)||'[]')}catch(_){notices=[]}if(!notices.length){list.innerHTML='<div class="empty">لا توجد تنبيهات داخلية حاليًا.</div>'; const stat=$('statNotices'); if(stat)stat.textContent='0'; return}const stat=$('statNotices'); if(stat)stat.textContent=String(notices.length); list.innerHTML=notices.map((n,i)=>`<div class="notice-item"><div>${esc(n.text)}</div><div class="date">${esc(n.date)} <button class="btn danger delete-notice" data-notice="${i}"><i data-lucide="trash-2"></i>حذف</button></div></div>`).join('');list.querySelectorAll('[data-notice]').forEach(b=>b.onclick=()=>{let a=[];try{a=JSON.parse(localStorage.getItem(NOTICE_KEY)||'[]')}catch(_){}a.splice(Number(b.dataset.notice),1);localStorage.setItem(NOTICE_KEY,JSON.stringify(a));renderNotices()})}
 $('addNoticeBtn').onclick=()=>$('noticeForm').classList.remove('hidden');
 $('cancelNoticeBtn').onclick=()=>{$('noticeForm').classList.add('hidden');$('noticeText').value=''};
@@ -241,6 +269,8 @@ async function reviewRequest(id){
 }
 async function setRequestStatus(id,status){const note=prompt(status==='rejected'?'اكتب ملاحظة توضح سبب عدم اعتماد الطلب (اختياري):':'ملاحظة المسؤول (اختياري):','');const r=await db.from('career_requests').update({status,admin_note:note||null,reviewed_at:new Date().toISOString(),reviewed_by:currentUser?.id||null}).eq('id',id);if(r.error){alert('تعذر تحديث حالة الطلب: '+r.error.message);return}await loadRequests()}
 $('refreshRequestsBtn').onclick=loadRequests;
+$('refreshNotificationsBtn').onclick=loadNotifications;
+$('markNotificationsBtn').onclick=markNotificationsRead;
 $('refreshRetirementBtn').onclick=loadRetirement;
 
 async function checkAdmin(){
@@ -254,11 +284,12 @@ async function checkAdmin(){
     const profileRes=await db.from('employees').select('role').eq('user_id',currentUser.id).maybeSingle();
     const isAdmin=roleRes.data?.role==='admin'||profileRes.data?.role==='admin';
     if(!isAdmin)throw new Error('هذا الحساب لا يملك صلاحية المسؤول.');
-    await loadOptionalGradeRules();await loadEmployees();await loadRequests();$('loading').classList.add('hidden');const stat=$('statEmployees');if(stat)stat.textContent=String(employees.length);renderNotices();if(window.lucide)lucide.createIcons();
+    await loadOptionalGradeRules();await loadEmployees();await loadRequests();await loadNotifications();$('loading').classList.add('hidden');const stat=$('statEmployees');if(stat)stat.textContent=String(employees.length);renderNotices();if(window.lucide)lucide.createIcons();
   }catch(e){console.error(e);$('loading').textContent='⚠️ '+(e.message||'تعذر التحقق من الصلاحيات')+' — سيتم الرجوع إلى صفحة الدخول.';setTimeout(()=>location.href='index.html',2200)}
 }
 $('logoutBtn').onclick=async()=>{try{if(db)await db.auth.signOut()}finally{location.href='index.html'}};
 checkAdmin();
+setInterval(()=>{if(db&&currentUser){loadNotifications();loadRequests();}},30000);
 })();
 </script>
 </body>
