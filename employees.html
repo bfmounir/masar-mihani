@@ -4,12 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ملفي المهني | منصة المسار المهني</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
 <style>
 :root{--primary:#8064B2;--primary-dark:#62488C;--primary-soft:#F0EBF8;--gold:#C9A84A;--gold-soft:#FBF5E4;--bg:#F7F5FA;--surface:#fff;--text:#302A38;--muted:#7B7285;--border:#E8E1EF;--success:#3E8B62;--success-soft:#EAF6EF;--warning:#A97922;--warning-soft:#FFF7E6;--danger:#B65B62;--danger-soft:#FCEDEF;--shadow:0 10px 30px rgba(74,55,105,.08)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Tahoma,Arial,sans-serif;color:var(--text)}button,input,select,textarea{font:inherit}.top{height:70px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:10;box-shadow:0 3px 18px rgba(74,55,105,.05)}.brand{display:flex;align-items:center;gap:11px}.logo{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,#9078BE,#70559F);color:#fff;display:grid;place-items:center}.brand h1{margin:0;color:#4F3D67;font-size:17px}.brand small{color:var(--muted);font-size:11px}.actions{display:flex;gap:8px}.btn{border:0;border-radius:11px;padding:10px 14px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:7px}.btn svg{width:16px}.btn.primary{background:var(--primary);color:#fff}.btn.secondary{background:var(--primary-soft);color:var(--primary-dark)}.btn.gold{background:var(--gold-soft);color:#80641A}.wrap{max-width:1100px;margin:auto;padding:30px 18px 45px}.hero{background:linear-gradient(135deg,#F0EBF8,#FBF8FD);border:1px solid var(--border);border-radius:20px;padding:24px;margin-bottom:16px;display:flex;justify-content:space-between;gap:20px;align-items:center}.hero h2{margin:0 0 7px;color:#55406F;font-size:24px}.hero p{margin:0;color:var(--muted);line-height:1.8}.status-chip{padding:8px 11px;border-radius:999px;background:var(--gold-soft);color:#80641A;font-weight:900;font-size:11px;white-space:nowrap}.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}.card{background:#fff;border:1px solid var(--border);border-radius:17px;padding:19px;box-shadow:var(--shadow)}.card h3{margin:0 0 15px;color:#5A4572;display:flex;align-items:center;gap:8px}.card h3 svg{width:19px;color:var(--primary)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-weight:800;font-size:12px;color:#51475A}.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid #DDD5E5;border-radius:11px;background:#FEFDFF;color:var(--text);outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:#9B84BD;box-shadow:0 0 0 3px rgba(128,100,178,.09)}.hint{font-size:11px;color:#8B8292;line-height:1.7}.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.message{padding:11px 13px;border-radius:11px;margin-top:13px;display:none;line-height:1.7;font-size:12px}.message.ok{display:block;background:var(--success-soft);color:#2E704D;border:1px solid #CFE9D9}.message.err{display:block;background:var(--danger-soft);color:#A24D55;border:1px solid #F0D0D4}.request{border:1px solid var(--border);background:#FCFBFD;border-radius:13px;padding:13px;margin-bottom:9px}.request:last-child{margin-bottom:0}.request-head{display:flex;justify-content:space-between;gap:10px}.request strong{color:#5A4572}.badge{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:900;background:#F1EDF5;color:#675477}.badge.ok{background:var(--success-soft);color:#2E704D}.badge.wait{background:var(--warning-soft);color:#80641A}.badge.no{background:var(--danger-soft);color:#A24D55}.request p{margin:8px 0 0;color:#6F6677;line-height:1.7;font-size:12px}.meta{font-size:10px;color:#978E9E;margin-top:7px}.result-box{margin-top:14px;padding:13px;border-radius:12px;background:#FAF8FC;border:1px solid var(--border);line-height:1.9;font-size:12px}.employee-notification{display:flex;gap:10px;padding:12px;border:1px solid var(--border);border-radius:12px;background:#FCFBFD;margin-bottom:8px}.employee-notification.unread{background:#FBF8FF;border-right:3px solid var(--primary)}.employee-notification .eni{width:34px;height:34px;border-radius:10px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;flex:none}.employee-notification strong{font-size:11px;color:#5A4572}.employee-notification p{margin:3px 0;color:#6F6677;font-size:11px;line-height:1.7}.employee-notification time{font-size:9px;color:#978E9E}.empty{text-align:center;color:#958B9D;padding:25px}.loading{position:fixed;inset:0;background:#F8F6FB;display:grid;place-items:center;z-index:100;color:#65498A;font-weight:800}.hidden{display:none!important}@media(max-width:800px){.grid{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}}@media(max-width:560px){.top{padding:0 12px}.brand h1{font-size:14px}.brand small{display:none}.actions .btn span{display:none}.wrap{padding:18px 11px 30px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.hero h2{font-size:21px}}
+
+/* =========================================================
+   التطوير البصري الحديث — لوحة الموظف
+   ========================================================= */
+:root{
+  --primary:#7455A6;
+  --primary-dark:#52377F;
+  --primary-soft:#F1ECF8;
+  --primary-pale:#F8F5FC;
+  --gold:#C6A04A;
+  --gold-soft:#FBF6E8;
+  --bg:#F6F4F9;
+  --surface:#FFFFFF;
+  --text:#292332;
+  --muted:#7B7285;
+  --border:#E8E2EE;
+  --shadow:0 14px 40px rgba(64,44,94,.08);
+  --shadow-hover:0 18px 48px rgba(64,44,94,.13);
+}
+html{scroll-behavior:smooth}
+body{font-family:"Cairo",Tahoma,Arial,sans-serif;background:radial-gradient(circle at 90% 0%,#F0EAF8 0,#F6F4F9 28%,#F6F4F9 100%);min-height:100vh}
+.top{height:76px;padding:0 30px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(232,226,238,.85);box-shadow:0 8px 28px rgba(55,38,82,.06)}
+.brand{gap:13px}.logo{width:46px;height:46px;border-radius:15px;background:linear-gradient(145deg,#8D70BD,#63458F);box-shadow:0 8px 20px rgba(116,85,166,.25)}
+.logo svg{width:22px;height:22px;stroke-width:2.3}.brand h1{font-size:16px;font-weight:900;letter-spacing:-.2px;color:#47335F}.brand small{font-family:"Cairo",sans-serif;font-size:10px;font-weight:600}
+.actions{gap:9px}.btn{min-height:42px;border-radius:13px;padding:9px 15px;font-weight:800;transition:transform .18s ease,box-shadow .18s ease,background .18s ease;border:1px solid transparent}.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(75,54,105,.11)}.btn:active{transform:translateY(0)}
+.btn.primary{background:linear-gradient(135deg,#7E60AD,#66478F);box-shadow:0 8px 18px rgba(116,85,166,.18)}
+.btn.secondary{background:#F2EDF8;border-color:#E5DDF0;color:#5B4380}.btn.gold{background:linear-gradient(135deg,#FBF5E4,#F7EDCF);border-color:#EBDCA9;color:#7C611B}
+.wrap{max-width:1180px;padding:30px 20px 55px}
+.hero{position:relative;overflow:hidden;min-height:145px;border:1px solid #E5DDEF;border-radius:24px;padding:28px 30px;background:linear-gradient(135deg,#F1ECF8 0%,#FBFAFD 58%,#FFF 100%);box-shadow:var(--shadow);margin-bottom:20px}
+.hero:before{content:"";position:absolute;width:210px;height:210px;border-radius:50%;left:-85px;top:-105px;background:rgba(116,85,166,.07)}.hero:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;right:-65px;bottom:-80px;background:rgba(198,160,74,.08)}
+.hero>div,.hero>.status-chip{position:relative;z-index:1}.hero h2{font-size:26px;font-weight:900;letter-spacing:-.6px;margin-bottom:5px;color:#4E3A68}.hero p{font-size:12px;font-weight:500;max-width:760px}.status-chip{border:1px solid #E8DDAF;background:rgba(251,246,232,.92);box-shadow:0 5px 14px rgba(126,98,28,.07);font-size:10px}
+.grid{gap:20px}.card{border-radius:20px;padding:22px;border:1px solid rgba(232,226,238,.95);box-shadow:var(--shadow);transition:box-shadow .2s ease,transform .2s ease;background:rgba(255,255,255,.97)}.card:hover{box-shadow:var(--shadow-hover)}
+.card h3{font-size:15px;font-weight:900;color:#4F3B68;padding-bottom:13px;margin-bottom:16px;border-bottom:1px solid #F0ECF4}.card h3 svg{width:20px;height:20px;stroke-width:2.3}
+.form-grid{gap:15px}.field{gap:7px}.field label{font-size:11px;font-weight:800;color:#51485B}.field input,.field select,.field textarea{font-family:"Cairo",Tahoma,Arial,sans-serif;padding:12px 13px;border-radius:12px;border:1px solid #DED6E7;background:#FCFBFD;font-size:12px;font-weight:600;transition:border-color .18s,box-shadow .18s,background .18s}.field input:hover,.field select:hover,.field textarea:hover{background:#fff}.field input:focus,.field select:focus,.field textarea:focus{border-color:#9579BB;background:#fff;box-shadow:0 0 0 4px rgba(116,85,166,.08)}
+.hint{font-size:10px;font-weight:500}.row{margin-top:17px}.row .btn{min-height:44px}
+.result-box{border-radius:14px;background:linear-gradient(180deg,#FCFBFD,#F9F7FC);border-color:#E8E1EE;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+#currentSouthBox{background:linear-gradient(135deg,#FBF8EF,#FFFDF7)!important;border-color:#E9DCA9!important;box-shadow:0 8px 20px rgba(137,108,39,.07)}
+#currentSouthContent>div>div{background:rgba(255,255,255,.65);padding:9px;border:1px solid rgba(233,220,169,.5);border-radius:11px}
+.request{border-radius:15px;padding:15px;background:linear-gradient(180deg,#FFF,#FCFBFD);border-color:#E9E3EF;transition:transform .18s,box-shadow .18s,border-color .18s}.request:hover{transform:translateY(-2px);box-shadow:0 9px 24px rgba(69,48,96,.07);border-color:#D9CCE8}.request strong{font-size:12px;font-weight:900}.request p{font-size:11px}.meta{font-size:9px}.badge{font-size:9px;padding:5px 10px}
+.employee-notification{border-radius:14px;padding:13px;background:#FCFBFD;transition:transform .18s,box-shadow .18s}.employee-notification:hover{transform:translateX(-2px);box-shadow:0 7px 18px rgba(69,48,96,.06)}.employee-notification .eni{width:37px;height:37px;border-radius:11px;box-shadow:0 5px 12px rgba(116,85,166,.08)}
+.empty{font-size:11px;padding:30px 20px;background:#FCFBFD;border:1px dashed #DED5E7;border-radius:14px}
+.loading{font-family:"Cairo",Tahoma,Arial,sans-serif;background:linear-gradient(135deg,#F7F3FB,#FDFCFF);font-size:13px}
+#highPositionCard{border-color:#E9DCA9;background:linear-gradient(180deg,#FFFDF8,#FFF)}
+#highPositionCard h3 svg{color:#B58A28}
+#smartPreview{border-style:dashed}
+#resultBox:not(.hidden){border-right:4px solid var(--primary)}
+@media(max-width:800px){.top{height:70px;padding:0 15px}.wrap{padding:20px 13px 38px}.hero{padding:22px 20px;border-radius:19px}.hero h2{font-size:22px}.card{padding:18px;border-radius:17px}}
+@media(max-width:560px){.top{padding:0 10px}.logo{width:40px;height:40px;border-radius:13px}.brand h1{font-size:13px}.actions{gap:5px}.btn{min-height:40px;padding:8px 11px;border-radius:11px}.wrap{padding:15px 9px 30px}.hero{padding:19px 16px;min-height:125px}.hero h2{font-size:20px}.card{padding:15px}.card h3{font-size:14px}.field input,.field select,.field textarea{font-size:11px}.row .btn{width:100%;justify-content:center}}
+
 </style>
 </head>
 <body>
