@@ -29,7 +29,7 @@
 <button id="signupTab" class="tab" type="button" onclick="showMode('signup')">إنشاء حساب موظف</button>
 </div>
 
-<div id="message" class="message"></div>
+<div id="message" class="message"></div><button id="resendBtn" type="button" class="main-btn hidden" style="margin-bottom:16px;background:linear-gradient(135deg,#C9A84A,#AA820A)" onclick="resendConfirmation()">إعادة إرسال رسالة تأكيد البريد</button>
 
 <div id="loginPanel">
 <div class="login-types">
@@ -92,6 +92,7 @@
     const m = document.getElementById("message");
     m.className = "message";
     m.textContent = "";
+    const r=document.getElementById("resendBtn"); if(r)r.classList.add("hidden");
   }
 
   async function login(event){
@@ -171,7 +172,8 @@
         location.href = "employee.html";
         return;
       }
-      showSuccess("تم إنشاء الحساب. إذا طُلب منك تأكيد البريد الإلكتروني، افتح رسالة التأكيد ثم سجّل الدخول.");
+      showSuccess("تم إنشاء الحساب بنجاح. تحقق من بريدك الإلكتروني واضغط رابط التأكيد قبل تسجيل الدخول. إذا لم تصل الرسالة، يمكنك إعادة إرسالها.");
+      const resend=document.getElementById("resendBtn"); if(resend)resend.classList.remove("hidden");
       showMode("login");
       document.getElementById("loginEmail").value = email;
     }catch(e){
@@ -181,6 +183,16 @@
       btn.disabled = false;
       btn.textContent = "إنشاء الحساب والانتقال لإدخال المعلومات";
     }
+  }
+
+  async function resendConfirmation(){
+    clearMessage();
+    const email=document.getElementById("loginEmail").value.trim()||document.getElementById("signupEmail").value.trim();
+    if(!email){showError("أدخل البريد الإلكتروني أولًا.");return;}
+    const btn=document.getElementById("resendBtn");btn.disabled=true;btn.textContent="جاري إرسال الرسالة...";
+    try{const {error}=await client.auth.resend({type:"signup",email});if(error)throw error;showSuccess("تمت إعادة إرسال رسالة تأكيد البريد. افحص البريد الوارد ومجلد الرسائل غير المرغوب فيها.");}
+    catch(e){showError(e.message||"تعذر إعادة إرسال رسالة التأكيد.");}
+    finally{btn.disabled=false;btn.textContent="إعادة إرسال رسالة تأكيد البريد";}
   }
 
   async function checkExistingSession(){
@@ -208,6 +220,7 @@
   window.selectLoginType = selectLoginType;
   window.login = login;
   window.signUp = signUp;
+  window.resendConfirmation = resendConfirmation;
 
   checkExistingSession();
 })();
