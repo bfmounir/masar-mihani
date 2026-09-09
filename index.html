@@ -3,998 +3,214 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>منصة المسار المهني</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
-
 <style>
-/* =========================================================
-   الإعدادات العامة
-   ========================================================= */
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-:root {
-    --primary: #173f5f;
-    --primary-dark: #0f2f49;
-    --primary-light: #eaf3f8;
-    --accent: #2c7a9f;
-    --text: #1f2937;
-    --muted: #6b7280;
-    --border: #dce3e8;
-    --white: #ffffff;
-    --danger-bg: #fff1f2;
-    --danger-text: #b42318;
-    --success-bg: #ecfdf3;
-    --success-text: #087443;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    min-height: 100vh;
-    font-family: Arial, Tahoma, "Segoe UI", sans-serif;
-    color: var(--text);
-
-    background:
-        radial-gradient(
-            circle at 15% 15%,
-            rgba(44,122,159,.12),
-            transparent 30%
-        ),
-        radial-gradient(
-            circle at 85% 85%,
-            rgba(23,63,95,.14),
-            transparent 32%
-        ),
-        linear-gradient(
-            135deg,
-            #eef5f8 0%,
-            #e6edf2 50%,
-            #dce7ed 100%
-        );
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 30px 20px;
-
-    position: relative;
-    overflow: hidden;
-}
-
-/* =========================================================
-   خلفيات زخرفية
-   ========================================================= */
-
-body::before,
-body::after {
-    content: "";
-    position: fixed;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 0;
-}
-
-body::before {
-    width: 320px;
-    height: 320px;
-
-    top: -150px;
-    right: -120px;
-
-    background: rgba(44,122,159,.10);
-}
-
-body::after {
-    width: 280px;
-    height: 280px;
-
-    bottom: -140px;
-    left: -110px;
-
-    background: rgba(23,63,95,.10);
-}
-
-
-/* =========================================================
-   الحاوية الرئيسية
-   ========================================================= */
-
-.login-container {
-    width: 100%;
-    max-width: 455px;
-
-    position: relative;
-    z-index: 1;
-}
-
-
-/* =========================================================
-   البطاقة
-   ========================================================= */
-
-.login-card {
-    background: rgba(255,255,255,.96);
-
-    border: 1px solid rgba(255,255,255,.8);
-
-    border-radius: 26px;
-
-    padding: 38px 38px 30px;
-
-    box-shadow:
-        0 25px 70px rgba(15,47,73,.16),
-        0 5px 18px rgba(15,47,73,.06);
-
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-
-    animation: cardAppear .55s ease-out;
-}
-
-@keyframes cardAppear {
-
-    from {
-        opacity: 0;
-        transform: translateY(18px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-}
-
-
-/* =========================================================
-   الشعار
-   ========================================================= */
-
-.logo-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    margin-bottom: 20px;
-
-    min-height: 100px;
-}
-
-.logo-image {
-    width: 100px;
-    height: 100px;
-
-    object-fit: contain;
-
-    display: block;
-
-    border-radius: 18px;
-
-    filter: drop-shadow(
-        0 10px 18px rgba(23,63,95,.16)
-    );
-
-    transition:
-        transform .25s ease,
-        filter .25s ease;
-}
-
-.logo-image:hover {
-    transform: translateY(-2px);
-
-    filter: drop-shadow(
-        0 13px 22px rgba(23,63,95,.20)
-    );
-}
-
-
-/* =========================================================
-   العنوان والوصف
-   ========================================================= */
-
-h1 {
-    text-align: center;
-
-    color: var(--primary);
-
-    font-size: 27px;
-
-    font-weight: 800;
-
-    margin-bottom: 9px;
-
-    letter-spacing: -.3px;
-}
-
-.subtitle {
-    text-align: center;
-
-    color: var(--muted);
-
-    font-size: 14.5px;
-
-    line-height: 1.9;
-
-    margin-bottom: 30px;
-}
-
-
-/* =========================================================
-   النموذج
-   ========================================================= */
-
-#loginForm {
-    width: 100%;
-}
-
-.form-group {
-    margin-bottom: 18px;
-}
-
-label {
-    display: block;
-
-    margin-bottom: 8px;
-
-    color: #344054;
-
-    font-size: 14px;
-
-    font-weight: 700;
-}
-
-.input-wrapper {
-    position: relative;
-}
-
-.input-icon {
-    position: absolute;
-
-    top: 50%;
-    right: 14px;
-
-    transform: translateY(-50%);
-
-    color: #8293a1;
-
-    font-size: 17px;
-
-    pointer-events: none;
-}
-
-input {
-    width: 100%;
-
-    height: 52px;
-
-    padding: 13px 45px 13px 14px;
-
-    border: 1px solid var(--border);
-
-    border-radius: 13px;
-
-    background: #f9fbfc;
-
-    color: var(--text);
-
-    font-family: inherit;
-
-    font-size: 15px;
-
-    outline: none;
-
-    transition:
-        border-color .2s ease,
-        box-shadow .2s ease,
-        background .2s ease,
-        transform .2s ease;
-}
-
-input::placeholder {
-    color: #9aa6b2;
-}
-
-input:hover {
-    border-color: #bdcbd5;
-}
-
-input:focus {
-    background: #ffffff;
-
-    border-color: var(--accent);
-
-    box-shadow:
-        0 0 0 4px rgba(44,122,159,.11);
-}
-
-
-/* =========================================================
-   زر تسجيل الدخول
-   ========================================================= */
-
-button {
-    width: 100%;
-
-    height: 53px;
-
-    margin-top: 5px;
-
-    border: none;
-
-    border-radius: 13px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #194a6e,
-            #123852
-        );
-
-    color: #ffffff;
-
-    font-family: inherit;
-
-    font-size: 16px;
-
-    font-weight: 700;
-
-    cursor: pointer;
-
-    box-shadow:
-        0 9px 20px rgba(18,56,82,.18);
-
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease,
-        background .2s ease;
-}
-
-button:hover {
-    background:
-        linear-gradient(
-            135deg,
-            #153f60,
-            #0d2d45
-        );
-
-    transform: translateY(-1px);
-
-    box-shadow:
-        0 12px 25px rgba(18,56,82,.24);
-}
-
-button:active {
-    transform: translateY(0);
-}
-
-button:disabled {
-    opacity: .65;
-
-    cursor: not-allowed;
-
-    transform: none;
-
-    box-shadow: none;
-}
-
-
-/* =========================================================
-   الرسائل
-   ========================================================= */
-
-.message {
-    margin-top: 18px;
-
-    padding: 13px 15px;
-
-    border-radius: 12px;
-
-    display: none;
-
-    line-height: 1.7;
-
-    text-align: center;
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-    animation: messageAppear .25s ease-out;
-}
-
-@keyframes messageAppear {
-
-    from {
-        opacity: 0;
-        transform: translateY(-4px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-}
-
-.error {
-    background: var(--danger-bg);
-
-    color: var(--danger-text);
-
-    border: 1px solid #fecdd3;
-}
-
-.success {
-    background: var(--success-bg);
-
-    color: var(--success-text);
-
-    border: 1px solid #bbf7d0;
-}
-
-
-/* =========================================================
-   تذييل البطاقة
-   ========================================================= */
-
-.footer {
-    margin-top: 25px;
-
-    padding-top: 18px;
-
-    border-top: 1px solid #edf0f2;
-
-    text-align: center;
-
-    color: #98a2b3;
-
-    font-size: 12.5px;
-}
-
-.footer-badge {
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 6px;
-}
-
-.footer-dot {
-    width: 7px;
-
-    height: 7px;
-
-    border-radius: 50%;
-
-    background: #36a269;
-
-    box-shadow:
-        0 0 0 3px rgba(54,162,105,.10);
-}
-
-
-/* =========================================================
-   الهاتف
-   ========================================================= */
-
-@media (max-width: 520px) {
-
-    body {
-        padding: 18px 14px;
-    }
-
-    .login-card {
-        padding: 30px 22px 24px;
-
-        border-radius: 22px;
-    }
-
-    .logo-wrapper {
-        min-height: 82px;
-
-        margin-bottom: 18px;
-    }
-
-    .logo-image {
-        width: 82px;
-        height: 82px;
-
-        border-radius: 16px;
-    }
-
-    h1 {
-        font-size: 23px;
-    }
-
-    .subtitle {
-        font-size: 13.5px;
-
-        margin-bottom: 25px;
-    }
-
-    input {
-        height: 50px;
-    }
-
-    button {
-        height: 51px;
-    }
-
-}
-
-
-/* =========================================================
-   تقليل الحركة عند طلب المستخدم
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-
-        animation-duration: .01ms !important;
-
-        animation-iteration-count: 1 !important;
-
-        transition-duration: .01ms !important;
-    }
-
-}
+:root{--brand-purple:#6F52A3;--brand-purple-dark:#584084;--brand-gold:#C9A84A;--brand-gold-light:#F7F0D8;--bg-light:#F7F5FA;--shadow-sm:0 4px 15px rgba(74,55,105,.07);--shadow-md:0 12px 32px rgba(74,55,105,.11)}
+
+*{box-sizing:border-box}html,body{min-height:100%}body{margin:0;font-family:Arial,Tahoma,sans-serif;background:radial-gradient(circle at 15% 15%,#F7F0D8 0,#F4F0F8 34%,#FAF7FC 72%);min-height:100vh;display:flex;align-items:center;justify-content:center;color:#302537;padding:24px;position:relative;overflow:auto}body:before,body:after{content:"";position:fixed;border-radius:50%;filter:blur(2px);pointer-events:none;z-index:0}body:before{width:360px;height:360px;background:rgba(111,82,163,.08);top:-150px;right:-100px}body:after{width:300px;height:300px;background:rgba(201,168,74,.08);bottom:-130px;left:-100px}.login-container{width:100%;max-width:980px;position:relative;z-index:1}.login-shell{display:grid;grid-template-columns:1fr 1.08fr;background:rgba(255,255,255,.88);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.85);border-radius:30px;overflow:hidden;box-shadow:0 25px 70px rgba(74,55,105,.11)}.welcome{padding:48px 42px;background:linear-gradient(145deg,#8064B2,#6F52A3 55%,#584084);color:#fff;display:flex;flex-direction:column;justify-content:center;position:relative}.welcome:after{content:"";position:absolute;width:220px;height:220px;border:1px solid rgba(212,175,55,.16);border-radius:50%;left:-90px;bottom:-80px}.brand-mark{width:78px;height:78px;border-radius:24px;background:rgba(212,175,55,.16);border:1px solid rgba(212,175,55,.35);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;margin-bottom:24px;box-shadow:0 12px 28px rgba(74,55,105,.09)}.welcome h2{margin:0 0 10px;font-size:29px;line-height:1.35}.welcome .institution{font-size:15px;line-height:1.9;opacity:.9}.feature-list{margin:28px 0 0;padding:0;list-style:none;display:grid;gap:12px}.feature-list li{padding:11px 13px;border-radius:13px;background:rgba(255,255,255,.09);border-color:rgba(212,175,55,.20);border:1px solid rgba(255,255,255,.10);font-size:13px}.login-card{background:#fff;padding:42px 40px}.login-head{text-align:center;margin-bottom:25px}.login-head h1{margin:0 0 8px;color:#6F52A3;font-size:26px}.login-head p{margin:0;color:#75677D;font-size:13px;line-height:1.8}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:5px;background:#F3EEF6;border:1px solid #EADFF0;border-radius:14px;margin-bottom:18px}.tab{border:0;background:transparent;color:#66586D;padding:12px 8px;border-radius:10px;cursor:pointer;font-weight:bold;font-size:14px;transition:.2s}.tab:hover{background:#F1EAF5}.tab.active{background:#6F52A3;color:#fff;box-shadow:0 5px 14px rgba(74,55,105,.13)}.login-types{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px}.type-btn{border:1px solid #D9CBE0;background:#FCFAFD;color:#5A4A61;padding:12px;border-radius:12px;cursor:pointer;font-weight:bold;font-size:13px;transition:.2s}.type-btn:hover{border-color:#C6A6D7}.type-btn.active{background:#F1EAF5;color:#6F52A3;border-color:#6F52A3}.form-group{margin-bottom:16px}label{display:block;margin-bottom:7px;color:#493B50;font-size:13px;font-weight:bold}input{width:100%;padding:14px 15px;border:1px solid #D9CBE0;border-radius:12px;outline:none;font-size:15px;background:#FCFAFD;direction:ltr;text-align:left;transition:.2s}input:hover{border-color:#B89AC8}input:focus{border-color:#6F52A3;box-shadow:0 0 0 4px rgba(74,21,112,.09);background:#fff}.main-btn{width:100%;border:0;background:linear-gradient(135deg,#6F52A3,#6A2992);color:#fff;padding:14px;border-radius:12px;cursor:pointer;font-size:15px;font-weight:bold;margin-top:4px;box-shadow:0 9px 20px rgba(74,55,105,.13);transition:transform .18s,box-shadow .18s}.main-btn:hover{transform:translateY(-1px);box-shadow:0 12px 25px rgba(74,55,105,.17)}.main-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}.message{display:none;padding:12px 13px;border-radius:11px;margin-bottom:17px;font-size:13px;line-height:1.7}.message.error{display:block;background:#fff0f0;color:#a52828;border:1px solid #f2d1d1}.message.success{display:block;background:#eaf8ef;color:#18733c;border:1px solid #ccebd6}.hidden{display:none}.footer{text-align:center;margin-top:20px;color:#8A7B91;font-size:11px;line-height:1.8;border-top:1px solid #EEE7F1;padding-top:16px}.secure-note{display:flex;justify-content:center;gap:6px;align-items:center;margin-top:9px;color:#75677D;font-size:11px}.secure-dot{width:7px;height:7px;border-radius:50%;background:#29a36a;box-shadow:0 0 0 4px rgba(41,163,106,.10)}@media(max-width:760px){body{padding:12px}.login-shell{grid-template-columns:1fr}.welcome{padding:28px 25px}.welcome h2{font-size:23px}.feature-list{display:none}.login-card{padding:30px 22px}.brand-mark{width:64px;height:64px;font-size:30px;margin-bottom:17px}}@media(max-width:430px){.login-types{grid-template-columns:1fr}.login-head h1{font-size:23px}.login-card{padding:25px 17px}.welcome{padding:24px 20px}}
+
+.welcome .institution{color:var(--brand-gold-light)}
+.brand-mark{background:linear-gradient(135deg,var(--brand-gold),#AA820A)!important;color:#fff;border-color:rgba(255,255,255,.3)!important}
+.login-shell{border-color:rgba(212,175,55,.20)}
+.tab.active{background:linear-gradient(135deg,var(--brand-purple),var(--brand-purple-dark));box-shadow:0 5px 14px rgba(74,55,105,.13)}
+.type-btn.active{background:#F7F0D8;color:var(--brand-purple);border-color:var(--brand-gold)}
+.footer{border-top-color:#EADFF0}
 </style>
 </head>
-
 <body>
+<div class="login-container"><div class="login-shell">
+<div class="welcome"><div class="brand-mark">م</div><h2>منصة المسار المهني</h2><div class="institution">المؤسسة العمومية الإستشفائية بأولف<br>نظام رقمي لإدارة ومتابعة المسار المهني للموظفين</div><ul class="feature-list"><li>👤 إدخال ومتابعة البيانات الأساسية</li><li>⏳ متابعة الأقدمية والاستحقاق الزمني</li><li>🔔 التنبيهات الداخلية والمتابعة الإدارية</li></ul></div><div class="login-card">
+<div class="login-head"><h1>تسجيل الدخول</h1><p>الوصول الآمن إلى نظام إدارة الموظفين والمسار المهني</p></div>
 
-<div class="login-container">
-
-    <div class="login-card">
-
-        <!-- =================================================
-             الشعار
-             ================================================= -->
-
-        <div class="logo-wrapper">
-
-            <img
-                src="logo (2).png"
-                alt="شعار منصة المسار المهني"
-                class="logo-image"
-            >
-
-        </div>
-
-
-        <!-- =================================================
-             العنوان
-             ================================================= -->
-
-        <h1>
-            منصة المسار المهني
-        </h1>
-
-
-        <p class="subtitle">
-
-            نظام متابعة المسار المهني والترقيات
-
-            <br>
-
-            المؤسسة العمومية الإستشفائية بأولف
-
-        </p>
-
-
-        <!-- =================================================
-             نموذج تسجيل الدخول
-             ================================================= -->
-
-        <form id="loginForm">
-
-            <div class="form-group">
-
-                <label for="email">
-                    البريد الإلكتروني
-                </label>
-
-                <div class="input-wrapper">
-
-                    <span class="input-icon">
-                        ✉
-                    </span>
-
-                    <input
-                        type="email"
-                        id="email"
-                        placeholder="أدخل البريد الإلكتروني"
-                        autocomplete="username"
-                        required
-                    >
-
-                </div>
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="password">
-                    كلمة المرور
-                </label>
-
-                <div class="input-wrapper">
-
-                    <span class="input-icon">
-                        🔒
-                    </span>
-
-                    <input
-                        type="password"
-                        id="password"
-                        placeholder="أدخل كلمة المرور"
-                        autocomplete="current-password"
-                        required
-                    >
-
-                </div>
-
-            </div>
-
-
-            <button
-                type="submit"
-                id="loginButton"
-            >
-                تسجيل الدخول
-            </button>
-
-        </form>
-
-
-        <!-- =================================================
-             الرسائل
-             ================================================= -->
-
-        <div
-            id="message"
-            class="message"
-        ></div>
-
-
-        <!-- =================================================
-             التذييل
-             ================================================= -->
-
-        <div class="footer">
-
-            <span class="footer-badge">
-
-                <span class="footer-dot"></span>
-
-                منصة إدارية داخلية
-
-            </span>
-
-        </div>
-
-    </div>
-
+<div class="tabs">
+<button id="loginTab" class="tab active" type="button" onclick="showMode('login')">تسجيل الدخول</button>
+<button id="signupTab" class="tab" type="button" onclick="showMode('signup')">إنشاء حساب موظف</button>
 </div>
 
+<div id="message" class="message"></div>
+
+<div id="loginPanel">
+<div class="login-types">
+<button type="button" id="employeeType" class="type-btn active" onclick="selectLoginType('employee')">دخول الموظف</button>
+<button type="button" id="adminType" class="type-btn" onclick="selectLoginType('admin')">دخول المسؤول</button>
+</div>
+<form onsubmit="login(event)">
+<div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="loginEmail" placeholder="example@email.com" autocomplete="email" required></div>
+<div class="form-group"><label>كلمة المرور</label><input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" autocomplete="current-password" required></div>
+<button id="loginBtn" class="main-btn" type="submit">تسجيل الدخول</button>
+</form>
+</div>
+
+<div id="signupPanel" class="hidden">
+<form onsubmit="signUp(event)">
+<div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="signupEmail" placeholder="example@email.com" autocomplete="email" required></div>
+<div class="form-group"><label>كلمة المرور</label><input type="password" id="signupPassword" placeholder="اختر كلمة مرور لا تقل عن 6 أحرف" minlength="6" autocomplete="new-password" required></div>
+<div class="form-group"><label>تأكيد كلمة المرور</label><input type="password" id="confirmPassword" placeholder="أعد كتابة كلمة المرور" minlength="6" autocomplete="new-password" required></div>
+<button id="signupBtn" class="main-btn" type="submit">إنشاء الحساب والانتقال لإدخال المعلومات</button>
+</form>
+</div>
+
+<div class="footer">بعد إنشاء الحساب، يقوم الموظف بإدخال معلوماته بنفسه، وتبقى المراجعة والمتابعة للمسؤول.<div class="secure-note"><span class="secure-dot"></span> جلسة دخول محمية عبر نظام المصادقة</div></div>
+</div></div></div>
 
 <script>
-"use strict";
+(function(){
+  // عميل محلي داخل نطاق مغلق لتجنب أي تعارض مع config.js أو الصفحات الأخرى.
+  const client = window.db || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  let loginType = "employee";
 
+  function showMode(mode){
+    clearMessage();
+    document.getElementById("loginPanel").classList.toggle("hidden", mode !== "login");
+    document.getElementById("signupPanel").classList.toggle("hidden", mode !== "signup");
+    document.getElementById("loginTab").classList.toggle("active", mode === "login");
+    document.getElementById("signupTab").classList.toggle("active", mode === "signup");
+  }
 
-/* =========================================================
-   عناصر الصفحة
-   ========================================================= */
+  function selectLoginType(type){
+    loginType = type;
+    document.getElementById("employeeType").classList.toggle("active", type === "employee");
+    document.getElementById("adminType").classList.toggle("active", type === "admin");
+    clearMessage();
+  }
 
-const loginForm =
-    document.getElementById("loginForm");
+  function showError(t){
+    const m = document.getElementById("message");
+    m.className = "message error";
+    m.textContent = t;
+  }
 
-const loginButton =
-    document.getElementById("loginButton");
+  function showSuccess(t){
+    const m = document.getElementById("message");
+    m.className = "message success";
+    m.textContent = t;
+  }
 
-const message =
-    document.getElementById("message");
+  function clearMessage(){
+    const m = document.getElementById("message");
+    m.className = "message";
+    m.textContent = "";
+  }
 
+  async function login(event){
+    event.preventDefault();
+    clearMessage();
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    const btn = document.getElementById("loginBtn");
+    btn.disabled = true;
+    btn.textContent = "جاري تسجيل الدخول...";
+    try{
+      const {data, error} = await client.auth.signInWithPassword({email, password});
+      if(error) throw error;
+      // التحقق من صلاحية المسؤول من جدول user_roles، مع إبقاء employees
+      // كمصدر احتياطي للتوافق مع الحسابات القديمة.
+      const {data: roleRow, error: roleError} = await client
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", data.user.id)
+        .maybeSingle();
+      if(roleError) console.warn("تعذر قراءة user_roles:", roleError);
 
-/* =========================================================
-   الاتصال بـ Supabase
-   ========================================================= */
+      const {data: profile, error: profileError} = await client
+        .from("employees")
+        .select("role")
+        .eq("user_id", data.user.id)
+        .maybeSingle();
+      if(profileError) console.warn("تعذر قراءة دور الموظف:", profileError);
 
-function getSupabaseClient() {
+      const isAdmin = roleRow?.role === "admin" || profile?.role === "admin";
 
-    if (
-        typeof db !== "undefined" &&
-        db &&
-        db.auth &&
-        typeof db.auth.signInWithPassword === "function"
-    ) {
-
-        return db;
-
-    }
-
-    throw new Error(
-        "تعذر الاتصال بإعدادات Supabase. يرجى التأكد من ملف config.js."
-    );
-
-}
-
-
-/* =========================================================
-   عرض الرسائل
-   ========================================================= */
-
-function showMessage(text, type) {
-
-    message.textContent = text;
-
-    message.className =
-        "message " + type;
-
-    message.style.display =
-        "block";
-
-}
-
-
-/* =========================================================
-   معالجة أخطاء تسجيل الدخول
-   ========================================================= */
-
-function getLoginErrorMessage(error) {
-
-    if (!error) {
-
-        return "حدث خطأ أثناء تسجيل الدخول.";
-
-    }
-
-
-    const msg =
-        String(
-            error.message || ""
-        ).toLowerCase();
-
-
-    if (
-        msg.includes("invalid login credentials") ||
-        msg.includes("invalid credentials")
-    ) {
-
-        return "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-
-    }
-
-
-    if (
-        msg.includes("email not confirmed")
-    ) {
-
-        return "يجب تأكيد البريد الإلكتروني قبل تسجيل الدخول.";
-
-    }
-
-
-    if (
-        msg.includes("too many requests")
-    ) {
-
-        return "تم تجاوز عدد محاولات الدخول. يرجى الانتظار قليلًا ثم المحاولة مرة أخرى.";
-
-    }
-
-
-    return (
-        error.message ||
-        "حدث خطأ أثناء تسجيل الدخول."
-    );
-
-}
-
-
-/* =========================================================
-   تسجيل الدخول
-   ========================================================= */
-
-loginForm.addEventListener(
-    "submit",
-    async function(event) {
-
-        event.preventDefault();
-
-
-        const email =
-            document
-                .getElementById("email")
-                .value
-                .trim();
-
-
-        const password =
-            document
-                .getElementById("password")
-                .value;
-
-
-        /* التحقق من الحقول */
-
-        if (!email || !password) {
-
-            showMessage(
-                "يرجى إدخال البريد الإلكتروني وكلمة المرور.",
-                "error"
-            );
-
-            return;
-
+      if(loginType === "admin"){
+        if(!isAdmin){
+          await client.auth.signOut();
+          showError("هذا الحساب ليس لديه صلاحيات المسؤول.");
+          return;
         }
+        location.href = "admin.html";
+        return;
+      }
 
+      if(isAdmin){
+        await client.auth.signOut();
+        showError("هذا حساب مسؤول. اختر دخول المسؤول.");
+        return;
+      }
 
-        /* تعطيل الزر أثناء المعالجة */
-
-        loginButton.disabled = true;
-
-        loginButton.textContent =
-            "جارٍ تسجيل الدخول...";
-
-        message.style.display =
-            "none";
-
-
-        try {
-
-            const supabaseClient =
-                getSupabaseClient();
-
-
-            /* =================================================
-               تسجيل الدخول في Supabase
-               ================================================= */
-
-            const {
-                data,
-                error
-            } =
-                await supabaseClient.auth.signInWithPassword({
-
-                    email,
-
-                    password
-
-                });
-
-
-            if (error) {
-
-                throw error;
-
-            }
-
-
-            if (
-                !data ||
-                !data.user
-            ) {
-
-                throw new Error(
-                    "تعذر الحصول على بيانات المستخدم."
-                );
-
-            }
-
-
-            /* =================================================
-               التحقق من صلاحية المسؤول
-               ================================================= */
-
-            const {
-                data: adminData,
-                error: adminError
-            } =
-                await supabaseClient
-
-                    .from("user_roles")
-
-                    .select("role")
-
-                    .eq(
-                        "user_id",
-                        data.user.id
-                    )
-
-                    .eq(
-                        "role",
-                        "admin"
-                    )
-
-                    .maybeSingle();
-
-
-            if (adminError) {
-
-                throw adminError;
-
-            }
-
-
-            /* =================================================
-               الحساب ليس مسؤولًا
-               ================================================= */
-
-            if (!adminData) {
-
-                await supabaseClient.auth.signOut();
-
-                throw new Error(
-                    "هذا الحساب غير مصرح له بالدخول إلى لوحة المسؤول."
-                );
-
-            }
-
-
-            /* =================================================
-               نجاح تسجيل الدخول
-               ================================================= */
-
-            showMessage(
-                "تم تسجيل الدخول بنجاح. جاري فتح لوحة المسؤول...",
-                "success"
-            );
-
-
-            setTimeout(
-                function() {
-
-                    window.location.href =
-                        "admin.html";
-
-                },
-                800
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Login error:",
-                error
-            );
-
-
-            showMessage(
-                getLoginErrorMessage(error),
-                "error"
-            );
-
-
-        } finally {
-
-            loginButton.disabled =
-                false;
-
-            loginButton.textContent =
-                "تسجيل الدخول";
-
-        }
-
+      location.href = "employee.html";
+    }catch(e){
+      console.error(e);
+      showError(e.message?.includes("Invalid login credentials")
+        ? "البريد الإلكتروني أو كلمة المرور غير صحيحة."
+        : (e.message || "حدث خطأ أثناء تسجيل الدخول."));
+    }finally{
+      btn.disabled = false;
+      btn.textContent = "تسجيل الدخول";
     }
-);
+  }
+
+  async function signUp(event){
+    event.preventDefault();
+    clearMessage();
+    const email = document.getElementById("signupEmail").value.trim();
+    const password = document.getElementById("signupPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    if(password !== confirmPassword){
+      showError("كلمتا المرور غير متطابقتين.");
+      return;
+    }
+    const btn = document.getElementById("signupBtn");
+    btn.disabled = true;
+    btn.textContent = "جاري إنشاء الحساب...";
+    try{
+      const {data, error} = await client.auth.signUp({email, password});
+      if(error) throw error;
+      if(data.session){
+        location.href = "employee.html";
+        return;
+      }
+      showSuccess("تم إنشاء الحساب. إذا طُلب منك تأكيد البريد الإلكتروني، افتح رسالة التأكيد ثم سجّل الدخول.");
+      showMode("login");
+      document.getElementById("loginEmail").value = email;
+    }catch(e){
+      console.error(e);
+      showError(e.message || "تعذر إنشاء الحساب.");
+    }finally{
+      btn.disabled = false;
+      btn.textContent = "إنشاء الحساب والانتقال لإدخال المعلومات";
+    }
+  }
+
+  async function checkExistingSession(){
+    try{
+      const {data} = await client.auth.getSession();
+      const session = data?.session;
+      if(!session?.user) return;
+      const {data: profile, error} = await client
+        .from("employees")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .maybeSingle();
+      if(error){
+        console.error(error);
+        return;
+      }
+      location.href = profile?.role === "admin" ? "admin.html" : "employee.html";
+    }catch(e){
+      console.error(e);
+    }
+  }
+
+  // الدوال التالية تُعرّض فقط للـ HTML inline handlers، بينما يبقى عميل Supabase محلياً.
+  window.showMode = showMode;
+  window.selectLoginType = selectLoginType;
+  window.login = login;
+  window.signUp = signUp;
+
+  checkExistingSession();
+})();
 </script>
-
 </body>
 </html>
