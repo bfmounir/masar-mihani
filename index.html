@@ -18,6 +18,92 @@
 .type-btn.active{background:#F7F0D8;color:var(--brand-purple);border-color:var(--brand-gold)}
 .footer{border-top-color:#EADFF0}
 .brand-mark{padding:6px;overflow:hidden}.brand-mark img{width:100%;height:100%;object-fit:contain;border-radius:18px;display:block;filter:drop-shadow(0 5px 10px rgba(0,0,0,.10))}
+
+/* ===== نافذة معلومات المنصة والدعم ===== */
+.about-btn{
+  width:100%;
+  margin-top:18px;
+  padding:13px 16px;
+  border:1px solid rgba(201,168,74,.55);
+  border-radius:13px;
+  background:linear-gradient(135deg,#fffaf0,#f8f1df);
+  color:#5d4678;
+  font-family:inherit;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s ease;
+  box-shadow:0 5px 14px rgba(74,55,105,.07);
+}
+.about-btn:hover{
+  transform:translateY(-1px);
+  border-color:#C9A84A;
+  box-shadow:0 8px 20px rgba(74,55,105,.11);
+}
+.about-overlay{
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(35,25,48,.55);
+  backdrop-filter:blur(7px);
+}
+.about-overlay.open{display:flex}
+.about-modal{
+  width:min(900px,100%);
+  max-height:92vh;
+  overflow:auto;
+  background:#fff;
+  border:1px solid rgba(201,168,74,.25);
+  border-radius:24px;
+  box-shadow:0 25px 80px rgba(30,20,45,.25);
+  direction:rtl;
+  animation:aboutIn .22s ease-out;
+}
+@keyframes aboutIn{
+  from{opacity:0;transform:translateY(12px) scale(.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.about-hero{
+  position:relative;
+  padding:30px 30px 26px;
+  color:#fff;
+  background:linear-gradient(135deg,#8064B2,#6F52A3 55%,#584084);
+}
+.about-hero h2{color:#fff}
+.platform-contact{
+  box-shadow:0 7px 20px rgba(74,55,105,.05);
+}
+.platform-contact h3{font-size:16px}
+.platform-contact strong{
+  color:#49385a;
+  font-size:13px;
+  line-height:1.7;
+}
+.platform-contact a:hover{
+  color:#6F52A3!important;
+  text-decoration:underline!important;
+}
+@media(max-width:600px){
+  .about-overlay{padding:10px}
+  .about-modal{max-height:94vh;border-radius:18px}
+  .about-hero{padding:24px 20px 22px}
+  .about-hero h2{font-size:23px!important}
+  .about-hero p{font-size:13px!important}
+  .about-modal>div:nth-child(2){padding:18px!important}
+  .goal-grid{grid-template-columns:1fr 1fr}
+  .about-card{padding:15px}
+  .platform-contact>div{
+    grid-template-columns:1fr!important;
+  }
+  .platform-contact>div>div[style*="grid-column"]{
+    grid-column:auto!important;
+  }
+}
+
 </style>
 
 <!-- PWA: منصة المسار المهني -->
@@ -258,12 +344,33 @@
     }
   }
 
+  function openAbout(){
+    const overlay=document.getElementById("aboutOverlay");
+    if(!overlay) return;
+    overlay.classList.add("open");
+    document.body.style.overflow="hidden";
+  }
+
+  function closeAbout(event){
+    if(event && event.target && event.target.id !== "aboutOverlay") return;
+    const overlay=document.getElementById("aboutOverlay");
+    if(!overlay) return;
+    overlay.classList.remove("open");
+    document.body.style.overflow="";
+  }
+
+  document.addEventListener("keydown",function(event){
+    if(event.key==="Escape") closeAbout();
+  });
+
   // الدوال التالية تُعرّض فقط للـ HTML inline handlers، بينما يبقى عميل Supabase محلياً.
   window.showMode = showMode;
   window.selectLoginType = selectLoginType;
   window.login = login;
   window.signUp = signUp;
   window.resendConfirmation = resendConfirmation;
+  window.openAbout = openAbout;
+  window.closeAbout = closeAbout;
 
   checkExistingSession();
 })();
