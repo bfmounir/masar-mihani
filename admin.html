@@ -72,6 +72,42 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
 @media(max-width:900px){.sidebar{width:220px}.content{margin-right:220px}.dashboard-hero{min-height:190px}.dashboard-hero h3{font-size:22px}.hero-visual{display:none}}
 @media(max-width:650px){.topbar{height:64px;padding:0 12px}.sidebar{top:64px}.content{padding-top:138px}.admin-role-chip{display:none}.dashboard-hero{padding:22px 20px;border-radius:20px}.dashboard-hero h3{font-size:20px}.dashboard-hero p{font-size:10px}.hero-actions .hero-action{flex:1}.stat-card{min-height:88px}.brand h1{font-size:13px}}
 .logo{overflow:hidden;padding:4px}.logo img{width:100%;height:100%;object-fit:contain;border-radius:11px;display:block;background:#fff;filter:drop-shadow(0 2px 5px rgba(0,0,0,.08))}
+
+/* ====== Notifications + Contact + Mobile Drawer Fix ====== */
+.notification-sender{background:linear-gradient(180deg,#fff,#FCFAFE)}
+.platform-contact-card{background:linear-gradient(135deg,#FBF8FD,#FFFFFF)}
+.contact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.contact-grid>div{padding:11px 12px;border:1px solid var(--border);border-radius:12px;background:#FCFBFD;display:flex;flex-direction:column;gap:4px}
+.contact-grid>div.full{grid-column:1/-1}
+.contact-grid small{font-size:9px;color:#92889B;font-weight:900}
+.contact-grid strong{font-size:12px;color:#4F3B65;line-height:1.6}
+.mobile-menu-btn,.mobile-menu-overlay{display:none}
+@media(max-width:650px){
+  .mobile-menu-btn{display:grid;place-items:center;width:42px;height:42px;border:1px solid var(--border);background:#fff;color:var(--primary);border-radius:12px;cursor:pointer;flex:0 0 auto;order:3}
+  .topbar{height:64px;padding:0 12px;gap:10px}
+  .topbar .brand{min-width:0;flex:1}
+  .topbar .brand>div:last-child{min-width:0;overflow:hidden}
+  .brand h1{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand small{font-size:9px}
+  .top-actions{gap:6px}
+  .top-actions .admin-role-chip,.top-actions .user-chip{display:none}
+  .logout{padding:9px 10px}
+  .logout span{display:none}
+  .sidebar{position:fixed;top:64px;right:0;bottom:0;left:auto;width:min(290px,86vw);height:auto;margin:0;display:block;overflow-y:auto;overflow-x:hidden;z-index:50;border-left:1px solid var(--border);border-right:0;border-bottom:0;border-radius:0;box-shadow:-12px 12px 35px rgba(0,0,0,.16);transform:translateX(110%);transition:transform .25s ease;background:#fff}
+  body.menu-open .sidebar{transform:translateX(0)}
+  .sidebar .menu-title{display:block}
+  .menu-item{width:100%;min-width:0;justify-content:flex-start;padding:13px 14px}
+  .mobile-menu-overlay{display:block;position:fixed;inset:64px 0 0 0;background:rgba(15,23,42,.35);z-index:45;opacity:0;pointer-events:none;transition:opacity .25s ease}
+  body.menu-open .mobile-menu-overlay{opacity:1;pointer-events:auto}
+  .content{margin-right:0;padding:82px 12px 25px;width:100%;min-width:0}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .request-summary{grid-template-columns:1fr 1fr}
+  .contact-grid{grid-template-columns:1fr}
+  .contact-grid>div.full{grid-column:auto}
+  .modal-backdrop{padding:10px}
+  .employee-modal{width:100%;max-height:90vh;padding:16px}
+}
+@media(max-width:420px){.stats-grid{grid-template-columns:1fr}.contact-grid{grid-template-columns:1fr}}
 </style>
 
 <!-- PWA: منصة المسار المهني -->
@@ -87,6 +123,7 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
 <body>
 <div id="loading" class="loading"><div class="loading-inner"><div class="spinner"></div><div>جارٍ التحقق من الاتصال وصلاحيات المسؤول...</div></div></div>
 <header class="topbar">
+  <button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="فتح القائمة"><i data-lucide="menu"></i></button>
   <div class="brand"><div class="logo"><img src="./logo%20(2).png" alt="شعار منصة المسار المهني"></div><div><h1>منصة المسار المهني</h1><small>لوحة تحكم المسؤول</small></div></div>
   <div class="top-actions"><span class="admin-role-chip"><i data-lucide="badge-check"></i> مسؤول النظام</span><span id="userEmail" class="user-chip"></span><button id="logoutBtn" class="logout"><i data-lucide="log-out"></i><span>تسجيل الخروج</span></button></div>
 </header>
@@ -103,6 +140,7 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
   <button class="menu-item" data-section="southSection"><i data-lucide="sun-medium"></i><span>أقدمية الجنوب</span></button>
   <button class="menu-item" data-section="retirementSection"><i data-lucide="calendar-clock"></i><span>التقاعد</span></button>
 </aside>
+<div id="mobileMenuOverlay" class="mobile-menu-overlay"></div>
 <main class="content">
 <section id="homeSection" class="section active">
   <div class="header"><h2><i data-lucide="bell-ring"></i>التنبيهات الداخلية</h2><p>مركز مختصر لمتابعة التنبيهات الإدارية الداخلية.</p></div>
@@ -136,6 +174,29 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
     <h3 style="display:flex;align-items:center;gap:8px"><i data-lucide="square-pen"></i>إضافة تنبيه داخلي</h3>
     <div class="form-grid"><div class="field full"><label>نص التنبيه</label><textarea id="noticeText" rows="3" placeholder="اكتب التنبيه الداخلي..."></textarea></div></div>
     <div class="actions"><button class="btn primary" id="saveNoticeBtn"><i data-lucide="save"></i>حفظ التنبيه</button><button class="btn secondary" id="cancelNoticeBtn"><i data-lucide="x"></i>إلغاء</button></div>
+  </div>
+  <div class="card notification-sender" style="margin-top:14px">
+    <div class="notice-head"><strong><i data-lucide="send"></i> إرسال تنبيه مباشر إلى موظف</strong><span class="badge">يظهر داخل حساب الموظف</span></div>
+    <div class="section-note" style="margin-bottom:12px"><i data-lucide="info"></i><div>استخدم هذا القسم لإرسال تنبيه إداري مباشر إلى موظف محدد. سيظهر التنبيه في قسم «إشعاراتي» داخل حسابه.</div></div>
+    <div class="form-grid">
+      <div class="field full"><label>الموظف المستهدف *</label><select id="notificationEmployee"><option value="">جارٍ تحميل الموظفين...</option></select></div>
+      <div class="field"><label>عنوان التنبيه *</label><input id="notificationTitle" maxlength="120" placeholder="مثال: استكمال وثيقة"></div>
+      <div class="field"><label>نوع التنبيه</label><select id="notificationIcon"><option value="bell">تنبيه عام</option><option value="info">معلومة</option><option value="file-text">وثيقة</option><option value="calendar">موعد</option><option value="circle-check">إجراء مكتمل</option><option value="triangle-alert">تنبيه مهم</option></select></div>
+      <div class="field full"><label>نص التنبيه *</label><textarea id="notificationMessage" rows="4" maxlength="1000" placeholder="اكتب الرسالة التي ستصل إلى الموظف..."></textarea></div>
+    </div>
+    <div class="actions"><button class="btn primary" id="sendNotificationBtn"><i data-lucide="send"></i>إرسال التنبيه</button><button class="btn secondary" id="refreshNotificationEmployeesBtn"><i data-lucide="refresh-cw"></i>تحديث قائمة الموظفين</button></div>
+    <div id="notificationSendStatus" class="result"></div>
+  </div>
+  <div class="card platform-contact-card" style="margin-top:14px">
+    <div class="notice-head"><strong><i data-lucide="contact-round"></i> معلومات المسؤول والمبرمج</strong><span class="badge">الدعم والمتابعة</span></div>
+    <div class="contact-grid">
+      <div><small>الاسم</small><strong>بن صغير منير</strong></div>
+      <div><small>بالإنجليزية</small><strong>Benseghir Mounir</strong></div>
+      <div><small>الصفة</small><strong>رئيس مكتب التكوين</strong></div>
+      <div><small>المؤسسة</small><strong>المؤسسة العمومية الإستشفائية بأولف</strong></div>
+      <div class="full"><small>الدور في المنصة</small><strong>مسؤول المنصة ومبرمجها</strong></div>
+    </div>
+  </div>
   </div>
 </section>
 <section id="requestsSection" class="section">
@@ -205,7 +266,6 @@ const SOUTH_MONTHS_PER_FULL_YEAR=6;
 const DEFAULT_GRADE_RULE={min:30,medium:36,max:42,validFrom:null,validTo:null};
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-function isoToday(){return new Date().toISOString().slice(0,10)}
 function parseDate(v){if(!v)return null;const d=new Date(String(v).slice(0,10)+'T00:00:00');return Number.isNaN(d.getTime())?null:d}
 function fmtDate(v){const d=parseDate(v);return d?d.toLocaleDateString('ar-DZ'): '—'}
 function monthsBetween(start,end){const a=parseDate(start),b=parseDate(end);if(!a||!b||b<a)return null;let m=(b.getFullYear()-a.getFullYear())*12+(b.getMonth()-a.getMonth());if(b.getDate()<a.getDate())m--;return Math.max(0,m)}
@@ -236,6 +296,25 @@ function showSection(id){document.querySelectorAll('.section').forEach(s=>s.clas
 document.querySelectorAll('.menu-item').forEach(b=>b.addEventListener('click',()=>showSection(b.dataset.section)));
 if(window.lucide)lucide.createIcons();
 
+async function loadNotificationEmployees(){
+  const select=$('notificationEmployee');
+  if(!select||!db)return;
+  select.innerHTML='<option value="">جارٍ تحميل الموظفين...</option>';
+  try{
+    const r=await db.from('career_profiles').select('id,user_id,employee_name_ar,current_rank,current_grade').order('employee_name_ar',{ascending:true});
+    if(r.error)throw r.error;
+    const rows=Array.isArray(r.data)?r.data:[];
+    if(!rows.length){select.innerHTML='<option value="">لا يوجد موظفون لديهم ملف مهني بعد</option>';return}
+    select.innerHTML='<option value="">اختر الموظف...</option>'+rows.map(p=>`<option value="${esc(p.user_id)}">${esc(p.employee_name_ar||'موظف غير مسجل')}${p.current_rank?' — '+esc(p.current_rank):''}</option>`).join('');
+  }catch(e){console.warn('Notification employees unavailable:',e.message);select.innerHTML='<option value="">تعذر تحميل قائمة الموظفين</option>'}
+}
+async function sendDirectNotification(){
+  const userId=$('notificationEmployee')?.value,title=$('notificationTitle')?.value.trim(),message=$('notificationMessage')?.value.trim(),icon=$('notificationIcon')?.value||'bell',status=$('notificationSendStatus'),btn=$('sendNotificationBtn');
+  if(!userId||!title||!message){status.innerHTML='<div class="status error">اختر الموظف واكتب عنوان التنبيه ونصه قبل الإرسال.</div>';return}
+  btn.disabled=true;btn.innerHTML='<i data-lucide="loader-circle"></i>جارٍ الإرسال...';if(window.lucide)lucide.createIcons();
+  try{const r=await db.rpc('send_career_notification_to_employee',{p_user_id:userId,p_title:title,p_message:message,p_icon:icon});if(r.error)throw r.error;status.innerHTML='<div class="status ok">تم إرسال التنبيه بنجاح وسيظهر للموظف داخل قسم «إشعاراتي».</div>';$('notificationTitle').value='';$('notificationMessage').value='';await loadNotifications()}catch(e){console.error(e);status.innerHTML='<div class="status error">تعذر إرسال التنبيه: '+esc(e.message||'خطأ غير معروف')+'</div>'}finally{btn.disabled=false;btn.innerHTML='<i data-lucide="send"></i>إرسال التنبيه';if(window.lucide)lucide.createIcons()}
+}
+
 async function loadNotifications(){
   const box=$('systemNotifications');
   if(!box)return;
@@ -260,6 +339,14 @@ async function markNotificationsRead(){
 }
 function renderNotices(){const list=$('noticeList');let notices=[];try{notices=JSON.parse(localStorage.getItem(NOTICE_KEY)||'[]')}catch(_){notices=[]}if(!notices.length){list.innerHTML='<div class="empty">لا توجد تنبيهات داخلية حاليًا.</div>'; const stat=$('statNotices'); if(stat)stat.textContent='0'; return}const stat=$('statNotices'); if(stat)stat.textContent=String(notices.length); list.innerHTML=notices.map((n,i)=>`<div class="notice-item"><div>${esc(n.text)}</div><div class="date">${esc(n.date)} <button class="btn danger delete-notice" data-notice="${i}"><i data-lucide="trash-2"></i>حذف</button></div></div>`).join('');list.querySelectorAll('[data-notice]').forEach(b=>b.onclick=()=>{let a=[];try{a=JSON.parse(localStorage.getItem(NOTICE_KEY)||'[]')}catch(_){}a.splice(Number(b.dataset.notice),1);localStorage.setItem(NOTICE_KEY,JSON.stringify(a));renderNotices()})}
 $('addNoticeBtn').onclick=()=>$('noticeForm').classList.remove('hidden');
+$('sendNotificationBtn').onclick=sendDirectNotification;
+$('refreshNotificationEmployeesBtn').onclick=loadNotificationEmployees;
+const mobileMenuBtn=$('mobileMenuBtn'),mobileMenuOverlay=$('mobileMenuOverlay');
+function closeMobileMenu(){document.body.classList.remove('menu-open');if(mobileMenuBtn)mobileMenuBtn.setAttribute('aria-label','فتح القائمة')}
+function toggleMobileMenu(){const open=document.body.classList.toggle('menu-open');if(mobileMenuBtn)mobileMenuBtn.setAttribute('aria-label',open?'إغلاق القائمة':'فتح القائمة')}
+mobileMenuBtn?.addEventListener('click',toggleMobileMenu);mobileMenuOverlay?.addEventListener('click',closeMobileMenu);
+document.querySelectorAll('.menu-item').forEach(item=>item.addEventListener('click',closeMobileMenu));
+window.addEventListener('resize',()=>{if(window.innerWidth>650)closeMobileMenu()});
 $('cancelNoticeBtn').onclick=()=>{$('noticeForm').classList.add('hidden');$('noticeText').value=''};
 $('saveNoticeBtn').onclick=()=>{const text=$('noticeText').value.trim();if(!text)return alert('اكتب نص التنبيه أولًا.');let a=[];try{a=JSON.parse(localStorage.getItem(NOTICE_KEY)||'[]')}catch(_){}a.unshift({text,date:new Date().toLocaleString('ar-DZ')});localStorage.setItem(NOTICE_KEY,JSON.stringify(a));$('noticeText').value='';$('noticeForm').classList.add('hidden');renderNotices()};
 
@@ -402,7 +489,7 @@ async function checkAdmin(){
     const profileRes=await db.from('employees').select('role').eq('user_id',currentUser.id).maybeSingle();
     const isAdmin=roleRes.data?.role==='admin'||profileRes.data?.role==='admin';
     if(!isAdmin)throw new Error('هذا الحساب لا يملك صلاحية المسؤول.');
-    await loadOptionalGradeRules();await loadEmployees();await loadRequests();await loadNotifications();$('loading').classList.add('hidden');const stat=$('statEmployees');if(stat)stat.textContent=String(employees.length);renderNotices();if(window.lucide)lucide.createIcons();
+    await loadOptionalGradeRules();await loadEmployees();await loadRequests();await loadNotificationEmployees();await loadNotifications();$('loading').classList.add('hidden');const stat=$('statEmployees');if(stat)stat.textContent=String(employees.length);renderNotices();if(window.lucide)lucide.createIcons();
   }catch(e){console.error(e);$('loading').textContent='⚠️ '+(e.message||'تعذر التحقق من الصلاحيات')+' — سيتم الرجوع إلى صفحة الدخول.';setTimeout(()=>location.href='index.html',2200)}
 }
 $('logoutBtn').onclick=async()=>{try{if(db)await db.auth.signOut()}finally{location.href='index.html'}};
