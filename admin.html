@@ -1,80 +1,23 @@
 <!DOCTYPE html>
+
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>لوحة المسؤول | منصة المسار المهني</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="config.js"></script>
+
 <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-:root{
-  --primary:#6F52A3;--primary-dark:#584084;--primary-soft:#EEE8F7;
-  --gold:#C9A84A;--gold-soft:#F7F0D8;
-  --bg:#F7F5FA;--surface:#FFFFFF;--surface-soft:#FBFAFD;
-  --text:#302A38;--muted:#7B7285;--border:#E8E1EF;
-  --success:#3E8B62;--success-soft:#EAF6EF;--warning:#A97922;--warning-soft:#FFF7E6;
-  --danger:#B65B62;--danger-soft:#FCEDEF;
-  --shadow:0 8px 28px rgba(74,55,105,.08);--shadow-lg:0 16px 45px rgba(74,55,105,.11);--radius:16px
-}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
-button,input,select,textarea{font:inherit}.topbar{height:70px;background:rgba(255,255,255,.96);color:var(--text);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:fixed;top:0;right:0;left:0;z-index:20;border-bottom:1px solid var(--border);box-shadow:0 3px 18px rgba(74,55,105,.06);backdrop-filter:blur(12px)}
-.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,#8064B2,#6F52A3);color:#fff;display:grid;place-items:center;font-size:21px;font-weight:900;box-shadow:0 7px 18px rgba(111,82,163,.22)}.brand h1{font-size:17px;margin:0 0 3px;color:#493A5F}.brand small{color:var(--muted);font-size:11px}.top-actions{display:flex;gap:10px;align-items:center}.user-chip{background:var(--primary-soft);color:var(--primary-dark);padding:8px 11px;border-radius:10px;font-size:12px;max-width:360px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.logout{border:1px solid #DDD2E9;border-radius:10px;padding:9px 13px;background:#fff;color:var(--primary-dark);font-weight:800;cursor:pointer;display:flex;align-items:center;gap:7px;transition:.2s}.logout:hover{background:var(--primary-soft);transform:translateY(-1px)}
-.sidebar{position:fixed;top:70px;right:0;bottom:0;width:242px;background:#fff;border-left:1px solid var(--border);padding:18px 12px;z-index:10;box-shadow:3px 0 18px rgba(74,55,105,.035)}.menu-title{font-size:10px;color:#9A91A3;font-weight:900;margin:10px 10px 8px;letter-spacing:.2px}.menu-item{width:100%;border:1px solid transparent;background:transparent;text-align:right;padding:12px 13px;border-radius:12px;margin-bottom:5px;color:#62586B;font-weight:800;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:10px}.menu-item svg{width:18px;height:18px;stroke-width:2}.menu-item:hover{background:#FAF8FC;color:var(--primary);border-color:#EEE7F4}.menu-item.active{background:var(--primary-soft);color:var(--primary-dark);border-color:#DED2EC;box-shadow:none}.menu-item.active svg{color:var(--primary)}
-.content{margin-right:242px;padding:94px 28px 38px;max-width:1500px}.section{display:none}.section.active{display:block;animation:fadeIn .22s ease}@keyframes fadeIn{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}.header{margin-bottom:18px}.header h2{margin:0 0 7px;color:#55406F;font-size:24px;display:flex;align-items:center;gap:9px}.header h2 svg{width:23px;height:23px;color:var(--primary)}.header p{margin:0;color:var(--muted);line-height:1.8}.card,.notice{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:19px;box-shadow:var(--shadow)}
-.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:0 0 16px}.stat-card{background:#fff;border:1px solid var(--border);border-radius:15px;padding:15px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);min-height:86px}.stat-icon{width:43px;height:43px;border-radius:12px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;flex:none}.stat-icon.gold{background:var(--gold-soft);color:#9A7A20}.stat-icon.green{background:var(--success-soft);color:var(--success)}.stat-icon.blue{background:#EEF5FB;color:#4D789A}.stat-icon svg{width:21px;height:21px}.stat-label{font-size:11px;color:var(--muted);margin-bottom:4px}.stat-value{font-size:20px;font-weight:900;color:#4B3A60}
-.notice-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.notice-head strong{display:flex;align-items:center;gap:8px;color:#57466A}.notice-list{display:grid;gap:9px}.notice-item{padding:13px;border-radius:12px;background:var(--surface-soft);border-right:3px solid var(--gold);line-height:1.8}.notice-item .date{font-size:10px;color:#968D9D;margin-top:6px}.notice-item .delete-notice{float:left;padding:5px 8px;font-size:10px}
-.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-weight:800;color:#51475A;font-size:12px}.field input,.field select,.field textarea{width:100%;padding:12px 13px;border:1px solid #DDD5E5;border-radius:11px;font:inherit;background:#FEFDFF;color:#302A38;outline:none;transition:.2s}.field input:focus,.field select:focus,.field textarea:focus{border-color:#9B84BD;box-shadow:0 0 0 3px rgba(111,82,163,.08);background:#fff}.field small{color:#8B8292;line-height:1.6}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.btn{border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:900;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;justify-content:center;gap:7px}.btn svg{width:16px;height:16px}.btn:hover{transform:translateY(-1px)}.btn.primary{background:var(--primary);color:#fff;box-shadow:0 6px 15px rgba(111,82,163,.18)}.btn.primary:hover{background:#634692}.btn.secondary{background:#F2EEF6;color:var(--primary-dark)}.btn.secondary:hover{background:#EAE3F0}.btn.danger{background:var(--danger-soft);color:#A24D55}.btn.gold{background:var(--gold-soft);color:#80641A}.result{margin-top:16px}.status{padding:12px;border-radius:11px;background:#F8F5FA;color:#665B70;line-height:1.8;border:1px solid #ECE5F0}.status.ok{background:var(--success-soft);color:#2E704D;border-color:#CFE9D9}.status.error{background:var(--danger-soft);color:#A24D55;border-color:#F0D0D4}.empty{text-align:center;color:#93899B;padding:30px 15px}.employee-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:14px;overflow:hidden;border:1px solid var(--border);border-radius:12px}.employee-table th,.employee-table td{padding:11px;border-bottom:1px solid #EFEAF2;text-align:right;font-size:12px}.employee-table th{background:#F4F0F8;color:#5C4775;font-weight:900}.employee-table tbody tr:last-child td{border-bottom:0}.employee-table tbody tr:hover{background:#FCFAFE}.badge{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;background:#F4F0F8;color:#675477;font-size:10px;font-weight:900}.calc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:15px}.metric{background:#FCFBFD;border:1px solid var(--border);border-radius:13px;padding:14px}.metric .label{font-size:11px;color:#7F7487}.metric .value{font-size:18px;font-weight:900;color:#5B4474;margin-top:5px}.warning{color:#80641A;background:var(--warning-soft);border:1px solid #F0DEAA;padding:12px;border-radius:11px;line-height:1.8}.loading{position:fixed;inset:0;background:#F8F6FB;display:grid;place-items:center;z-index:100;font-weight:900;color:#65498A;padding:20px;text-align:center}.loading-inner{text-align:center}.spinner{width:32px;height:32px;border:3px solid #E5DDF0;border-top-color:#8064B2;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}@keyframes spin{to{transform:rotate(360deg)}}.hidden{display:none!important}.section-note{display:flex;align-items:flex-start;gap:9px;padding:12px 13px;background:#F9F7FC;border:1px solid var(--border);border-radius:12px;color:#756A80;line-height:1.8;margin-bottom:14px}.section-note svg{width:18px;flex:none;color:var(--primary);margin-top:2px}
-.request-card{background:#fff;border:1px solid var(--border);border-radius:15px;padding:17px;margin-bottom:11px;box-shadow:var(--shadow)}.request-card.pending{border-right:4px solid var(--gold)}.request-card.resolved{border-right:4px solid var(--success)}.request-card.rejected{border-right:4px solid var(--danger)}.request-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.request-title{font-size:14px;font-weight:900;color:#57446D}.request-meta{font-size:10px;color:#948A9D;margin-top:5px}.request-message{background:#FAF8FC;border:1px solid #EEE8F3;border-radius:11px;padding:11px;margin:12px 0;line-height:1.8;color:#62596A}.request-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.request-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.mini-label{font-size:10px;font-weight:900;color:#6D6275;margin-bottom:4px}.request-card input,.request-card textarea{width:100%;padding:10px;border:1px solid #DDD5E5;border-radius:9px;background:#FEFDFF;outline:none}.request-card input:focus,.request-card textarea:focus{border-color:#9B84BD;box-shadow:0 0 0 3px rgba(128,100,178,.08)} .south-review-box{background:#FBF8F0;border:1px solid #E9DCA9;border-radius:12px;padding:11px}.south-review-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.south-review-grid>div{display:flex;flex-direction:column;gap:4px}.south-review-grid span{font-size:10px;font-weight:900;color:#75611F}.south-review-grid input{background:#fff}.south-note{font-size:10px;color:#80641A;line-height:1.7;margin-top:8px}@media(max-width:900px){.south-review-grid{grid-template-columns:1fr 1fr}}
-.request-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:15px} .request-search{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:11px;background:#fff;color:var(--text);outline:none}.request-search:focus{border-color:#9B84BD;box-shadow:0 0 0 3px rgba(111,82,163,.08)}.smart-summary{background:#F8F5FC;border:1px solid #E8DFF0;border-radius:12px;padding:11px;line-height:1.8;margin:11px 0}.quick-replies{display:flex;gap:6px;flex-wrap:wrap;margin:7px 0}.quick-reply{border:1px solid #DDD2E9;background:#fff;color:#60477C;border-radius:999px;padding:6px 9px;font-size:10px;font-weight:800;cursor:pointer}.quick-reply:hover{background:var(--primary-soft)}.request-tabs{display:flex;gap:7px;flex-wrap:wrap}.request-tab{border:1px solid var(--border);background:#fff;color:#655A70;border-radius:11px;padding:10px 13px;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;gap:7px}.request-tab svg{width:16px;height:16px}.request-tab.active{background:var(--primary-soft);color:var(--primary-dark);border-color:#D9CBE9}.tab-count{min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#F1ECF6;display:inline-grid;place-items:center;font-size:10px}.request-tab.active .tab-count{background:#fff}.request-employee{display:inline-flex;align-items:center;gap:8px;border:0;background:none;padding:0;color:#4F3970;font-weight:900;cursor:pointer;text-align:right}.request-employee:hover{text-decoration:underline}.request-rank{display:inline-flex;margin-top:6px;background:#F4F0F8;color:#6B557D;border-radius:999px;padding:4px 8px;font-size:10px;font-weight:900}.request-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:11px}.request-summary-item{background:#FCFBFD;border:1px solid #EEE8F3;border-radius:10px;padding:9px}.request-summary-item small{display:block;color:#94899B;font-size:9px;margin-bottom:3px}.request-summary-item b{color:#59466B;font-size:11px}.archive-info{padding:10px 12px;border-radius:10px;background:#F5FAF7;border:1px solid #D7EBDD;color:#477258;font-size:11px;line-height:1.7;margin-top:11px}.modal-backdrop{position:fixed;inset:0;background:rgba(42,31,54,.35);z-index:80;display:grid;place-items:center;padding:18px}.employee-modal{width:min(760px,100%);max-height:min(88vh,820px);overflow:auto;background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow-lg);padding:20px}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}.modal-kicker{font-size:10px;color:var(--primary);font-weight:900;margin-bottom:3px}.modal-head h3{margin:0;color:#4F3B65;font-size:20px}.modal-close{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:#fff;color:#6D6275;display:grid;place-items:center;cursor:pointer}.modal-close:hover{background:var(--primary-soft);color:var(--primary-dark)}.profile-hero{display:flex;align-items:center;gap:13px;padding:14px;border-radius:14px;background:linear-gradient(135deg,#F7F2FB,#FCFAFD);border:1px solid #E9E0F0;margin-bottom:14px}.profile-avatar{width:48px;height:48px;border-radius:14px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;flex:none}.profile-avatar svg{width:24px;height:24px}.profile-name{font-size:17px;font-weight:900;color:#4E3C62}.profile-rank{font-size:11px;color:#7C7085;margin-top:4px}.profile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.profile-item{padding:11px;border:1px solid var(--border);border-radius:11px;background:#FCFBFD}.profile-item .label{font-size:9px;color:#91869A;margin-bottom:4px;font-weight:900}.profile-item .value{font-size:12px;color:#4F4458;font-weight:800;line-height:1.6}.profile-request{margin-top:14px;padding:13px;border:1px solid #E8E0EE;border-radius:13px;background:#FAF8FC}.profile-request h4{margin:0 0 8px;color:#57446D}.profile-request p{margin:0;line-height:1.8;color:#62596A;white-space:pre-wrap}.modal-actions{display:flex;justify-content:flex-start;margin-top:14px}@media(max-width:900px){.request-summary{grid-template-columns:1fr 1fr}.profile-grid{grid-template-columns:1fr}}
-.app-notification{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;border:1px solid var(--border);border-radius:13px;background:#fff;margin-bottom:9px;box-shadow:var(--shadow)}.app-notification.unread{background:#FBF8FF;border-right:4px solid var(--primary)}.app-notification .ni{width:38px;height:38px;border-radius:11px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;flex:none}.app-notification .ni svg{width:18px}.app-notification strong{color:#55406F;font-size:12px}.app-notification p{margin:4px 0 0;color:#6F6677;font-size:11px;line-height:1.7}.app-notification time{display:block;color:#9A91A3;font-size:9px;margin-top:5px}.notification-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.notification-count{background:#FCEDEF;color:#A24D55;border-radius:999px;padding:3px 7px;font-size:9px;font-weight:900}
-@media(max-width:1050px){.stats-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:900px){.sidebar{width:210px}.content{margin-right:210px}.form-grid{grid-template-columns:1fr}.calc-grid{grid-template-columns:1fr 1fr}}@media(max-width:650px){.sidebar{position:static;width:100%;height:auto;border-left:0;border-bottom:1px solid var(--border);display:flex;overflow:auto;gap:5px;padding:8px;box-shadow:none}.sidebar .menu-title{display:none}.menu-item{min-width:max-content;justify-content:center}.content{margin-right:0;padding:145px 12px 25px}.topbar{height:62px;padding:0 12px}.brand h1{font-size:14px}.brand small{font-size:9px}.user-chip{display:none}.logout span{display:none}.stats-grid{grid-template-columns:1fr 1fr}.calc-grid{grid-template-columns:1fr}.header h2{font-size:21px}.notice-head{align-items:flex-start;flex-direction:column}}@media(max-width:420px){.stats-grid{grid-template-columns:1fr}.btn{width:100%}}
 
-/* ====== Visual Upgrade v3 ====== */
-:root{
-  --primary:#7052A6;
-  --primary-dark:#50377D;
-  --primary-soft:#F0EAF8;
-  --primary-pale:#F8F5FC;
-  --gold:#C8A34A;
-  --bg:#F5F3F8;
-  --surface:#FFFFFF;
-  --surface-soft:#FBFAFD;
-  --text:#292332;
-  --muted:#777083;
-  --border:#E8E3EE;
-  --shadow:0 10px 30px rgba(63,42,91,.065);
-  --shadow-lg:0 22px 60px rgba(55,38,78,.13);
-  --radius:18px;
-}
-html,body{font-family:"Cairo",Tahoma,Arial,sans-serif;background:linear-gradient(180deg,#F7F5FA 0%,#F3F1F6 100%);}
-body{font-size:13px;letter-spacing:.05px}
-button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
-.topbar{height:74px;padding:0 28px;background:rgba(255,255,255,.9);border-bottom:1px solid rgba(232,227,238,.85);box-shadow:0 5px 24px rgba(60,42,86,.06)}
-.brand{gap:13px}.logo{width:46px;height:46px;border-radius:15px;background:linear-gradient(145deg,#8C70BE,#674997);box-shadow:0 10px 24px rgba(103,73,151,.22)}
-.brand h1{font-size:16px;font-weight:900;color:#433354}.brand small{font-size:10px;font-weight:600}
-.top-actions{gap:8px}.admin-role-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 11px;border-radius:12px;background:#F1EAF8;color:#5A3D83;border:1px solid #E1D4EF;font-size:10px;font-weight:900}.admin-role-chip svg{width:15px;height:15px}
-.user-chip{background:#FAF8FC;border:1px solid #EAE4F0;color:#6A6073;padding:8px 11px;border-radius:12px;font-size:10px}.logout{border:1px solid #DED6E7;border-radius:12px;padding:9px 13px;background:#fff;color:#59427A;box-shadow:0 4px 12px rgba(67,47,91,.04)}
-.sidebar{top:74px;width:252px;padding:16px 13px;background:rgba(255,255,255,.96);border-left:1px solid #EAE5EF;box-shadow:4px 0 22px rgba(68,48,91,.035)}
-.sidebar-profile{display:flex;align-items:center;gap:10px;padding:13px;border-radius:16px;background:linear-gradient(135deg,#F8F4FC,#FBFAFD);border:1px solid #E9E0F2;margin:0 2px 16px}.sidebar-profile-icon{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:#EDE4F6;color:#674997;box-shadow:inset 0 0 0 1px #E2D7EC}.sidebar-profile-icon svg{width:20px}.sidebar-profile-text{display:flex;flex-direction:column;gap:2px}.sidebar-profile-text strong{font-size:11px;color:#4B3960}.sidebar-profile-text span{font-size:9px;color:#8A8092}
-.menu-title{font-size:9px;color:#A29AA9;margin:12px 10px 8px;letter-spacing:.4px}.menu-item{padding:12px 13px;border-radius:13px;margin-bottom:4px;color:#645A6D;font-size:11px;font-weight:800}.menu-item svg{width:18px;height:18px;stroke-width:2.1}.menu-item:hover{background:#FAF8FC;border-color:#EEE7F4;transform:translateX(-2px)}.menu-item.active{background:linear-gradient(90deg,#F0EAF8,#F7F3FB);color:#543A7A;border-color:#DED2EC;box-shadow:inset -3px 0 0 #7555A8}.menu-item.active svg{color:#6E4D9F}
-.content{margin-right:252px;padding:100px 30px 42px;max-width:1550px}.header{margin-bottom:20px}.header h2{font-size:23px;font-weight:900;color:#49355D;letter-spacing:-.2px}.header h2 svg{width:24px;height:24px}.header p{font-size:11px;color:#817888}
-.dashboard-hero{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;min-height:210px;padding:28px 30px;margin-bottom:18px;border:1px solid #E7DDF0;border-radius:24px;background:radial-gradient(circle at 12% 20%,rgba(200,163,74,.14),transparent 26%),linear-gradient(135deg,#5D4386 0%,#7255A5 55%,#8A6ABA 100%);box-shadow:0 18px 45px rgba(82,57,117,.18);color:#fff}.dashboard-hero:after{content:"";position:absolute;width:310px;height:310px;border-radius:50%;left:-110px;bottom:-190px;border:1px solid rgba(255,255,255,.12);box-shadow:0 0 0 35px rgba(255,255,255,.025),0 0 0 70px rgba(255,255,255,.02)}.hero-content{position:relative;z-index:2;max-width:760px}.hero-kicker{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:800;color:#EEE7F8;margin-bottom:9px}.hero-dot{width:7px;height:7px;border-radius:50%;background:#E8C96E;box-shadow:0 0 0 5px rgba(232,201,110,.14)}.dashboard-hero h3{margin:0 0 7px;font-size:26px;font-weight:900;letter-spacing:-.6px}.dashboard-hero p{margin:0;max-width:700px;color:#EEE8F5;font-size:11px;line-height:2}.hero-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}.hero-action{border:1px solid rgba(255,255,255,.16);background:#fff;color:#5C4280;border-radius:11px;padding:9px 13px;font-weight:900;font-size:10px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.2s;box-shadow:0 8px 18px rgba(40,24,61,.12)}.hero-action svg{width:15px}.hero-action:hover{transform:translateY(-2px)}.hero-action.ghost{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.2);box-shadow:none}.hero-visual{position:relative;width:190px;height:170px;flex:none;margin-left:12px}.hero-main-icon{position:absolute;inset:42px 48px;width:82px;height:82px;border-radius:26px;display:grid;place-items:center;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(10px);box-shadow:0 18px 40px rgba(40,24,61,.12)}.hero-main-icon svg{width:36px;height:36px}.hero-orbit{position:absolute;border:1px solid rgba(255,255,255,.16);border-radius:50%}.orbit-one{width:150px;height:150px;top:10px;left:20px}.orbit-two{width:190px;height:190px;top:-10px;left:0}.stats-grid{gap:14px;margin-bottom:18px}.stat-card{position:relative;overflow:hidden;min-height:100px;padding:17px;border-radius:18px;background:rgba(255,255,255,.96);box-shadow:0 8px 26px rgba(65,45,88,.06);transition:.25s}.stat-card:after{content:"";position:absolute;left:-18px;bottom:-35px;width:90px;height:90px;border-radius:50%;background:#F7F3FB}.stat-card:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(65,45,88,.1)}.stat-icon{width:47px;height:47px;border-radius:14px;background:#F0EAF8;color:#6C4B9B}.stat-icon svg{width:22px;height:22px}.stat-label{font-size:10px;font-weight:700;color:#817787}.stat-value{font-size:21px;font-weight:900;color:#4B385F;margin-top:1px}
-.card,.notice{border-radius:18px;padding:20px;box-shadow:0 8px 28px rgba(63,42,91,.055);border-color:#E9E3EE}.notice-head strong{font-size:12px;font-weight:900}.btn{border-radius:11px;font-size:10px;padding:10px 13px}.btn.primary{box-shadow:0 7px 16px rgba(111,82,163,.18)}
-.request-toolbar{margin-top:17px;padding:12px;border:1px solid #E9E3EE;background:#FBFAFD;border-radius:15px}.request-tabs{gap:6px}.request-tab{border-radius:11px;font-size:10px;padding:9px 12px}.request-tab.active{box-shadow:0 5px 12px rgba(89,61,119,.07)}.request-search{height:40px;border-radius:11px;background:#fff;padding:9px 12px;font-size:10px}.request-card{border-radius:17px;padding:18px;box-shadow:0 7px 24px rgba(63,42,91,.055);transition:.2s}.request-card:hover{transform:translateY(-1px);box-shadow:0 12px 30px rgba(63,42,91,.08)}.request-employee{font-size:12px}.request-rank{font-size:9px}.request-title{font-size:13px}.request-meta{font-size:9px}.request-message{font-size:10px}.smart-summary{font-size:10px;border-radius:13px}.quick-reply{font-size:9px;padding:6px 9px}
-.app-notification{border-radius:15px;box-shadow:0 7px 22px rgba(63,42,91,.045)}.app-notification .ni{border-radius:12px}.employee-modal{border-radius:24px;box-shadow:0 28px 80px rgba(42,27,59,.2)}.profile-hero{border-radius:17px}.profile-item{border-radius:13px}
-.field label{font-size:10px}.field input,.field select,.field textarea{border-radius:12px;font-size:11px}.section-note{border-radius:14px;font-size:10px}
-.loading{background:rgba(247,245,250,.96);backdrop-filter:blur(6px)}
-@media(max-width:1050px){.dashboard-hero{padding:24px}.hero-visual{width:150px;transform:scale(.86);margin-left:-10px}}
-@media(max-width:900px){.sidebar{width:220px}.content{margin-right:220px}.dashboard-hero{min-height:190px}.dashboard-hero h3{font-size:22px}.hero-visual{display:none}}
-@media(max-width:650px){.topbar{height:64px;padding:0 12px}.sidebar{top:64px}.content{padding-top:138px}.admin-role-chip{display:none}.dashboard-hero{padding:22px 20px;border-radius:20px}.dashboard-hero h3{font-size:20px}.dashboard-hero p{font-size:10px}.hero-actions .hero-action{flex:1}.stat-card{min-height:88px}.brand h1{font-size:13px}}
-.logo{overflow:hidden;padding:4px}.logo img{width:100%;height:100%;object-fit:contain;border-radius:11px;display:block;background:#fff;filter:drop-shadow(0 2px 5px rgba(0,0,0,.08))}
-</style>
+<!-- PWA -->
 
-<!-- PWA: منصة المسار المهني -->
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#6d4aff">
 <meta name="mobile-web-app-capable" content="yes">
@@ -83,379 +26,6520 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
 <meta name="apple-mobile-web-app-title" content="المسار المهني">
 <link rel="apple-touch-icon" href="./logo%20(2).png">
 
+<style>
+:root{
+  --primary:#7052A6;
+  --primary-dark:#50377D;
+  --primary-soft:#F0EAF8;
+  --primary-pale:#F8F5FC;
+  --gold:#C8A34A;
+  --gold-soft:#F7F0D8;
+  --bg:#F5F3F8;
+  --surface:#FFFFFF;
+  --surface-soft:#FBFAFD;
+  --text:#292332;
+  --muted:#777083;
+  --border:#E8E3EE;
+  --success:#3E8B62;
+  --success-soft:#EAF6EF;
+  --warning:#A97922;
+  --warning-soft:#FFF7E6;
+  --danger:#B65B62;
+  --danger-soft:#FCEDEF;
+  --shadow:0 10px 30px rgba(63,42,91,.065);
+  --shadow-lg:0 22px 60px rgba(55,38,78,.13);
+  --radius:18px;
+  --topbar-height:74px;
+  --sidebar-width:252px;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  font-family:"Cairo",Tahoma,Arial,sans-serif;
+  background:linear-gradient(180deg,#F7F5FA 0%,#F3F1F6 100%);
+  color:var(--text);
+  font-size:13px;
+  letter-spacing:.05px;
+}
+
+button,
+input,
+select,
+textarea{
+  font:inherit;
+  font-family:"Cairo",Tahoma,Arial,sans-serif;
+}
+
+button{
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* =========================
+   الشريط العلوي
+========================= */
+
+.topbar{
+  height:var(--topbar-height);
+  background:rgba(255,255,255,.96);
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:0 28px;
+  position:fixed;
+  top:0;
+  right:0;
+  left:0;
+  z-index:100;
+  border-bottom:1px solid rgba(232,227,238,.9);
+  box-shadow:0 5px 24px rgba(60,42,86,.06);
+  backdrop-filter:blur(12px);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  min-width:0;
+}
+
+.logo{
+  width:46px;
+  height:46px;
+  border-radius:15px;
+  overflow:hidden;
+  padding:4px;
+  flex:none;
+  background:#fff;
+  box-shadow:0 10px 24px rgba(103,73,151,.18);
+}
+
+.logo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  border-radius:11px;
+  background:#fff;
+}
+
+.brand > div:last-child{
+  min-width:0;
+}
+
+.brand h1{
+  font-size:16px;
+  font-weight:900;
+  color:#433354;
+  margin:0 0 2px;
+  white-space:nowrap;
+}
+
+.brand small{
+  font-size:10px;
+  font-weight:600;
+  color:var(--muted);
+}
+
+.top-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+
+.admin-role-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 11px;
+  border-radius:12px;
+  background:#F1EAF8;
+  color:#5A3D83;
+  border:1px solid #E1D4EF;
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.admin-role-chip svg{
+  width:15px;
+  height:15px;
+}
+
+.user-chip{
+  background:#FAF8FC;
+  border:1px solid #EAE4F0;
+  color:#6A6073;
+  padding:8px 11px;
+  border-radius:12px;
+  font-size:10px;
+  max-width:300px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.logout{
+  border:1px solid #DED6E7;
+  border-radius:12px;
+  padding:9px 13px;
+  background:#fff;
+  color:#59427A;
+  box-shadow:0 4px 12px rgba(67,47,91,.04);
+  font-weight:900;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  transition:.2s;
+}
+
+.logout:hover{
+  background:var(--primary-soft);
+  transform:translateY(-1px);
+}
+
+/* =========================
+   الشريط الجانبي
+========================= */
+
+.sidebar{
+  position:fixed;
+  top:var(--topbar-height);
+  right:0;
+  bottom:0;
+  width:var(--sidebar-width);
+  background:rgba(255,255,255,.97);
+  border-left:1px solid #EAE5EF;
+  padding:16px 13px;
+  z-index:90;
+  overflow-y:auto;
+  overflow-x:hidden;
+  box-shadow:4px 0 22px rgba(68,48,91,.035);
+}
+
+.sidebar-profile{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:13px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#F8F4FC,#FBFAFD);
+  border:1px solid #E9E0F2;
+  margin:0 2px 16px;
+}
+
+.sidebar-profile-icon{
+  width:40px;
+  height:40px;
+  border-radius:13px;
+  display:grid;
+  place-items:center;
+  background:#EDE4F6;
+  color:#674997;
+  box-shadow:inset 0 0 0 1px #E2D7EC;
+  flex:none;
+}
+
+.sidebar-profile-icon svg{
+  width:20px;
+}
+
+.sidebar-profile-text{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  min-width:0;
+}
+
+.sidebar-profile-text strong{
+  font-size:11px;
+  color:#4B3960;
+}
+
+.sidebar-profile-text span{
+  font-size:9px;
+  color:#8A8092;
+}
+
+.menu-title{
+  font-size:9px;
+  color:#A29AA9;
+  margin:12px 10px 8px;
+  letter-spacing:.4px;
+  font-weight:900;
+}
+
+.menu-item{
+  width:100%;
+  border:1px solid transparent;
+  background:transparent;
+  text-align:right;
+  padding:12px 13px;
+  border-radius:13px;
+  margin-bottom:4px;
+  color:#645A6D;
+  font-size:11px;
+  font-weight:800;
+  cursor:pointer;
+  transition:.2s;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.menu-item svg{
+  width:18px;
+  height:18px;
+  stroke-width:2.1;
+  flex:none;
+}
+
+.menu-item:hover{
+  background:#FAF8FC;
+  border-color:#EEE7F4;
+  color:var(--primary);
+  transform:translateX(-2px);
+}
+
+.menu-item.active{
+  background:linear-gradient(90deg,#F0EAF8,#F7F3FB);
+  color:#543A7A;
+  border-color:#DED2EC;
+  box-shadow:inset -3px 0 0 #7555A8;
+}
+
+.menu-item.active svg{
+  color:#6E4D9F;
+}
+
+/* =========================
+   المحتوى
+========================= */
+
+.content{
+  margin-right:var(--sidebar-width);
+  padding:100px 30px 42px;
+  max-width:1550px;
+  min-height:100vh;
+}
+
+.section{
+  display:none;
+}
+
+.section.active{
+  display:block;
+  animation:fadeIn .22s ease;
+}
+
+@keyframes fadeIn{
+  from{
+    opacity:.5;
+    transform:translateY(4px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
+}
+
+.header{
+  margin-bottom:20px;
+}
+
+.header h2{
+  margin:0 0 7px;
+  color:#49355D;
+  font-size:23px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.header h2 svg{
+  width:24px;
+  height:24px;
+  color:var(--primary);
+}
+
+.header p{
+  margin:0;
+  color:#817888;
+  font-size:11px;
+  line-height:1.8;
+}
+
+/* =========================
+   البطاقات
+========================= */
+
+.card,
+.notice{
+  background:var(--surface);
+  border:1px solid #E9E3EE;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 8px 28px rgba(63,42,91,.055);
+}
+
+.notice-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.notice-head strong{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:#57466A;
+  font-size:12px;
+  font-weight:900;
+}
+
+/* =========================
+   الصفحة الرئيسية
+========================= */
+
+.dashboard-hero{
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  min-height:210px;
+  padding:28px 30px;
+  margin-bottom:18px;
+  border:1px solid #E7DDF0;
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 12% 20%,rgba(200,163,74,.14),transparent 26%),
+    linear-gradient(135deg,#5D4386 0%,#7255A5 55%,#8A6ABA 100%);
+  box-shadow:0 18px 45px rgba(82,57,117,.18);
+  color:#fff;
+}
+
+.dashboard-hero:after{
+  content:"";
+  position:absolute;
+  width:310px;
+  height:310px;
+  border-radius:50%;
+  left:-110px;
+  bottom:-190px;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:
+    0 0 0 35px rgba(255,255,255,.025),
+    0 0 0 70px rgba(255,255,255,.02);
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:760px;
+}
+
+.hero-kicker{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:10px;
+  font-weight:800;
+  color:#EEE7F8;
+  margin-bottom:9px;
+}
+
+.hero-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#E8C96E;
+  box-shadow:0 0 0 5px rgba(232,201,110,.14);
+}
+
+.dashboard-hero h3{
+  margin:0 0 7px;
+  font-size:26px;
+  font-weight:900;
+  letter-spacing:-.6px;
+}
+
+.dashboard-hero p{
+  margin:0;
+  max-width:700px;
+  color:#EEE8F5;
+  font-size:11px;
+  line-height:2;
+}
+
+.hero-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:17px;
+}
+
+.hero-action{
+  border:1px solid rgba(255,255,255,.16);
+  background:#fff;
+  color:#5C4280;
+  border-radius:11px;
+  padding:9px 13px;
+  font-weight:900;
+  font-size:10px;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  transition:.2s;
+  box-shadow:0 8px 18px rgba(40,24,61,.12);
+}
+
+.hero-action svg{
+  width:15px;
+}
+
+.hero-action:hover{
+  transform:translateY(-2px);
+}
+
+.hero-action.ghost{
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  border-color:rgba(255,255,255,.2);
+  box-shadow:none;
+}
+
+.hero-visual{
+  position:relative;
+  width:190px;
+  height:170px;
+  flex:none;
+  margin-left:12px;
+}
+
+.hero-main-icon{
+  position:absolute;
+  inset:42px 48px;
+  width:82px;
+  height:82px;
+  border-radius:26px;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.2);
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 40px rgba(40,24,61,.12);
+}
+
+.hero-main-icon svg{
+  width:36px;
+  height:36px;
+}
+
+.hero-orbit{
+  position:absolute;
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:50%;
+}
+
+.orbit-one{
+  width:150px;
+  height:150px;
+  top:10px;
+  left:20px;
+}
+
+.orbit-two{
+  width:190px;
+  height:190px;
+  top:-10px;
+  left:0;
+}
+
+/* =========================
+   الإحصائيات
+========================= */
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+  margin:0 0 18px;
+}
+
+.stat-card{
+  position:relative;
+  overflow:hidden;
+  min-height:100px;
+  padding:17px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:rgba(255,255,255,.96);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  box-shadow:0 8px 26px rgba(65,45,88,.06);
+  transition:.25s;
+}
+
+.stat-card:after{
+  content:"";
+  position:absolute;
+  left:-18px;
+  bottom:-35px;
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  background:#F7F3FB;
+}
+
+.stat-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 16px 34px rgba(65,45,88,.1);
+}
+
+.stat-icon{
+  width:47px;
+  height:47px;
+  border-radius:14px;
+  background:#F0EAF8;
+  color:#6C4B9B;
+  display:grid;
+  place-items:center;
+  flex:none;
+}
+
+.stat-icon.gold{
+  background:var(--gold-soft);
+  color:#9A7A20;
+}
+
+.stat-icon.green{
+  background:var(--success-soft);
+  color:var(--success);
+}
+
+.stat-icon.blue{
+  background:#EEF5FB;
+  color:#4D789A;
+}
+
+.stat-icon svg{
+  width:22px;
+  height:22px;
+}
+
+.stat-label{
+  font-size:10px;
+  font-weight:700;
+  color:#817787;
+  margin-bottom:3px;
+}
+
+.stat-value{
+  font-size:21px;
+  font-weight:900;
+  color:#4B385F;
+}
+
+/* =========================
+   النماذج
+========================= */
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.field.full{
+  grid-column:1/-1;
+}
+
+.field label{
+  font-weight:800;
+  color:#51475A;
+  font-size:10px;
+}
+
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  padding:12px 13px;
+  border:1px solid #DDD5E5;
+  border-radius:12px;
+  font-size:11px;
+  background:#FEFDFF;
+  color:#302A38;
+  outline:none;
+  transition:.2s;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  border-color:#9B84BD;
+  box-shadow:0 0 0 3px rgba(111,82,163,.08);
+  background:#fff;
+}
+
+.field small{
+  color:#8B8292;
+  line-height:1.6;
+}
+
+.actions{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
+.btn{
+  border:0;
+  border-radius:11px;
+  padding:10px 13px;
+  font-size:10px;
+  font-weight:900;
+  cursor:pointer;
+  transition:.2s;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+}
+
+.btn svg{
+  width:16px;
+  height:16px;
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+}
+
+.btn.primary{
+  background:var(--primary);
+  color:#fff;
+  box-shadow:0 7px 16px rgba(111,82,163,.18);
+}
+
+.btn.primary:hover{
+  background:#634692;
+}
+
+.btn.secondary{
+  background:#F2EEF6;
+  color:var(--primary-dark);
+}
+
+.btn.secondary:hover{
+  background:#EAE3F0;
+}
+
+.btn.danger{
+  background:var(--danger-soft);
+  color:#A24D55;
+}
+
+.btn.gold{
+  background:var(--gold-soft);
+  color:#80641A;
+}
+
+.result{
+  margin-top:16px;
+}
+
+.status{
+  padding:12px;
+  border-radius:11px;
+  background:#F8F5FA;
+  color:#665B70;
+  line-height:1.8;
+  border:1px solid #ECE5F0;
+}
+
+.status.ok{
+  background:var(--success-soft);
+  color:#2E704D;
+  border-color:#CFE9D9;
+}
+
+.status.error{
+  background:var(--danger-soft);
+  color:#A24D55;
+  border-color:#F0D0D4;
+}
+
+.empty{
+  text-align:center;
+  color:#93899B;
+  padding:30px 15px;
+}
+
+.section-note{
+  display:flex;
+  align-items:flex-start;
+  gap:9px;
+  padding:12px 13px;
+  background:#F9F7FC;
+  border:1px solid var(--border);
+  border-radius:14px;
+  color:#756A80;
+  line-height:1.8;
+  margin-bottom:14px;
+  font-size:10px;
+}
+
+.section-note svg{
+  width:18px;
+  flex:none;
+  color:var(--primary);
+  margin-top:2px;
+}
+
+/* =========================
+   الجداول
+========================= */
+
+.employee-table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  margin-top:14px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:12px;
+}
+
+.employee-table th,
+.employee-table td{
+  padding:11px;
+  border-bottom:1px solid #EFEAF2;
+  text-align:right;
+  font-size:12px;
+}
+
+.employee-table th{
+  background:#F4F0F8;
+  color:#5C4775;
+  font-weight:900;
+}
+
+.employee-table tbody tr:last-child td{
+  border-bottom:0;
+}
+
+.employee-table tbody tr:hover{
+  background:#FCFAFE;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#F4F0F8;
+  color:#675477;
+  font-size:10px;
+  font-weight:900;
+}
+
+/* =========================
+   الحسابات
+========================= */
+
+.calc-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+  margin-top:15px;
+}
+
+.metric{
+  background:#FCFBFD;
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:14px;
+}
+
+.metric .label{
+  font-size:11px;
+  color:#7F7487;
+}
+
+.metric .value{
+  font-size:18px;
+  font-weight:900;
+  color:#5B4474;
+  margin-top:5px;
+}
+
+.warning{
+  color:#80641A;
+  background:var(--warning-soft);
+  border:1px solid #F0DEAA;
+  padding:12px;
+  border-radius:11px;
+  line-height:1.8;
+}
+
+.loading{
+  position:fixed;
+  inset:0;
+  background:rgba(247,245,250,.96);
+  display:grid;
+  place-items:center;
+  z-index:1000;
+  font-weight:900;
+  color:#65498A;
+  padding:20px;
+  text-align:center;
+  backdrop-filter:blur(6px);
+}
+
+.loading-inner{
+  text-align:center;
+}
+
+.spinner{
+  width:32px;
+  height:32px;
+  border:3px solid #E5DDF0;
+  border-top-color:#8064B2;
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+  margin:0 auto 12px;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* =========================
+   الطلبات
+========================= */
+
+.request-toolbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:17px;
+  padding:12px;
+  border:1px solid #E9E3EE;
+  background:#FBFAFD;
+  border-radius:15px;
+}
+
+.request-tabs{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.request-tab{
+  border:1px solid var(--border);
+  background:#fff;
+  color:#655A70;
+  border-radius:11px;
+  padding:9px 12px;
+  font-size:10px;
+  font-weight:900;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+}
+
+.request-tab svg{
+  width:16px;
+  height:16px;
+}
+
+.request-tab.active{
+  background:var(--primary-soft);
+  color:var(--primary-dark);
+  border-color:#D9CBE9;
+  box-shadow:0 5px 12px rgba(89,61,119,.07);
+}
+
+.tab-count{
+  min-width:22px;
+  height:22px;
+  padding:0 6px;
+  border-radius:999px;
+  background:#F1ECF6;
+  display:inline-grid;
+  place-items:center;
+  font-size:10px;
+}
+
+.request-tab.active .tab-count{
+  background:#fff;
+}
+
+.request-search{
+  width:100%;
+  height:40px;
+  padding:9px 12px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:#fff;
+  color:var(--text);
+  outline:none;
+  font-size:10px;
+}
+
+.request-search:focus{
+  border-color:#9B84BD;
+  box-shadow:0 0 0 3px rgba(111,82,163,.08);
+}
+
+.request-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:18px;
+  margin-bottom:11px;
+  box-shadow:0 7px 24px rgba(63,42,91,.055);
+  transition:.2s;
+}
+
+.request-card:hover{
+  transform:translateY(-1px);
+  box-shadow:0 12px 30px rgba(63,42,91,.08);
+}
+
+.request-card.pending{
+  border-right:4px solid var(--gold);
+}
+
+.request-card.resolved{
+  border-right:4px solid var(--success);
+}
+
+.request-card.rejected{
+  border-right:4px solid var(--danger);
+}
+
+.request-top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+}
+
+.request-title{
+  font-size:13px;
+  font-weight:900;
+  color:#57446D;
+}
+
+.request-meta{
+  font-size:9px;
+  color:#948A9D;
+  margin-top:5px;
+}
+
+.request-message{
+  background:#FAF8FC;
+  border:1px solid #EEE8F3;
+  border-radius:11px;
+  padding:11px;
+  margin:12px 0;
+  line-height:1.8;
+  color:#62596A;
+  font-size:10px;
+}
+
+.request-fields{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.request-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.mini-label{
+  font-size:10px;
+  font-weight:900;
+  color:#6D6275;
+  margin-bottom:4px;
+}
+
+.request-card input,
+.request-card textarea{
+  width:100%;
+  padding:10px;
+  border:1px solid #DDD5E5;
+  border-radius:9px;
+  background:#FEFDFF;
+  outline:none;
+  font-family:"Cairo",Tahoma,Arial,sans-serif;
+}
+
+.request-card input:focus,
+.request-card textarea:focus{
+  border-color:#9B84BD;
+  box-shadow:0 0 0 3px rgba(128,100,178,.08);
+}
+
+.request-employee{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:0;
+  background:none;
+  padding:0;
+  color:#4F3970;
+  font-size:12px;
+  font-weight:900;
+  cursor:pointer;
+  text-align:right;
+}
+
+.request-employee:hover{
+  text-decoration:underline;
+}
+
+.request-rank{
+  display:inline-flex;
+  margin-top:6px;
+  background:#F4F0F8;
+  color:#6B557D;
+  border-radius:999px;
+  padding:4px 8px;
+  font-size:9px;
+  font-weight:900;
+}
+
+.smart-summary{
+  background:#F8F5FC;
+  border:1px solid #E8DFF0;
+  border-radius:13px;
+  padding:11px;
+  line-height:1.8;
+  margin:11px 0;
+  font-size:10px;
+}
+
+.quick-replies{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin:7px 0;
+}
+
+.quick-reply{
+  border:1px solid #DDD2E9;
+  background:#fff;
+  color:#60477C;
+  border-radius:999px;
+  padding:6px 9px;
+  font-size:9px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.quick-reply:hover{
+  background:var(--primary-soft);
+}
+
+.south-review-box{
+  background:#FBF8F0;
+  border:1px solid #E9DCA9;
+  border-radius:12px;
+  padding:11px;
+}
+
+.south-review-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+}
+
+.south-review-grid > div{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.south-review-grid span{
+  font-size:10px;
+  font-weight:900;
+  color:#75611F;
+}
+
+.south-review-grid input{
+  background:#fff;
+}
+
+.south-note{
+  font-size:10px;
+  color:#80641A;
+  line-height:1.7;
+  margin-top:8px;
+}
+
+.request-summary{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  margin-top:11px;
+}
+
+.request-summary-item{
+  background:#FCFBFD;
+  border:1px solid #EEE8F3;
+  border-radius:10px;
+  padding:9px;
+}
+
+.request-summary-item small{
+  display:block;
+  color:#94899B;
+  font-size:9px;
+  margin-bottom:3px;
+}
+
+.request-summary-item b{
+  color:#59466B;
+  font-size:11px;
+}
+
+.archive-info{
+  padding:10px 12px;
+  border-radius:10px;
+  background:#F5FAF7;
+  border:1px solid #D7EBDD;
+  color:#477258;
+  font-size:11px;
+  line-height:1.7;
+  margin-top:11px;
+}
+
+/* =========================
+   نافذة الموظف
+========================= */
+
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(42,31,54,.35);
+  z-index:500;
+  display:grid;
+  place-items:center;
+  padding:18px;
+}
+
+.employee-modal{
+  width:min(760px,100%);
+  max-height:min(88vh,820px);
+  overflow:auto;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:24px;
+  box-shadow:0 28px 80px rgba(42,27,59,.2);
+  padding:20px;
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.modal-kicker{
+  font-size:10px;
+  color:var(--primary);
+  font-weight:900;
+  margin-bottom:3px;
+}
+
+.modal-head h3{
+  margin:0;
+  color:#4F3B65;
+  font-size:20px;
+}
+
+.modal-close{
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#fff;
+  color:#6D6275;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+}
+
+.modal-close:hover{
+  background:var(--primary-soft);
+  color:var(--primary-dark);
+}
+
+.profile-hero{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:14px;
+  border-radius:17px;
+  background:linear-gradient(135deg,#F7F2FB,#FCFAFD);
+  border:1px solid #E9E0F0;
+  margin-bottom:14px;
+}
+
+.profile-avatar{
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  background:var(--primary-soft);
+  color:var(--primary);
+  display:grid;
+  place-items:center;
+  flex:none;
+}
+
+.profile-avatar svg{
+  width:24px;
+  height:24px;
+}
+
+.profile-name{
+  font-size:17px;
+  font-weight:900;
+  color:#4E3C62;
+}
+
+.profile-rank{
+  font-size:11px;
+  color:#7C7085;
+  margin-top:4px;
+}
+
+.profile-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+}
+
+.profile-item{
+  padding:11px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  background:#FCFBFD;
+}
+
+.profile-item .label{
+  font-size:9px;
+  color:#91869A;
+  margin-bottom:4px;
+  font-weight:900;
+}
+
+.profile-item .value{
+  font-size:12px;
+  color:#4F4458;
+  font-weight:800;
+  line-height:1.6;
+}
+
+.profile-request{
+  margin-top:14px;
+  padding:13px;
+  border:1px solid #E8E0EE;
+  border-radius:13px;
+  background:#FAF8FC;
+}
+
+.profile-request h4{
+  margin:0 0 8px;
+  color:#57446D;
+}
+
+.profile-request p{
+  margin:0;
+  line-height:1.8;
+  color:#62596A;
+  white-space:pre-wrap;
+}
+
+.modal-actions{
+  display:flex;
+  justify-content:flex-start;
+  margin-top:14px;
+}
+
+/* =========================
+   الإشعارات
+========================= */
+
+.app-notification{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  padding:13px 14px;
+  border:1px solid var(--border);
+  border-radius:15px;
+  background:#fff;
+  margin-bottom:9px;
+  box-shadow:0 7px 22px rgba(63,42,91,.045);
+}
+
+.app-notification.unread{
+  background:#FBF8FF;
+  border-right:4px solid var(--primary);
+}
+
+.app-notification .ni{
+  width:38px;
+  height:38px;
+  border-radius:12px;
+  background:var(--primary-soft);
+  color:var(--primary);
+  display:grid;
+  place-items:center;
+  flex:none;
+}
+
+.app-notification .ni svg{
+  width:18px;
+}
+
+.app-notification strong{
+  color:#55406F;
+  font-size:12px;
+}
+
+.app-notification p{
+  margin:4px 0 0;
+  color:#6F6677;
+  font-size:11px;
+  line-height:1.7;
+}
+
+.app-notification time{
+  display:block;
+  color:#9A91A3;
+  font-size:9px;
+  margin-top:5px;
+}
+
+.notification-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+
+.notification-count{
+  background:#FCEDEF;
+  color:#A24D55;
+  border-radius:999px;
+  padding:3px 7px;
+  font-size:9px;
+  font-weight:900;
+}
+
+/* =========================
+   التنبيهات
+========================= */
+
+.notice-list{
+  display:grid;
+  gap:9px;
+}
+
+.notice-item{
+  padding:13px;
+  border-radius:12px;
+  background:var(--surface-soft);
+  border-right:3px solid var(--gold);
+  line-height:1.8;
+}
+
+.notice-item .date{
+  font-size:10px;
+  color:#968D9D;
+  margin-top:6px;
+}
+
+.notice-item .delete-notice{
+  float:left;
+  padding:5px 8px;
+  font-size:10px;
+}
+
+/* =========================
+   بطاقة تثبيت التطبيق
+========================= */
+
+.pwa-install-banner{
+  position:fixed;
+  z-index:99999;
+  right:18px;
+  left:18px;
+  bottom:18px;
+  max-width:620px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:14px 16px;
+  border:1px solid rgba(109,74,255,.18);
+  border-radius:20px;
+  background:rgba(255,255,255,.97);
+  box-shadow:0 18px 50px rgba(25,20,60,.20);
+  backdrop-filter:blur(14px);
+  font-family:Cairo,Arial,sans-serif;
+  direction:rtl;
+}
+
+.pwa-install-banner[hidden]{
+  display:none!important;
+}
+
+.pwa-install-icon{
+  width:52px;
+  height:52px;
+  flex:0 0 52px;
+  border-radius:15px;
+  overflow:hidden;
+  background:#f5f2ff;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(109,74,255,.12);
+}
+
+.pwa-install-icon img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.pwa-install-content{
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+.pwa-install-content strong{
+  font-size:15px;
+  color:#241d4f;
+}
+
+.pwa-install-content span{
+  font-size:12px;
+  line-height:1.6;
+  color:#6b6780;
+}
+
+.pwa-install-banner button#pwaInstallBtn{
+  border:0;
+  border-radius:12px;
+  padding:10px 15px;
+  background:#6d4aff;
+  color:#fff;
+  font-family:inherit;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.pwa-install-banner button#pwaInstallBtn:hover{
+  filter:brightness(.96);
+}
+
+.pwa-install-close{
+  width:32px;
+  height:32px;
+  border:0;
+  background:transparent;
+  color:#777;
+  font-size:22px;
+  line-height:1;
+  cursor:pointer;
+  padding:0;
+}
+
+.pwa-ios-note{
+  position:fixed;
+  z-index:99998;
+  right:18px;
+  left:18px;
+  bottom:18px;
+  max-width:560px;
+  margin:auto;
+  padding:14px 16px;
+  border-radius:18px;
+  background:#241d4f;
+  color:#fff;
+  font-family:Cairo,Arial,sans-serif;
+  direction:rtl;
+  box-shadow:0 18px 50px rgba(25,20,60,.25);
+  font-size:13px;
+  line-height:1.8;
+}
+
+.pwa-ios-note button{
+  float:left;
+  border:0;
+  background:transparent;
+  color:#fff;
+  font-size:20px;
+  cursor:pointer;
+}
+
+/* =========================================================
+   التجاوب
+   ========================================================= */
+
+/* شاشات متوسطة */
+@media(max-width:1100px){
+
+  .stats-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .dashboard-hero{
+    padding:24px;
+  }
+
+  .hero-visual{
+    width:150px;
+    transform:scale(.86);
+    margin-left:-10px;
+  }
+
+  .content{
+    padding-left:22px;
+    padding-right:22px;
+  }
+}
+
+/* تابلت */
+@media(max-width:900px){
+
+  :root{
+    --sidebar-width:220px;
+  }
+
+  .sidebar{
+    width:220px;
+  }
+
+  .content{
+    margin-right:220px;
+  }
+
+  .dashboard-hero{
+    min-height:190px;
+  }
+
+  .dashboard-hero h3{
+    font-size:22px;
+  }
+
+  .hero-visual{
+    display:none;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .calc-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .request-summary{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .south-review-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+/* =========================================================
+   الهاتف
+   ========================================================= */
+
+@media(max-width:650px){
+
+  :root{
+    --topbar-height:64px;
+  }
+
+  body{
+    font-size:12px;
+    overflow-x:hidden;
+  }
+
+  /* الشريط العلوي */
+  .topbar{
+    height:64px;
+    padding:0 10px;
+    gap:8px;
+  }
+
+  .brand{
+    gap:8px;
+    min-width:0;
+  }
+
+  .logo{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    padding:3px;
+  }
+
+  .brand h1{
+    font-size:13px;
+    margin-bottom:0;
+  }
+
+  .brand small{
+    font-size:8px;
+  }
+
+  .admin-role-chip{
+    display:none;
+  }
+
+  .user-chip{
+    display:none;
+  }
+
+  .logout{
+    width:40px;
+    height:40px;
+    padding:0;
+    border-radius:11px;
+    flex:none;
+  }
+
+  .logout span{
+    display:none;
+  }
+
+  .logout svg{
+    width:18px;
+    height:18px;
+  }
+
+  /* =====================================================
+     إصلاح الشريط الجانبي على الهاتف
+     ===================================================== */
+
+  .sidebar{
+    position:sticky;
+    top:64px;
+    right:auto;
+    bottom:auto;
+    width:100%;
+    height:auto;
+    max-height:none;
+    padding:8px 8px 7px;
+    margin:0;
+    border-left:0;
+    border-bottom:1px solid #E7E1ED;
+    background:rgba(255,255,255,.98);
+    box-shadow:0 4px 16px rgba(68,48,91,.07);
+    z-index:80;
+    overflow-x:auto;
+    overflow-y:hidden;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+
+  .sidebar::-webkit-scrollbar{
+    display:none;
+  }
+
+  .sidebar-profile{
+    display:none;
+  }
+
+  .menu-title{
+    display:none;
+  }
+
+  .menu-item{
+    width:auto;
+    min-width:max-content;
+    flex:0 0 auto;
+    justify-content:center;
+    text-align:center;
+    padding:9px 11px;
+    margin:0;
+    border-radius:11px;
+    gap:6px;
+    font-size:10px;
+    white-space:nowrap;
+    transform:none!important;
+  }
+
+  .menu-item svg{
+    width:16px;
+    height:16px;
+  }
+
+  .menu-item.active{
+    box-shadow:inset 0 -2px 0 #7555A8;
+  }
+
+  /* =====================================================
+     إصلاح المحتوى
+     ===================================================== */
+
+  .content{
+    margin-right:0;
+    width:100%;
+    max-width:none;
+    padding:18px 10px 30px;
+    min-height:calc(100vh - 64px);
+  }
+
+  .header{
+    margin-bottom:15px;
+  }
+
+  .header h2{
+    font-size:19px;
+    gap:7px;
+    margin-bottom:5px;
+  }
+
+  .header h2 svg{
+    width:21px;
+    height:21px;
+  }
+
+  .header p{
+    font-size:10px;
+    line-height:1.8;
+  }
+
+  /* =====================================================
+     البطل
+     ===================================================== */
+
+  .dashboard-hero{
+    min-height:auto;
+    padding:19px 16px;
+    margin-bottom:13px;
+    border-radius:18px;
+  }
+
+  .dashboard-hero h3{
+    font-size:19px;
+    letter-spacing:-.3px;
+  }
+
+  .dashboard-hero p{
+    font-size:9px;
+    line-height:1.9;
+  }
+
+  .hero-actions{
+    margin-top:13px;
+    gap:6px;
+  }
+
+  .hero-action{
+    flex:1 1 100%;
+    padding:9px 10px;
+    font-size:9px;
+  }
+
+  /* =====================================================
+     الإحصائيات
+     ===================================================== */
+
+  .stats-grid{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-bottom:13px;
+  }
+
+  .stat-card{
+    min-height:82px;
+    padding:11px;
+    gap:8px;
+    border-radius:14px;
+  }
+
+  .stat-icon{
+    width:37px;
+    height:37px;
+    border-radius:11px;
+  }
+
+  .stat-icon svg{
+    width:18px;
+    height:18px;
+  }
+
+  .stat-label{
+    font-size:8px;
+    line-height:1.5;
+  }
+
+  .stat-value{
+    font-size:17px;
+  }
+
+  /* =====================================================
+     البطاقات
+     ===================================================== */
+
+  .card,
+  .notice{
+    padding:14px;
+    border-radius:15px;
+  }
+
+  .notice-head{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .notice-head .notification-actions{
+    width:100%;
+  }
+
+  .notice-head .notification-actions .btn{
+    flex:1;
+  }
+
+  .btn{
+    font-size:10px;
+    min-height:38px;
+  }
+
+  .actions .btn{
+    width:100%;
+  }
+
+  /* =====================================================
+     النماذج
+     ===================================================== */
+
+  .form-grid{
+    grid-template-columns:1fr;
+    gap:11px;
+  }
+
+  .field.full{
+    grid-column:auto;
+  }
+
+  .field input,
+  .field select,
+  .field textarea{
+    padding:11px;
+    font-size:11px;
+  }
+
+  /* =====================================================
+     الطلبات
+     ===================================================== */
+
+  .request-toolbar{
+    padding:9px;
+    margin-top:12px;
+    border-radius:13px;
+  }
+
+  .request-tabs{
+    width:100%;
+    overflow-x:auto;
+    flex-wrap:nowrap;
+    scrollbar-width:none;
+  }
+
+  .request-tabs::-webkit-scrollbar{
+    display:none;
+  }
+
+  .request-tab{
+    flex:0 0 auto;
+    white-space:nowrap;
+  }
+
+  .request-toolbar > div:last-child{
+    width:100%!important;
+    min-width:0!important;
+  }
+
+  .request-toolbar > div:last-child > div{
+    width:100%!important;
+    min-width:0!important;
+  }
+
+  .request-toolbar .btn{
+    width:100%;
+  }
+
+  .request-card{
+    padding:13px;
+    border-radius:14px;
+  }
+
+  .request-top{
+    gap:8px;
+  }
+
+  .request-top > div{
+    min-width:0;
+  }
+
+  .request-employee{
+    font-size:11px;
+    max-width:100%;
+  }
+
+  .request-meta{
+    font-size:8px;
+    line-height:1.7;
+  }
+
+  .request-fields{
+    grid-template-columns:1fr;
+  }
+
+  .request-fields > div[style*="grid-column"]{
+    grid-column:auto!important;
+  }
+
+  .request-summary{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .request-actions{
+    flex-direction:column;
+  }
+
+  .request-actions .btn{
+    width:100%;
+  }
+
+  .south-review-grid{
+    grid-template-columns:1fr;
+  }
+
+  .quick-replies{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .quick-reply{
+    width:100%;
+    min-height:36px;
+  }
+
+  /* =====================================================
+     الحسابات
+     ===================================================== */
+
+  .calc-grid{
+    grid-template-columns:1fr;
+    gap:8px;
+  }
+
+  .metric{
+    padding:12px;
+  }
+
+  .metric .value{
+    font-size:17px;
+  }
+
+  /* =====================================================
+     الجداول على الهاتف
+     ===================================================== */
+
+  .employee-table{
+    display:block;
+    overflow-x:auto;
+    white-space:nowrap;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .employee-table th,
+  .employee-table td{
+    font-size:10px;
+    padding:9px;
+  }
+
+  /* =====================================================
+     نافذة الملف
+     ===================================================== */
+
+  .modal-backdrop{
+    padding:8px;
+    align-items:center;
+  }
+
+  .employee-modal{
+    width:100%;
+    max-height:92vh;
+    padding:14px;
+    border-radius:18px;
+  }
+
+  .profile-grid{
+    grid-template-columns:1fr;
+  }
+
+  .profile-item[style*="grid-column"]{
+    grid-column:auto!important;
+  }
+
+  .modal-actions .btn{
+    width:100%;
+  }
+
+  /* =====================================================
+     إشعارات النظام
+     ===================================================== */
+
+  .app-notification{
+    padding:11px;
+    gap:9px;
+  }
+
+  .app-notification .ni{
+    width:34px;
+    height:34px;
+    border-radius:10px;
+  }
+
+  .app-notification strong{
+    font-size:11px;
+  }
+
+  .app-notification p{
+    font-size:10px;
+  }
+
+  /* =====================================================
+     PWA
+     ===================================================== */
+
+  .pwa-install-banner{
+    right:8px;
+    left:8px;
+    bottom:8px;
+    padding:10px;
+    gap:9px;
+    border-radius:16px;
+  }
+
+  .pwa-install-icon{
+    width:43px;
+    height:43px;
+    flex-basis:43px;
+    border-radius:12px;
+  }
+
+  .pwa-install-content strong{
+    font-size:12px;
+  }
+
+  .pwa-install-content span{
+    font-size:10px;
+  }
+
+  .pwa-install-banner button#pwaInstallBtn{
+    padding:8px 9px;
+    font-size:10px;
+  }
+
+  .pwa-install-close{
+    width:27px;
+    height:27px;
+    font-size:19px;
+  }
+}
+
+/* هواتف صغيرة جدًا */
+@media(max-width:420px){
+
+  .brand h1{
+    font-size:12px;
+  }
+
+  .brand small{
+    display:none;
+  }
+
+  .stats-grid{
+    grid-template-columns:1fr;
+  }
+
+  .stat-card{
+    min-height:76px;
+  }
+
+  .menu-item{
+    padding:8px 9px;
+    font-size:9px;
+  }
+
+  .menu-item svg{
+    width:15px;
+    height:15px;
+  }
+
+  .request-summary{
+    grid-template-columns:1fr;
+  }
+
+  .quick-replies{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
 </head>
+
 <body>
-<div id="loading" class="loading"><div class="loading-inner"><div class="spinner"></div><div>جارٍ التحقق من الاتصال وصلاحيات المسؤول...</div></div></div>
+
+<div id="loading" class="loading">
+  <div class="loading-inner">
+    <div class="spinner"></div>
+    <div>جارٍ التحقق من الاتصال وصلاحيات المسؤول...</div>
+  </div>
+</div>
+
+<!-- =========================
+     الشريط العلوي
+========================= -->
+
 <header class="topbar">
-  <div class="brand"><div class="logo"><img src="./logo%20(2).png" alt="شعار منصة المسار المهني"></div><div><h1>منصة المسار المهني</h1><small>لوحة تحكم المسؤول</small></div></div>
-  <div class="top-actions"><span class="admin-role-chip"><i data-lucide="badge-check"></i> مسؤول النظام</span><span id="userEmail" class="user-chip"></span><button id="logoutBtn" class="logout"><i data-lucide="log-out"></i><span>تسجيل الخروج</span></button></div>
-</header>
-<aside class="sidebar">
-  <div class="sidebar-profile">
-    <div class="sidebar-profile-icon"><i data-lucide="shield-check"></i></div>
-    <div class="sidebar-profile-text"><strong>مساحة المسؤول</strong><span>إدارة ومتابعة المنصة</span></div>
-  </div>
-  <div class="menu-title">الرئيسية</div>
-  <button class="menu-item active" data-section="homeSection"><i data-lucide="bell-ring"></i><span>التنبيهات الداخلية <span id="unreadNotifBadge" class="notification-count" style="margin-right:4px">0</span></span></button>
-  <button class="menu-item" data-section="requestsSection"><i data-lucide="inbox"></i><span>طلبات الموظفين <span id="pendingBadge" class="badge" style="margin-right:4px">0</span></span></button>
-  <div class="menu-title">المتابعة</div>
-  <button class="menu-item" data-section="employeesSection"><i data-lucide="user-round-plus"></i><span>إضافة موظف</span></button>
-  <button class="menu-item" data-section="southSection"><i data-lucide="sun-medium"></i><span>أقدمية الجنوب</span></button>
-  <button class="menu-item" data-section="retirementSection"><i data-lucide="calendar-clock"></i><span>التقاعد</span></button>
-</aside>
-<main class="content">
-<section id="homeSection" class="section active">
-  <div class="header"><h2><i data-lucide="bell-ring"></i>التنبيهات الداخلية</h2><p>مركز مختصر لمتابعة التنبيهات الإدارية الداخلية.</p></div>
-  <div class="dashboard-hero">
-    <div class="hero-content">
-      <div class="hero-kicker"><span class="hero-dot"></span> مركز الإدارة والمتابعة</div>
-      <h3>مرحبًا بك في لوحة التحكم</h3>
-      <p>تابع الموظفين والطلبات والتنبيهات والأقدمية من مساحة إدارية موحدة وسهلة الاستخدام.</p>
-      <div class="hero-actions">
-        <button class="hero-action" type="button" onclick="document.querySelector('[data-section=\"requestsSection\"]').click()"><i data-lucide="inbox"></i>فتح طلبات الموظفين</button>
-        <button class="hero-action ghost" type="button" onclick="document.querySelector('[data-section=\"southSection\"]').click()"><i data-lucide="sun-medium"></i>حساب أقدمية الجنوب</button>
-      </div>
+
+  <div class="brand">
+    <div class="logo">
+      <img src="./logo%20(2).png" alt="شعار منصة المسار المهني">
     </div>
-    <div class="hero-visual"><div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-main-icon"><i data-lucide="layout-dashboard"></i></div></div>
+
+```
+<div>
+  <h1>منصة المسار المهني</h1>
+  <small>لوحة تحكم المسؤول</small>
+</div>
+```
+
   </div>
+
+  <div class="top-actions">
+
+```
+<span class="admin-role-chip">
+  <i data-lucide="badge-check"></i>
+  مسؤول النظام
+</span>
+
+<span id="userEmail" class="user-chip"></span>
+
+<button id="logoutBtn" class="logout" type="button">
+  <i data-lucide="log-out"></i>
+  <span>تسجيل الخروج</span>
+</button>
+```
+
+  </div>
+
+</header>
+
+<!-- =========================
+     القائمة الجانبية
+========================= -->
+
+<aside class="sidebar">
+
+  <div class="sidebar-profile">
+    <div class="sidebar-profile-icon">
+      <i data-lucide="shield-check"></i>
+    </div>
+
+```
+<div class="sidebar-profile-text">
+  <strong>مساحة المسؤول</strong>
+  <span>إدارة ومتابعة المنصة</span>
+</div>
+```
+
+  </div>
+
+  <div class="menu-title">الرئيسية</div>
+
+  <button class="menu-item active" data-section="homeSection" type="button">
+    <i data-lucide="bell-ring"></i>
+    <span>
+      التنبيهات الداخلية
+      <span id="unreadNotifBadge" class="notification-count" style="margin-right:4px">0</span>
+    </span>
+  </button>
+
+  <button class="menu-item" data-section="requestsSection" type="button">
+    <i data-lucide="inbox"></i>
+    <span>
+      طلبات الموظفين
+      <span id="pendingBadge" class="badge" style="margin-right:4px">0</span>
+    </span>
+  </button>
+
+  <div class="menu-title">المتابعة</div>
+
+  <button class="menu-item" data-section="employeesSection" type="button">
+    <i data-lucide="user-round-plus"></i>
+    <span>إضافة موظف</span>
+  </button>
+
+  <button class="menu-item" data-section="southSection" type="button">
+    <i data-lucide="sun-medium"></i>
+    <span>أقدمية الجنوب</span>
+  </button>
+
+  <button class="menu-item" data-section="retirementSection" type="button">
+    <i data-lucide="calendar-clock"></i>
+    <span>التقاعد</span>
+  </button>
+
+</aside>
+
+<!-- =========================
+     المحتوى الرئيسي
+========================= -->
+
+<main class="content">
+
+<!-- =========================
+     الرئيسية
+========================= -->
+
+<section id="homeSection" class="section active">
+
+  <div class="header">
+    <h2>
+      <i data-lucide="bell-ring"></i>
+      التنبيهات الداخلية
+    </h2>
+
+```
+<p>
+  مركز مختصر لمتابعة التنبيهات الإدارية الداخلية.
+</p>
+```
+
+  </div>
+
+  <div class="dashboard-hero">
+
+```
+<div class="hero-content">
+
+  <div class="hero-kicker">
+    <span class="hero-dot"></span>
+    مركز الإدارة والمتابعة
+  </div>
+
+  <h3>مرحبًا بك في لوحة التحكم</h3>
+
+  <p>
+    تابع الموظفين والطلبات والتنبيهات والأقدمية من مساحة إدارية موحدة وسهلة الاستخدام.
+  </p>
+
+  <div class="hero-actions">
+
+    <button
+      class="hero-action"
+      type="button"
+      onclick="document.querySelector('[data-section=&quot;requestsSection&quot;]').click()">
+      <i data-lucide="inbox"></i>
+      فتح طلبات الموظفين
+    </button>
+
+    <button
+      class="hero-action ghost"
+      type="button"
+      onclick="document.querySelector('[data-section=&quot;southSection&quot;]').click()">
+      <i data-lucide="sun-medium"></i>
+      حساب أقدمية الجنوب
+    </button>
+
+  </div>
+
+</div>
+
+<div class="hero-visual">
+  <div class="hero-orbit orbit-one"></div>
+  <div class="hero-orbit orbit-two"></div>
+
+  <div class="hero-main-icon">
+    <i data-lucide="layout-dashboard"></i>
+  </div>
+</div>
+```
+
+  </div>
+
   <div class="stats-grid">
-    <div class="stat-card"><div class="stat-icon"><i data-lucide="users"></i></div><div><div class="stat-label">الموظفون المضافون بهذه النسخة</div><div class="stat-value" id="statEmployees">0</div></div></div>
-    <div class="stat-card"><div class="stat-icon gold"><i data-lucide="bell"></i></div><div><div class="stat-label">التنبيهات الحالية</div><div class="stat-value" id="statNotices">0</div></div></div>
-    <div class="stat-card"><div class="stat-icon" style="background:#F2EDF8;color:#8064B2"><i data-lucide="inbox"></i></div><div><div class="stat-label">طلبات قيد الدراسة</div><div class="stat-value" id="statRequests">0</div></div></div>
-    <div class="stat-card"><div class="stat-icon green"><i data-lucide="hourglass"></i></div><div><div class="stat-label">متابعة الأقدمية</div><div class="stat-value">مفعلة</div></div></div>
+
+```
+<div class="stat-card">
+  <div class="stat-icon">
+    <i data-lucide="users"></i>
   </div>
+
+  <div>
+    <div class="stat-label">
+      الموظفون المضافون بهذه النسخة
+    </div>
+
+    <div class="stat-value" id="statEmployees">
+      0
+    </div>
+  </div>
+</div>
+
+<div class="stat-card">
+  <div class="stat-icon gold">
+    <i data-lucide="bell"></i>
+  </div>
+
+  <div>
+    <div class="stat-label">
+      التنبيهات الحالية
+    </div>
+
+    <div class="stat-value" id="statNotices">
+      0
+    </div>
+  </div>
+</div>
+
+<div class="stat-card">
+  <div class="stat-icon">
+    <i data-lucide="inbox"></i>
+  </div>
+
+  <div>
+    <div class="stat-label">
+      طلبات قيد الدراسة
+    </div>
+
+    <div class="stat-value" id="statRequests">
+      0
+    </div>
+  </div>
+</div>
+
+<div class="stat-card">
+  <div class="stat-icon green">
+    <i data-lucide="hourglass"></i>
+  </div>
+
+  <div>
+    <div class="stat-label">
+      متابعة الأقدمية
+    </div>
+
+    <div class="stat-value">
+      مفعلة
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
   <div class="card" style="margin-bottom:14px">
-    <div class="notice-head"><strong><i data-lucide="bell-dot"></i> إشعارات النظام</strong><div class="notification-actions"><button class="btn secondary" id="refreshNotificationsBtn"><i data-lucide="refresh-cw"></i>تحديث</button><button class="btn secondary" id="markNotificationsBtn"><i data-lucide="check-check"></i>تعيين الكل كمقروء</button></div></div>
-    <div id="systemNotifications"><div class="empty">جارٍ تحميل إشعارات النظام...</div></div>
+
+```
+<div class="notice-head">
+
+  <strong>
+    <i data-lucide="bell-dot"></i>
+    إشعارات النظام
+  </strong>
+
+  <div class="notification-actions">
+
+    <button class="btn secondary" id="refreshNotificationsBtn" type="button">
+      <i data-lucide="refresh-cw"></i>
+      تحديث
+    </button>
+
+    <button class="btn secondary" id="markNotificationsBtn" type="button">
+      <i data-lucide="check-check"></i>
+      تعيين الكل كمقروء
+    </button>
+
   </div>
+
+</div>
+
+<div id="systemNotifications">
+  <div class="empty">
+    جارٍ تحميل إشعارات النظام...
+  </div>
+</div>
+```
+
+  </div>
+
   <div class="notice">
-    <div class="notice-head"><strong><i data-lucide="megaphone"></i> التنبيهات</strong><button class="btn primary" id="addNoticeBtn"><i data-lucide="plus"></i>إضافة تنبيه</button></div>
-    <div id="noticeList" class="notice-list"></div>
+
+```
+<div class="notice-head">
+
+  <strong>
+    <i data-lucide="megaphone"></i>
+    التنبيهات
+  </strong>
+
+  <button class="btn primary" id="addNoticeBtn" type="button">
+    <i data-lucide="plus"></i>
+    إضافة تنبيه
+  </button>
+
+</div>
+
+<div id="noticeList" class="notice-list"></div>
+```
+
   </div>
+
   <div id="noticeForm" class="card hidden" style="margin-top:14px">
-    <h3 style="display:flex;align-items:center;gap:8px"><i data-lucide="square-pen"></i>إضافة تنبيه داخلي</h3>
-    <div class="form-grid"><div class="field full"><label>نص التنبيه</label><textarea id="noticeText" rows="3" placeholder="اكتب التنبيه الداخلي..."></textarea></div></div>
-    <div class="actions"><button class="btn primary" id="saveNoticeBtn"><i data-lucide="save"></i>حفظ التنبيه</button><button class="btn secondary" id="cancelNoticeBtn"><i data-lucide="x"></i>إلغاء</button></div>
+
+```
+<h3 style="display:flex;align-items:center;gap:8px">
+  <i data-lucide="square-pen"></i>
+  إضافة تنبيه داخلي
+</h3>
+
+<div class="form-grid">
+
+  <div class="field full">
+
+    <label>نص التنبيه</label>
+
+    <textarea
+      id="noticeText"
+      rows="3"
+      placeholder="اكتب التنبيه الداخلي..."></textarea>
+
   </div>
+
+</div>
+
+<div class="actions">
+
+  <button class="btn primary" id="saveNoticeBtn" type="button">
+    <i data-lucide="save"></i>
+    حفظ التنبيه
+  </button>
+
+  <button class="btn secondary" id="cancelNoticeBtn" type="button">
+    <i data-lucide="x"></i>
+    إلغاء
+  </button>
+
+</div>
+```
+
+  </div>
+
 </section>
+
+<!-- =========================
+     الطلبات
+========================= -->
+
 <section id="requestsSection" class="section">
-  <div class="header"><h2><i data-lucide="inbox"></i>مركز طلبات الموظفين</h2><p>واجهة منظمة لاستقبال الطلبات، فتح ملف الموظف، معالجة الطلب، ثم نقله تلقائيًا إلى الأرشيف مع الاحتفاظ الكامل بسجل الإجابة.</p></div>
-  <div class="section-note"><i data-lucide="shield-check"></i><div>البيانات المعروضة للمراجعة الإدارية. لا تصدر المنصة قرار ترقية آليًا؛ المسؤول هو من يراجع المعطيات ويثبت النتيجة والتواريخ والرتبة أو المنصب عند الاقتضاء.</div></div>
-  <div class="request-toolbar">
-    <div class="request-tabs"><button class="request-tab active" data-request-view="active"><i data-lucide="inbox"></i>الطلبات الواردة <span id="activeRequestsCount" class="tab-count">0</span></button><button class="request-tab" data-request-view="archive"><i data-lucide="archive"></i>الأرشيف <span id="archiveRequestsCount" class="tab-count">0</span></button></div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><div style="min-width:260px"><input id="requestSearch" class="request-search" placeholder="بحث باسم الموظف أو الرتبة أو نوع الطلب..." aria-label="بحث في الطلبات"></div><button class="btn primary" id="refreshRequestsBtn"><i data-lucide="refresh-cw"></i>تحديث الطلبات</button></div>
+
+  <div class="header">
+
+```
+<h2>
+  <i data-lucide="inbox"></i>
+  مركز طلبات الموظفين
+</h2>
+
+<p>
+  واجهة منظمة لاستقبال الطلبات، فتح ملف الموظف، معالجة الطلب، ثم نقله تلقائيًا إلى الأرشيف مع الاحتفاظ الكامل بسجل الإجابة.
+</p>
+```
+
   </div>
+
+  <div class="section-note">
+
+```
+<i data-lucide="shield-check"></i>
+
+<div>
+  البيانات المعروضة للمراجعة الإدارية. لا تصدر المنصة قرار ترقية آليًا؛ المسؤول هو من يراجع المعطيات ويثبت النتيجة والتواريخ والرتبة أو المنصب عند الاقتضاء.
+</div>
+```
+
+  </div>
+
+  <div class="request-toolbar">
+
+```
+<div class="request-tabs">
+
+  <button
+    class="request-tab active"
+    data-request-view="active"
+    type="button">
+
+    <i data-lucide="inbox"></i>
+    الطلبات الواردة
+
+    <span id="activeRequestsCount" class="tab-count">
+      0
+    </span>
+
+  </button>
+
+  <button
+    class="request-tab"
+    data-request-view="archive"
+    type="button">
+
+    <i data-lucide="archive"></i>
+    الأرشيف
+
+    <span id="archiveRequestsCount" class="tab-count">
+      0
+    </span>
+
+  </button>
+
+</div>
+
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+
+  <div style="min-width:260px">
+    <input
+      id="requestSearch"
+      class="request-search"
+      placeholder="بحث باسم الموظف أو الرتبة أو نوع الطلب..."
+      aria-label="بحث في الطلبات">
+  </div>
+
+  <button class="btn primary" id="refreshRequestsBtn" type="button">
+    <i data-lucide="refresh-cw"></i>
+    تحديث الطلبات
+  </button>
+
+</div>
+```
+
+  </div>
+
   <div id="requestsStatus" class="result"></div>
-  <div id="requestsList" class="result"><div class="empty">جارٍ تحميل الطلبات...</div></div>
+
+  <div id="requestsList" class="result">
+    <div class="empty">
+      جارٍ تحميل الطلبات...
+    </div>
+  </div>
+
 </section>
+
+<!-- =========================
+     نافذة ملف الموظف
+========================= -->
 
 <div id="employeeProfileModal" class="modal-backdrop hidden">
-  <div class="employee-modal" role="dialog" aria-modal="true" aria-labelledby="employeeModalTitle">
-    <div class="modal-head"><div><div class="modal-kicker">ملف الموظف</div><h3 id="employeeModalTitle">معلومات الموظف</h3></div><button class="modal-close" id="closeEmployeeModal" type="button"><i data-lucide="x"></i></button></div>
-    <div id="employeeModalBody"></div>
+
+  <div
+    class="employee-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="employeeModalTitle">
+
+```
+<div class="modal-head">
+
+  <div>
+
+    <div class="modal-kicker">
+      ملف الموظف
+    </div>
+
+    <h3 id="employeeModalTitle">
+      معلومات الموظف
+    </h3>
+
+  </div>
+
+  <button
+    class="modal-close"
+    id="closeEmployeeModal"
+    type="button"
+    aria-label="إغلاق">
+
+    <i data-lucide="x"></i>
+
+  </button>
+
+</div>
+
+<div id="employeeModalBody"></div>
+```
+
+  </div>
+
+</div>
+
+<!-- =========================
+     إضافة موظف
+========================= -->
+
+<section id="employeesSection" class="section">
+
+  <div class="header">
+
+```
+<h2>
+  <i data-lucide="user-round-plus"></i>
+  إضافة موظف
+</h2>
+
+<p>
+  إدخال يدوي بسيط للبيانات الأساسية اللازمة لمتابعة الأقدمية والاستحقاق الزمني.
+</p>
+```
+
+  </div>
+
+  <div class="card">
+
+```
+<div class="form-grid">
+
+  <div class="field full">
+
+    <label>الاسم واللقب *</label>
+
+    <input
+      id="employeeName"
+      type="text"
+      autocomplete="off"
+      placeholder="مثال: أحمد بن محمد">
+
+  </div>
+
+  <div class="field">
+
+    <label>تاريخ التعيين *</label>
+
+    <input
+      id="appointmentDate"
+      type="date">
+
+  </div>
+
+  <div class="field">
+
+    <label>الدرجة الحالية *</label>
+
+    <input
+      id="currentGrade"
+      type="text"
+      inputmode="numeric"
+      placeholder="مثال: 5">
+
+  </div>
+
+  <div class="field full">
+
+    <label>تاريخ آخر ترقية في الدرجة *</label>
+
+    <input
+      id="lastGradePromotionDate"
+      type="date">
+
+    <small>
+      هذا هو تاريخ بداية أقدمية الدرجة الحالية.
+    </small>
+
+  </div>
+
+</div>
+
+<div class="actions">
+
+  <button class="btn primary" id="saveEmployeeBtn" type="button">
+    <i data-lucide="save"></i>
+    حفظ الموظف
+  </button>
+
+  <button class="btn secondary" id="clearEmployeeBtn" type="button">
+    <i data-lucide="eraser"></i>
+    مسح
+  </button>
+
+</div>
+
+<div id="employeeStatus" class="result"></div>
+
+<div id="employeeCalculation" class="result">
+  <div class="empty">
+    بعد حفظ الموظف سيظهر حساب الاستحقاق الزمني هنا.
   </div>
 </div>
-<section id="employeesSection" class="section">
-  <div class="header"><h2><i data-lucide="user-round-plus"></i>إضافة موظف</h2><p>إدخال يدوي بسيط للبيانات الأساسية اللازمة لمتابعة الأقدمية والاستحقاق الزمني.</p></div>
-  <div class="card">
-    <div class="form-grid">
-      <div class="field full"><label>الاسم واللقب *</label><input id="employeeName" type="text" autocomplete="off" placeholder="مثال: أحمد بن محمد"></div>
-      <div class="field"><label>تاريخ التعيين *</label><input id="appointmentDate" type="date"></div>
-      <div class="field"><label>الدرجة الحالية *</label><input id="currentGrade" type="text" inputmode="numeric" placeholder="مثال: 5"></div>
-      <div class="field full"><label>تاريخ آخر ترقية في الدرجة *</label><input id="lastGradePromotionDate" type="date"><small>هذا هو تاريخ بداية أقدمية الدرجة الحالية.</small></div>
-    </div>
-    <div class="actions"><button class="btn primary" id="saveEmployeeBtn"><i data-lucide="save"></i>حفظ الموظف</button><button class="btn secondary" id="clearEmployeeBtn"><i data-lucide="eraser"></i>مسح</button></div>
-    <div id="employeeStatus" class="result"></div>
-    <div id="employeeCalculation" class="result"><div class="empty">بعد حفظ الموظف سيظهر حساب الاستحقاق الزمني هنا.</div></div>
+```
+
   </div>
+
 </section>
+
+<!-- =========================
+     أقدمية الجنوب
+========================= -->
+
 <section id="southSection" class="section">
-  <div class="header"><h2><i data-lucide="sun-medium"></i>أقدمية الجنوب</h2><p>حساب مستقل للأقدمية الفعلية والأقدمية الإضافية وفق القاعدة المعتمدة في هذه النسخة.</p></div>
-  <div class="card">
-    <div class="form-grid"><div class="field"><label>تاريخ بداية الخدمة</label><input id="southStartDate" type="date"></div><div class="field"><label>تاريخ الحساب</label><input id="southCalcDate" type="date"></div></div>
-    <div class="actions"><button class="btn primary" id="calculateSouthBtn"><i data-lucide="calculator"></i>حساب الأقدمية</button></div>
-    <div id="southResult" class="result"><div class="empty">أدخل التواريخ لإجراء الحساب.</div></div>
+
+  <div class="header">
+
+```
+<h2>
+  <i data-lucide="sun-medium"></i>
+  أقدمية الجنوب
+</h2>
+
+<p>
+  حساب مستقل للأقدمية الفعلية والأقدمية الإضافية وفق القاعدة المعتمدة في هذه النسخة.
+</p>
+```
+
   </div>
-  <div class="warning" style="margin-top:14px">قاعدة الحساب في هذه النسخة قابلة للتعديل. القيمة الافتراضية: 6 أشهر إضافية عن كل سنة خدمة فعلية كاملة.</div>
+
+  <div class="card">
+
+```
+<div class="form-grid">
+
+  <div class="field">
+
+    <label>تاريخ بداية الخدمة</label>
+
+    <input
+      id="southStartDate"
+      type="date">
+
+  </div>
+
+  <div class="field">
+
+    <label>تاريخ الحساب</label>
+
+    <input
+      id="southCalcDate"
+      type="date">
+
+  </div>
+
+</div>
+
+<div class="actions">
+
+  <button class="btn primary" id="calculateSouthBtn" type="button">
+    <i data-lucide="calculator"></i>
+    حساب الأقدمية
+  </button>
+
+</div>
+
+<div id="southResult" class="result">
+
+  <div class="empty">
+    أدخل التواريخ لإجراء الحساب.
+  </div>
+
+</div>
+```
+
+  </div>
+
+  <div class="warning" style="margin-top:14px">
+    قاعدة الحساب في هذه النسخة قابلة للتعديل. القيمة الافتراضية: 6 أشهر إضافية عن كل سنة خدمة فعلية كاملة.
+  </div>
+
 </section>
+
+<!-- =========================
+     التقاعد
+========================= -->
+
 <section id="retirementSection" class="section">
-  <div class="header"><h2><i data-lucide="calendar-clock"></i>التقاعد</h2><p>متابعة تاريخ التقاعد للموظفين الذين تتوفر لهم بيانات الميلاد وقاعدة التقاعد في Supabase.</p></div>
-  <div class="card">
-    <div class="actions"><button class="btn primary" id="refreshRetirementBtn"><i data-lucide="refresh-cw"></i>تحديث بيانات التقاعد</button></div>
-    <div id="retirementStatus" class="result"></div>
-    <div id="retirementTable" class="result"><div class="empty">اضغط تحديث لعرض البيانات المتاحة.</div></div>
+
+  <div class="header">
+
+```
+<h2>
+  <i data-lucide="calendar-clock"></i>
+  التقاعد
+</h2>
+
+<p>
+  متابعة تاريخ التقاعد للموظفين الذين تتوفر لهم بيانات الميلاد وقاعدة التقاعد في Supabase.
+</p>
+```
+
   </div>
+
+  <div class="card">
+
+```
+<div class="actions">
+
+  <button class="btn primary" id="refreshRetirementBtn" type="button">
+    <i data-lucide="refresh-cw"></i>
+    تحديث بيانات التقاعد
+  </button>
+
+</div>
+
+<div id="retirementStatus" class="result"></div>
+
+<div id="retirementTable" class="result">
+
+  <div class="empty">
+    اضغط تحديث لعرض البيانات المتاحة.
+  </div>
+
+</div>
+```
+
+  </div>
+
 </section>
+
 </main>
+
+<!-- =========================
+     JavaScript
+========================= -->
+
 <script>
 (function(){
+
 'use strict';
-const $=id=>document.getElementById(id);
-let db=window.db||null;
-let currentUser=null;
-let employees=[];
-let requests=[];
-let notifications=[];
-const MANUAL_IDS_KEY='career_platform_manual_employee_ids_v2';
-const NOTICE_KEY='career_internal_notices_v2';
-const SOUTH_MONTHS_PER_FULL_YEAR=6;
 
-// قواعد افتراضية مؤقتة؛ يمكن لاحقًا ربطها بجدول قواعد رسمي دون تغيير الواجهة.
-// يتم اختيار قاعدة الدرجة حسب الدرجة وتاريخ السريان إذا أضيفت قواعد في Supabase.
-const DEFAULT_GRADE_RULE={min:30,medium:36,max:42,validFrom:null,validTo:null};
+const $ = id => document.getElementById(id);
 
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-function isoToday(){return new Date().toISOString().slice(0,10)}
-function parseDate(v){if(!v)return null;const d=new Date(String(v).slice(0,10)+'T00:00:00');return Number.isNaN(d.getTime())?null:d}
-function fmtDate(v){const d=parseDate(v);return d?d.toLocaleDateString('ar-DZ'): '—'}
-function monthsBetween(start,end){const a=parseDate(start),b=parseDate(end);if(!a||!b||b<a)return null;let m=(b.getFullYear()-a.getFullYear())*12+(b.getMonth()-a.getMonth());if(b.getDate()<a.getDate())m--;return Math.max(0,m)}
-function addMonths(date,months){const d=parseDate(date);if(!d)return null;const n=new Date(d);n.setMonth(n.getMonth()+Number(months||0));return n.toISOString().slice(0,10)}
-function fmtMonths(m){if(m==null)return '—';const years=Math.floor(m/12),rem=m%12;if(!years)return rem+' شهر';if(!rem)return years+' سنة';return years+' سنة و '+rem+' شهر'}
-function normalizeName(v){return v.trim().replace(/\s+/g,' ')}
-function getName(e){return e.employee_name_ar||e.employee_name||e.full_name||e.name||'—'}
-function getAppointment(e){return e.appointment_date||e.recruitment_date||e.date_recruitment||null}
-function getGrade(e){return e.current_grade??e.grade??''}
-function getGradeStart(e){return e.grade_start_date||e.last_grade_promotion_date||e.current_grade_start_date||null}
-function southBonus(months){return Math.floor(Number(months||0)/12)*SOUTH_MONTHS_PER_FULL_YEAR}
-function manualIds(){try{const a=JSON.parse(localStorage.getItem(MANUAL_IDS_KEY)||'[]');return Array.isArray(a)?a.map(String):[]}catch(_){return []}}
-function rememberManualId(id){if(!id)return;const a=manualIds();if(!a.includes(String(id))){a.push(String(id));localStorage.setItem(MANUAL_IDS_KEY,JSON.stringify(a))}}
-function isManualEmployee(e){return e&&e.id!=null&&manualIds().includes(String(e.id))}
-function activeGradeRule(grade,date){
-  // يدعم جدولًا اختياريًا باسم grade_rules إذا تم إنشاؤه لاحقًا. لا يفترض وجوده.
-  const list=window.__gradeRules||[];
-  const g=String(grade??'').trim();
-  const candidates=list.filter(r=>String(r.grade??r.grade_number??r.current_grade??'').trim()===g)
-    .filter(r=>!r.valid_from||String(r.valid_from).slice(0,10)<=date)
-    .filter(r=>!r.valid_to||String(r.valid_to).slice(0,10)>=date)
-    .sort((a,b)=>String(b.valid_from||'').localeCompare(String(a.valid_from||'')));
-  const r=candidates[0];
-  return r?{min:Number(r.min_months??r.minimum_months??r.min??30),medium:Number(r.medium_months??r.average_months??r.medium??36),max:Number(r.max_months??r.maximum_months??r.max??42),validFrom:r.valid_from||null,validTo:r.valid_to||null}:DEFAULT_GRADE_RULE;
+let db = window.db || null;
+let currentUser = null;
+let employees = [];
+let requests = [];
+let notifications = [];
+
+const MANUAL_IDS_KEY = 'career_platform_manual_employee_ids_v2';
+const NOTICE_KEY = 'career_internal_notices_v2';
+
+const SOUTH_MONTHS_PER_FULL_YEAR = 6;
+
+const DEFAULT_GRADE_RULE = {
+  min:30,
+  medium:36,
+  max:42,
+  validFrom:null,
+  validTo:null
+};
+
+function esc(v){
+  return String(v ?? '').replace(/[&<>"']/g,m=>({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  }[m]));
 }
-function clearMenus(){document.querySelectorAll('.menu-item').forEach(b=>b.classList.remove('active'))}
-function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));const section=$(id);if(section)section.classList.add('active');document.querySelectorAll('.menu-item').forEach(b=>b.classList.toggle('active',b.dataset.section===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='retirementSection')loadRetirement();if(id==='requestsSection')loadRequests()}
-document.querySelectorAll('.menu-item').forEach(b=>b.addEventListener('click',()=>showSection(b.dataset.section)));
-if(window.lucide)lucide.createIcons();
+
+function isoToday(){
+  const d = new Date();
+
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function parseDate(v){
+  if(!v)return null;
+
+  const d = new Date(
+    String(v).slice(0,10) + 'T00:00:00'
+  );
+
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
+function fmtDate(v){
+  const d = parseDate(v);
+
+  return d
+    ? d.toLocaleDateString('ar-DZ')
+    : '—';
+}
+
+function monthsBetween(start,end){
+
+  const a = parseDate(start);
+  const b = parseDate(end);
+
+  if(!a || !b || b < a)return null;
+
+  let m =
+    (b.getFullYear()-a.getFullYear()) * 12 +
+    (b.getMonth()-a.getMonth());
+
+  if(b.getDate() < a.getDate())m--;
+
+  return Math.max(0,m);
+}
+
+function addMonths(date,months){
+
+  const d = parseDate(date);
+
+  if(!d)return null;
+
+  const n = new Date(d);
+
+  n.setMonth(
+    n.getMonth() + Number(months || 0)
+  );
+
+  return n.toISOString().slice(0,10);
+}
+
+function fmtMonths(m){
+
+  if(m == null)return '—';
+
+  const years = Math.floor(m/12);
+  const rem = m % 12;
+
+  if(!years)return rem + ' شهر';
+
+  if(!rem)return years + ' سنة';
+
+  return years + ' سنة و ' + rem + ' شهر';
+}
+
+function formatMonths(v){
+
+  const n = Number(v);
+
+  if(!Number.isFinite(n) || n <= 0){
+    return '—';
+  }
+
+  const y = Math.floor(n/12);
+  const m = n % 12;
+
+  if(y && m){
+    return `${y} سنة و ${m} شهر`;
+  }
+
+  if(y){
+    return `${y} سنة`;
+  }
+
+  return `${m} شهر`;
+}
+
+function diffMonths(a,b){
+
+  if(!a || !b)return 0;
+
+  const da = new Date(
+    String(a).slice(0,10)+'T00:00:00'
+  );
+
+  const dbb = new Date(
+    String(b).slice(0,10)+'T00:00:00'
+  );
+
+  if(
+    isNaN(da.getTime()) ||
+    isNaN(dbb.getTime()) ||
+    dbb < da
+  ){
+    return 0;
+  }
+
+  let months =
+    (dbb.getFullYear()-da.getFullYear())*12 +
+    (dbb.getMonth()-da.getMonth());
+
+  if(dbb.getDate() < da.getDate())months--;
+
+  return Math.max(0,months);
+}
+
+function normalizeName(v){
+  return v.trim().replace(/\s+/g,' ');
+}
+
+function getName(e){
+  return e.employee_name_ar ||
+         e.employee_name ||
+         e.full_name ||
+         e.name ||
+         '—';
+}
+
+function getAppointment(e){
+  return e.appointment_date ||
+         e.recruitment_date ||
+         e.date_recruitment ||
+         null;
+}
+
+function getGrade(e){
+  return e.current_grade ??
+         e.grade ??
+         '';
+}
+
+function getGradeStart(e){
+  return e.grade_start_date ||
+         e.last_grade_promotion_date ||
+         e.current_grade_start_date ||
+         null;
+}
+
+function southBonus(months){
+  return Math.floor(
+    Number(months || 0) / 12
+  ) * SOUTH_MONTHS_PER_FULL_YEAR;
+}
+
+function manualIds(){
+
+  try{
+
+    const a = JSON.parse(
+      localStorage.getItem(MANUAL_IDS_KEY) || '[]'
+    );
+
+    return Array.isArray(a)
+      ? a.map(String)
+      : [];
+
+  }catch(_){
+
+    return [];
+
+  }
+}
+
+function rememberManualId(id){
+
+  if(!id)return;
+
+  const a = manualIds();
+
+  if(!a.includes(String(id))){
+
+    a.push(String(id));
+
+    localStorage.setItem(
+      MANUAL_IDS_KEY,
+      JSON.stringify(a)
+    );
+
+  }
+}
+
+function activeGradeRule(grade,date){
+
+  const list = window.__gradeRules || [];
+
+  const g = String(grade ?? '').trim();
+
+  const candidates = list
+    .filter(r =>
+      String(
+        r.grade ??
+        r.grade_number ??
+        r.current_grade ??
+        ''
+      ).trim() === g
+    )
+    .filter(r =>
+      !r.valid_from ||
+      String(r.valid_from).slice(0,10) <= date
+    )
+    .filter(r =>
+      !r.valid_to ||
+      String(r.valid_to).slice(0,10) >= date
+    )
+    .sort((a,b)=>
+      String(b.valid_from || '')
+      .localeCompare(
+        String(a.valid_from || '')
+      )
+    );
+
+  const r = candidates[0];
+
+  return r
+    ? {
+        min:Number(
+          r.min_months ??
+          r.minimum_months ??
+          r.min ??
+          30
+        ),
+        medium:Number(
+          r.medium_months ??
+          r.average_months ??
+          r.medium ??
+          36
+        ),
+        max:Number(
+          r.max_months ??
+          r.maximum_months ??
+          r.max ??
+          42
+        ),
+        validFrom:r.valid_from || null,
+        validTo:r.valid_to || null
+      }
+    : DEFAULT_GRADE_RULE;
+}
+
+/* =========================
+   التنقل
+========================= */
+
+function showSection(id){
+
+  document
+    .querySelectorAll('.section')
+    .forEach(s => s.classList.remove('active'));
+
+  const section = $(id);
+
+  if(section){
+    section.classList.add('active');
+  }
+
+  document
+    .querySelectorAll('.menu-item')
+    .forEach(b =>
+      b.classList.toggle(
+        'active',
+        b.dataset.section === id
+      )
+    );
+
+  window.scrollTo({
+    top:0,
+    behavior:'smooth'
+  });
+
+  if(id === 'retirementSection'){
+    loadRetirement();
+  }
+
+  if(id === 'requestsSection'){
+    loadRequests();
+  }
+}
+
+document
+  .querySelectorAll('.menu-item')
+  .forEach(b =>
+    b.addEventListener(
+      'click',
+      () => showSection(b.dataset.section)
+    )
+  );
+
+if(window.lucide){
+  lucide.createIcons();
+}
+
+/* =========================
+   إشعارات النظام
+========================= */
 
 async function loadNotifications(){
-  const box=$('systemNotifications');
+
+  const box = $('systemNotifications');
+
   if(!box)return;
+
   try{
-    const r=await db.from('career_notifications').select('*').order('created_at',{ascending:false}).limit(30);
+
+    const r = await db
+      .from('career_notifications')
+      .select('*')
+      .order('created_at',{ascending:false})
+      .limit(30);
+
     if(r.error)throw r.error;
-    notifications=Array.isArray(r.data)?r.data:[];
-    const unread=notifications.filter(n=>!n.is_read).length;
-    if($('unreadNotifBadge'))$('unreadNotifBadge').textContent=String(unread);
-    if(!notifications.length){box.innerHTML='<div class="empty">لا توجد إشعارات نظام حاليًا.</div>';}
-    else{box.innerHTML=notifications.map(n=>`<div class="app-notification ${n.is_read?'':'unread'}"><div class="ni"><i data-lucide="${esc(n.icon||'bell')}"></i></div><div style="flex:1"><strong>${esc(n.title||'إشعار')}</strong><p>${esc(n.message||'')}</p><time>${esc(new Date(n.created_at).toLocaleString('ar-DZ'))}${n.is_read?'':' — جديد'}</time></div></div>`).join('');}
-    if($('statNotices'))$('statNotices').textContent=String(notifications.filter(n=>!n.is_read).length);
-    if(window.lucide)lucide.createIcons();
-  }catch(e){console.warn('Notifications unavailable:',e.message);box.innerHTML='<div class="empty">إشعارات النظام ستظهر بعد تنفيذ ملف SQL المحدث.</div>'}
+
+    notifications =
+      Array.isArray(r.data)
+        ? r.data
+        : [];
+
+    const unread =
+      notifications.filter(
+        n => !n.is_read
+      ).length;
+
+    if($('unreadNotifBadge')){
+      $('unreadNotifBadge').textContent =
+        String(unread);
+    }
+
+    if(!notifications.length){
+
+      box.innerHTML =
+        '<div class="empty">لا توجد إشعارات نظام حاليًا.</div>';
+
+    }else{
+
+      box.innerHTML =
+        notifications.map(n => `
+
+          <div class="app-notification ${n.is_read ? '' : 'unread'}">
+
+            <div class="ni">
+              <i data-lucide="${esc(n.icon || 'bell')}"></i>
+            </div>
+
+            <div style="flex:1">
+
+              <strong>
+                ${esc(n.title || 'إشعار')}
+              </strong>
+
+              <p>
+                ${esc(n.message || '')}
+              </p>
+
+              <time>
+                ${esc(
+                  new Date(
+                    n.created_at
+                  ).toLocaleString('ar-DZ')
+                )}
+                ${n.is_read ? '' : ' — جديد'}
+              </time>
+
+            </div>
+
+          </div>
+
+        `).join('');
+
+    }
+
+    if($('statNotices')){
+
+      $('statNotices').textContent =
+        String(
+          notifications.filter(
+            n => !n.is_read
+          ).length
+        );
+
+    }
+
+    if(window.lucide){
+      lucide.createIcons();
+    }
+
+  }catch(e){
+
+    console.warn(
+      'Notifications unavailable:',
+      e.message
+    );
+
+    box.innerHTML =
+      '<div class="empty">إشعارات النظام ستظهر بعد تنفيذ ملف SQL المحدث.</div>';
+
+  }
 }
+
 async function markNotificationsRead(){
-  const ids=notifications.filter(n=>!n.is_read).map(n=>n.id);
+
+  const ids =
+    notifications
+      .filter(n => !n.is_read)
+      .map(n => n.id);
+
   if(!ids.length)return;
-  const r=await db.from('career_notifications').update({is_read:true,read_at:new Date().toISOString()}).in('id',ids);
-  if(r.error){alert('تعذر تحديث الإشعارات: '+r.error.message);return}
+
+  const r = await db
+    .from('career_notifications')
+    .update({
+      is_read:true,
+      read_at:new Date().toISOString()
+    })
+    .in('id',ids);
+
+  if(r.error){
+
+    alert(
+      'تعذر تحديث الإشعارات: ' +
+      r.error.message
+    );
+
+    return;
+  }
+
   await loadNotifications();
 }
-function renderNotices(){const list=$('noticeList');let notices=[];try{notices=JSON.parse(localStorage.getItem(NOTICE_KEY)||'[]')}catch(_){notices=[]}if(!notices.length){list.innerHTML='<div class="empty">لا توجد تنبيهات داخلية حاليًا.</div>'; const stat=$('statNotices'); if(stat)stat.textContent='0'; return}const stat=$('statNotices'); if(stat)stat.textContent=String(notices.length); list.innerHTML=notices.map((n,i)=>`<div class="notice-item"><div>${esc(n.text)}</div><div class="date">${esc(n.date)} <button class="btn danger delete-notice" data-notice="${i}"><i data-lucide="trash-2"></i>حذف</button></div></div>`).join('');list.querySelectorAll('[data-notice]').forEach(b=>b.onclick=()=>{let a=[];try{a=JSON.parse(localStorage.getItem(NOTICE_KEY)||'[]')}catch(_){}a.splice(Number(b.dataset.notice),1);localStorage.setItem(NOTICE_KEY,JSON.stringify(a));renderNotices()})}
-$('addNoticeBtn').onclick=()=>$('noticeForm').classList.remove('hidden');
-$('cancelNoticeBtn').onclick=()=>{$('noticeForm').classList.add('hidden');$('noticeText').value=''};
-$('saveNoticeBtn').onclick=()=>{const text=$('noticeText').value.trim();if(!text)return alert('اكتب نص التنبيه أولًا.');let a=[];try{a=JSON.parse(localStorage.getItem(NOTICE_KEY)||'[]')}catch(_){}a.unshift({text,date:new Date().toLocaleString('ar-DZ')});localStorage.setItem(NOTICE_KEY,JSON.stringify(a));$('noticeText').value='';$('noticeForm').classList.add('hidden');renderNotices()};
 
-function employeePayload(name,appointment,grade,gradeDate){return {employee_name_ar:name,appointment_date:appointment,current_grade:grade,grade_start_date:gradeDate,status:'active'}}
-async function saveEmployee(){
-  const name=normalizeName($('employeeName').value),appointment=$('appointmentDate').value,grade=$('currentGrade').value.trim(),gradeDate=$('lastGradePromotionDate').value,status=$('employeeStatus');
-  if(!name||!appointment||!grade||!gradeDate){status.innerHTML='<div class="status error">يرجى ملء جميع الحقول الأربعة.</div>';return}
-  if(!parseDate(appointment)||!parseDate(gradeDate)||parseDate(gradeDate)>parseDate(isoToday())){status.innerHTML='<div class="status error">تحقق من صحة التواريخ.</div>';return}
-  if(parseDate(gradeDate)<parseDate(appointment)){status.innerHTML='<div class="status error">تاريخ آخر ترقية في الدرجة لا يمكن أن يسبق تاريخ التعيين.</div>';return}
-  const btn=$('saveEmployeeBtn');btn.disabled=true;btn.innerHTML='<i data-lucide="loader-circle"></i>جارٍ الحفظ...'; if(window.lucide) lucide.createIcons();
+/* =========================
+   التنبيهات الداخلية
+========================= */
+
+function renderNotices(){
+
+  const list = $('noticeList');
+
+  let notices = [];
+
   try{
-    if(!db)throw new Error('اتصال Supabase غير متاح. تأكد من وجود config.js في نفس مجلد الصفحة.');
-    const {data,error}=await db.from('employees').insert(employeePayload(name,appointment,grade,gradeDate)).select('*').single();
-    if(error)throw error;
-    employees.unshift(data);rememberManualId(data.id); const stat=$('statEmployees'); if(stat)stat.textContent=String(employees.length);
-    status.innerHTML='<div class="status ok">تم حفظ الموظف بنجاح، وأصبح ضمن الموظفين الذين تديرهم هذه النسخة.</div>';
-    renderEmployeeCalculation(data);
-    $('employeeName').value='';$('appointmentDate').value='';$('currentGrade').value='';$('lastGradePromotionDate').value='';
-  }catch(e){console.error(e);status.innerHTML='<div class="status error">تعذر حفظ الموظف: '+esc(e.message||'خطأ غير معروف')+'</div>'}
-  finally{btn.disabled=false;btn.innerHTML='<i data-lucide="save"></i>حفظ الموظف'; if(window.lucide) lucide.createIcons()}
+
+    notices = JSON.parse(
+      localStorage.getItem(NOTICE_KEY) || '[]'
+    );
+
+  }catch(_){
+
+    notices = [];
+
+  }
+
+  if(!notices.length){
+
+    list.innerHTML =
+      '<div class="empty">لا توجد تنبيهات داخلية حاليًا.</div>';
+
+    const stat = $('statNotices');
+
+    if(stat)stat.textContent = '0';
+
+    return;
+  }
+
+  const stat = $('statNotices');
+
+  if(stat){
+    stat.textContent =
+      String(notices.length);
+  }
+
+  list.innerHTML =
+    notices.map((n,i) => `
+
+      <div class="notice-item">
+
+        <div>
+          ${esc(n.text)}
+        </div>
+
+        <div class="date">
+
+          ${esc(n.date)}
+
+          <button
+            class="btn danger delete-notice"
+            data-notice="${i}"
+            type="button">
+
+            <i data-lucide="trash-2"></i>
+            حذف
+
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join('');
+
+  list
+    .querySelectorAll('[data-notice]')
+    .forEach(b => {
+
+      b.onclick = () => {
+
+        let a = [];
+
+        try{
+
+          a = JSON.parse(
+            localStorage.getItem(
+              NOTICE_KEY
+            ) || '[]'
+          );
+
+        }catch(_){}
+
+        a.splice(
+          Number(b.dataset.notice),
+          1
+        );
+
+        localStorage.setItem(
+          NOTICE_KEY,
+          JSON.stringify(a)
+        );
+
+        renderNotices();
+
+        if(window.lucide){
+          lucide.createIcons();
+        }
+
+      };
+
+    });
+
+  if(window.lucide){
+    lucide.createIcons();
+  }
 }
-$('saveEmployeeBtn').onclick=saveEmployee;
-$('clearEmployeeBtn').onclick=()=>{['employeeName','appointmentDate','currentGrade','lastGradePromotionDate'].forEach(id=>$(id).value='');$('employeeStatus').innerHTML='';$('employeeCalculation').innerHTML='<div class="empty">بعد حفظ الموظف سيظهر حساب الاستحقاق الزمني هنا.</div>'};
+
+$('addNoticeBtn').onclick = () => {
+
+  $('noticeForm')
+    .classList
+    .remove('hidden');
+
+};
+
+$('cancelNoticeBtn').onclick = () => {
+
+  $('noticeForm')
+    .classList
+    .add('hidden');
+
+  $('noticeText').value = '';
+
+};
+
+$('saveNoticeBtn').onclick = () => {
+
+  const text =
+    $('noticeText')
+      .value
+      .trim();
+
+  if(!text){
+
+    alert(
+      'اكتب نص التنبيه أولًا.'
+    );
+
+    return;
+  }
+
+  let a = [];
+
+  try{
+
+    a = JSON.parse(
+      localStorage.getItem(
+        NOTICE_KEY
+      ) || '[]'
+    );
+
+  }catch(_){}
+
+  a.unshift({
+    text,
+    date:new Date().toLocaleString('ar-DZ')
+  });
+
+  localStorage.setItem(
+    NOTICE_KEY,
+    JSON.stringify(a)
+  );
+
+  $('noticeText').value = '';
+
+  $('noticeForm')
+    .classList
+    .add('hidden');
+
+  renderNotices();
+
+};
+
+/* =========================
+   الموظفون
+========================= */
+
+function employeePayload(
+  name,
+  appointment,
+  grade,
+  gradeDate
+){
+
+  return {
+    employee_name_ar:name,
+    appointment_date:appointment,
+    current_grade:grade,
+    grade_start_date:gradeDate,
+    status:'active'
+  };
+
+}
+
+async function saveEmployee(){
+
+  const name =
+    normalizeName(
+      $('employeeName').value
+    );
+
+  const appointment =
+    $('appointmentDate').value;
+
+  const grade =
+    $('currentGrade')
+      .value
+      .trim();
+
+  const gradeDate =
+    $('lastGradePromotionDate').value;
+
+  const status =
+    $('employeeStatus');
+
+  if(
+    !name ||
+    !appointment ||
+    !grade ||
+    !gradeDate
+  ){
+
+    status.innerHTML =
+      '<div class="status error">يرجى ملء جميع الحقول الأربعة.</div>';
+
+    return;
+  }
+
+  if(
+    !parseDate(appointment) ||
+    !parseDate(gradeDate) ||
+    parseDate(gradeDate) >
+    parseDate(isoToday())
+  ){
+
+    status.innerHTML =
+      '<div class="status error">تحقق من صحة التواريخ.</div>';
+
+    return;
+  }
+
+  if(
+    parseDate(gradeDate) <
+    parseDate(appointment)
+  ){
+
+    status.innerHTML =
+      '<div class="status error">تاريخ آخر ترقية في الدرجة لا يمكن أن يسبق تاريخ التعيين.</div>';
+
+    return;
+  }
+
+  const btn =
+    $('saveEmployeeBtn');
+
+  btn.disabled = true;
+
+  btn.innerHTML =
+    '<i data-lucide="loader-circle"></i>جارٍ الحفظ...';
+
+  if(window.lucide){
+    lucide.createIcons();
+  }
+
+  try{
+
+    if(!db){
+
+      throw new Error(
+        'اتصال Supabase غير متاح. تأكد من وجود config.js في نفس مجلد الصفحة.'
+      );
+
+    }
+
+    const {
+      data,
+      error
+    } = await db
+      .from('employees')
+      .insert(
+        employeePayload(
+          name,
+          appointment,
+          grade,
+          gradeDate
+        )
+      )
+      .select('*')
+      .single();
+
+    if(error)throw error;
+
+    employees.unshift(data);
+
+    rememberManualId(data.id);
+
+    const stat =
+      $('statEmployees');
+
+    if(stat){
+
+      stat.textContent =
+        String(employees.length);
+
+    }
+
+    status.innerHTML =
+      '<div class="status ok">تم حفظ الموظف بنجاح، وأصبح ضمن الموظفين الذين تديرهم هذه النسخة.</div>';
+
+    renderEmployeeCalculation(data);
+
+    $('employeeName').value = '';
+    $('appointmentDate').value = '';
+    $('currentGrade').value = '';
+    $('lastGradePromotionDate').value = '';
+
+  }catch(e){
+
+    console.error(e);
+
+    status.innerHTML =
+      '<div class="status error">تعذر حفظ الموظف: ' +
+      esc(e.message || 'خطأ غير معروف') +
+      '</div>';
+
+  }finally{
+
+    btn.disabled = false;
+
+    btn.innerHTML =
+      '<i data-lucide="save"></i>حفظ الموظف';
+
+    if(window.lucide){
+      lucide.createIcons();
+    }
+
+  }
+
+}
+
+$('saveEmployeeBtn').onclick =
+  saveEmployee;
+
+$('clearEmployeeBtn').onclick = () => {
+
+  [
+    'employeeName',
+    'appointmentDate',
+    'currentGrade',
+    'lastGradePromotionDate'
+  ].forEach(
+    id => $(id).value = ''
+  );
+
+  $('employeeStatus').innerHTML = '';
+
+  $('employeeCalculation').innerHTML =
+    '<div class="empty">بعد حفظ الموظف سيظهر حساب الاستحقاق الزمني هنا.</div>';
+
+};
+
+/* =========================
+   حساب الموظف
+========================= */
 
 function renderEmployeeCalculation(e){
-  const today=isoToday(),app=getAppointment(e),gs=getGradeStart(e),grade=getGrade(e);const actual=monthsBetween(app,today);const gradeMonths=monthsBetween(gs,today);const bonus=southBonus(gradeMonths);const effective=gradeMonths==null?null:gradeMonths+bonus;const rule=activeGradeRule(grade,today);const rows=[['المدة الدنيا',rule.min],['المدة المتوسطة',rule.medium],['المدة القصوى',rule.max]];
-  let html=`<div class="calc-grid"><div class="metric"><div class="label">الأقدمية الفعلية منذ التعيين</div><div class="value">${fmtMonths(actual)}</div></div><div class="metric"><div class="label">أقدمية الجنوب الإضافية للدرجة الحالية</div><div class="value">${fmtMonths(bonus)}</div></div><div class="metric"><div class="label">أقدمية الدرجة الحالية المحتسبة</div><div class="value">${fmtMonths(effective)}</div></div></div><div class="card" style="margin-top:14px;background:#fbfdfe"><h3>الاستحقاق الزمني للدرجة الحالية ${esc(grade)}</h3><table class="employee-table"><thead><tr><th>المدة</th><th>التاريخ الأساسي</th><th>بعد احتساب الجنوب</th><th>الوضع</th></tr></thead><tbody>`;
-  rows.forEach(([label,m])=>{const base=addMonths(gs,m),effectiveDate=addMonths(gs,Math.max(0,m-bonus));const ready=effectiveDate&&effectiveDate<=today;html+=`<tr><td>${label} (${m} شهرًا)</td><td>${fmtDate(base)}</td><td>${fmtDate(effectiveDate)}</td><td><span class="badge">${ready?'مستحق زمنيًا':'لم يحل بعد'}</span></td></tr>`});
-  html+=`</tbody></table><div class="warning" style="margin-top:12px">هذا حساب زمني للأقدمية والاستحقاق فقط، وليس قرارًا بالترقية. قاعدة المدد قابلة للضبط وربطها لاحقًا بتاريخ السريان الرسمي لكل درجة.</div></div>`;$('employeeCalculation').innerHTML=html
+
+  const today = isoToday();
+
+  const app =
+    getAppointment(e);
+
+  const gs =
+    getGradeStart(e);
+
+  const grade =
+    getGrade(e);
+
+  const actual =
+    monthsBetween(
+      app,
+      today
+    );
+
+  const gradeMonths =
+    monthsBetween(
+      gs,
+      today
+    );
+
+  const bonus =
+    southBonus(
+      gradeMonths
+    );
+
+  const effective =
+    gradeMonths == null
+      ? null
+      : gradeMonths + bonus;
+
+  const rule =
+    activeGradeRule(
+      grade,
+      today
+    );
+
+  const rows = [
+    ['المدة الدنيا',rule.min],
+    ['المدة المتوسطة',rule.medium],
+    ['المدة القصوى',rule.max]
+  ];
+
+  let html = `
+
+    <div class="calc-grid">
+
+      <div class="metric">
+        <div class="label">
+          الأقدمية الفعلية منذ التعيين
+        </div>
+        <div class="value">
+          ${fmtMonths(actual)}
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="label">
+          أقدمية الجنوب الإضافية للدرجة الحالية
+        </div>
+        <div class="value">
+          ${fmtMonths(bonus)}
+        </div>
+      </div>
+
+      <div class="metric">
+        <div class="label">
+          أقدمية الدرجة الحالية المحتسبة
+        </div>
+        <div class="value">
+          ${fmtMonths(effective)}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card" style="margin-top:14px;background:#fbfdfe">
+
+      <h3>
+        الاستحقاق الزمني للدرجة الحالية
+        ${esc(grade)}
+      </h3>
+
+      <div style="overflow-x:auto">
+
+        <table class="employee-table">
+
+          <thead>
+
+            <tr>
+              <th>المدة</th>
+              <th>التاريخ الأساسي</th>
+              <th>بعد احتساب الجنوب</th>
+              <th>الوضع</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+  `;
+
+  rows.forEach(([label,m]) => {
+
+    const base =
+      addMonths(
+        gs,
+        m
+      );
+
+    const effectiveDate =
+      addMonths(
+        gs,
+        Math.max(
+          0,
+          m - bonus
+        )
+      );
+
+    const ready =
+      effectiveDate &&
+      effectiveDate <= today;
+
+    html += `
+
+      <tr>
+
+        <td>
+          ${label} (${m} شهرًا)
+        </td>
+
+        <td>
+          ${fmtDate(base)}
+        </td>
+
+        <td>
+          ${fmtDate(effectiveDate)}
+        </td>
+
+        <td>
+          <span class="badge">
+            ${ready ? 'مستحق زمنيًا' : 'لم يحل بعد'}
+          </span>
+        </td>
+
+      </tr>
+
+    `;
+
+  });
+
+  html += `
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <div class="warning" style="margin-top:12px">
+        هذا حساب زمني للأقدمية والاستحقاق فقط، وليس قرارًا بالترقية. قاعدة المدد قابلة للضبط وربطها لاحقًا بتاريخ السريان الرسمي لكل درجة.
+      </div>
+
+    </div>
+
+  `;
+
+  $('employeeCalculation').innerHTML =
+    html;
+
 }
 
-$('calculateSouthBtn').onclick=()=>{const s=$('southStartDate').value,e=$('southCalcDate').value||isoToday(),m=monthsBetween(s,e);if(m==null){$('southResult').innerHTML='<div class="status error">تحقق من التاريخين.</div>';return}const b=southBonus(m);$('southResult').innerHTML=`<div class="calc-grid"><div class="metric"><div class="label">الخدمة الفعلية</div><div class="value">${fmtMonths(m)}</div></div><div class="metric"><div class="label">الأقدمية الإضافية</div><div class="value">${fmtMonths(b)}</div></div><div class="metric"><div class="label">الخدمة المحتسبة</div><div class="value">${fmtMonths(m+b)}</div></div></div>`};
-$('southCalcDate').value=isoToday();
+/* =========================
+   أقدمية الجنوب
+========================= */
+
+$('calculateSouthBtn').onclick = () => {
+
+  const s =
+    $('southStartDate').value;
+
+  const e =
+    $('southCalcDate').value ||
+    isoToday();
+
+  const m =
+    monthsBetween(
+      s,
+      e
+    );
+
+  if(m == null){
+
+    $('southResult').innerHTML =
+      '<div class="status error">تحقق من التاريخين.</div>';
+
+    return;
+  }
+
+  const b =
+    southBonus(m);
+
+  $('southResult').innerHTML = `
+
+    <div class="calc-grid">
+
+      <div class="metric">
+
+        <div class="label">
+          الخدمة الفعلية
+        </div>
+
+        <div class="value">
+          ${fmtMonths(m)}
+        </div>
+
+      </div>
+
+      <div class="metric">
+
+        <div class="label">
+          الأقدمية الإضافية
+        </div>
+
+        <div class="value">
+          ${fmtMonths(b)}
+        </div>
+
+      </div>
+
+      <div class="metric">
+
+        <div class="label">
+          الخدمة المحتسبة
+        </div>
+
+        <div class="value">
+          ${fmtMonths(m+b)}
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+};
+
+$('southCalcDate').value =
+  isoToday();
+
+/* =========================
+   قواعد الدرجة
+========================= */
 
 async function loadOptionalGradeRules(){
-  window.__gradeRules=[];
+
+  window.__gradeRules = [];
+
   if(!db)return;
-  try{const r=await db.from('grade_rules').select('*');if(!r.error&&Array.isArray(r.data))window.__gradeRules=r.data}catch(_){/* الجدول اختياري */}
+
+  try{
+
+    const r =
+      await db
+        .from('grade_rules')
+        .select('*');
+
+    if(
+      !r.error &&
+      Array.isArray(r.data)
+    ){
+
+      window.__gradeRules =
+        r.data;
+
+    }
+
+  }catch(_){}
+
 }
+
+/* =========================
+   تحميل الموظفين
+========================= */
+
 async function loadEmployees(){
-  // لا تُعرض الأسماء القديمة. نحتفظ فقط بمعرّفات الموظفين الذين أضافتهم هذه النسخة يدويًا.
-  employees=[];
-  const ids=manualIds();if(!ids.length)return;
-  try{const r=await db.from('employees').select('*').in('id',ids);if(r.error)throw r.error;employees=Array.isArray(r.data)?r.data:[]}catch(e){console.warn('Manual employee preload skipped:',e.message)}
-}
-function retirementDate(birth,age){const d=parseDate(birth);if(!d)return null;d.setFullYear(d.getFullYear()+Number(age||60));return d.toISOString().slice(0,10)}
-async function loadRetirement(){
-  const box=$('retirementTable'),status=$('retirementStatus');box.innerHTML='<div class="empty">جارٍ تحميل بيانات التقاعد...</div>';status.innerHTML='';
+
+  employees = [];
+
+  const ids =
+    manualIds();
+
+  if(!ids.length)return;
+
   try{
-    const ids=manualIds();
-    if(!ids.length){box.innerHTML='<div class="empty">لا توجد موظفين مضافون يدويًا في هذه النسخة بعد.</div>';return}
-    const [er,rr]=await Promise.all([db.from('employees').select('*').in('id',ids),db.from('retirement_rules').select('*').eq('active',true)]);
-    if(er.error)throw er.error;
-    const emps=Array.isArray(er.data)?er.data:[];const rules=Array.isArray(rr.data)?rr.data:[];const today=isoToday();
-    const rule=rules.filter(r=>!r.valid_from||today>=String(r.valid_from).slice(0,10)).filter(r=>!r.valid_to||today<=String(r.valid_to).slice(0,10)).sort((a,b)=>String(b.valid_from||'').localeCompare(String(a.valid_from||'')))[0];
-    const age=Number(rule?.minimum_age_years)||60;
-    const rows=emps.map(e=>{const birth=e.birth_date||e.employee_birth_date||e.date_naissance||e.dob;return {...e,_birth:birth,_ret:retirementDate(birth,age)}}).filter(e=>e._ret);
-    if(!rows.length){box.innerHTML='<div class="empty">الموظفون المضافون يدويًا بهذه المرحلة لا تحتوي استمارتهم على تاريخ الميلاد؛ لذلك لا يمكن حساب تاريخ التقاعد لهم حاليًا. يمكن إضافة تاريخ الميلاد لاحقًا عند اعتماد الحقول الجديدة.</div>';return}
-    box.innerHTML=`<div class="status ok">سن التقاعد المستعمل: ${age} سنة — قاعدة ${esc(rule?.rule_name_ar||'القاعدة الفعالة')}</div><table class="employee-table"><thead><tr><th>الاسم واللقب</th><th>تاريخ الميلاد</th><th>تاريخ التعيين</th><th>تاريخ التقاعد المتوقع</th><th>الحالة</th></tr></thead><tbody>${rows.map(e=>{const due=parseDate(e._ret)<=parseDate(today);return `<tr><td>${esc(getName(e))}</td><td>${fmtDate(e._birth)}</td><td>${fmtDate(getAppointment(e))}</td><td>${fmtDate(e._ret)}</td><td><span class="badge">${due?'بلغ الموعد':'قيد المتابعة'}</span></td></tr>`}).join('')}</tbody></table>`
-  }catch(e){console.error(e);status.innerHTML='<div class="status error">تعذر تحميل التقاعد: '+esc(e.message||'خطأ غير معروف')+'</div>';box.innerHTML='<div class="empty">تحقق من اتصال Supabase ومن جدول retirement_rules.</div>'}
-}
-async function loadRequests(){
-  const box=$('requestsList'),status=$('requestsStatus'); if(!box)return;
-  box.innerHTML='<div class="empty">جارٍ تحميل طلبات الموظفين...</div>';status.innerHTML='';
-  try{
-    const r=await db.from('career_requests').select('*,career_profiles(*)').order('created_at',{ascending:false});
+
+    const r =
+      await db
+        .from('employees')
+        .select('*')
+        .in('id',ids);
+
     if(r.error)throw r.error;
-    requests=Array.isArray(r.data)?r.data:[];
-    const active=requests.filter(x=>x.status==='pending' || x.status==='in_review');
-    const archive=requests.filter(x=>x.status==='resolved' || x.status==='rejected' || x.archived_at);
-    if($('statRequests'))$('statRequests').textContent=String(active.length);
-    if($('pendingBadge'))$('pendingBadge').textContent=String(active.length);
-    if($('activeRequestsCount'))$('activeRequestsCount').textContent=String(active.length);
-    if($('archiveRequestsCount'))$('archiveRequestsCount').textContent=String(archive.length);
-    renderRequestView(currentRequestView==='archive'?'archive':'active');
-  }catch(e){console.error(e);box.innerHTML='<div class="empty">تعذر تحميل الطلبات. تأكد من إنشاء جدول career_requests وcareer_profiles وفق ملف SQL المرفق.</div>';status.innerHTML='<div class="status error">'+esc(e.message||'خطأ غير معروف')+'</div>'}
-}
-function requestStatusLabel(status){return status==='resolved'?['تمت الإجابة','ok']:status==='rejected'?['غير معتمد حاليًا','no']:status==='in_review'?['قيد الدراسة','wait']:['جديد','wait']}
-let currentRequestView='active';
-function renderRequestView(view){
-  currentRequestView=view;
-  document.querySelectorAll('.request-tab').forEach(b=>b.classList.toggle('active',b.dataset.requestView===view));
-  const box=$('requestsList'); if(!box)return;
-  const baseRows=view==='archive'?requests.filter(x=>x.status==='resolved'||x.status==='rejected'||x.archived_at):requests.filter(x=>x.status==='pending'||x.status==='in_review');const q=String($('requestSearch')?.value||'').trim().toLowerCase();const rows=q?baseRows.filter(x=>{const p=x.career_profiles||{};return [p.employee_name_ar,p.current_rank,x.title,x.message,x.request_subject,x.request_type].some(v=>String(v||'').toLowerCase().includes(q))}):baseRows;
-  if(!rows.length){box.innerHTML=view==='archive'?'<div class="empty"><i data-lucide="archive" style="width:28px;height:28px;margin-bottom:8px"></i><br>الأرشيف فارغ حاليًا.</div>':'<div class="empty"><i data-lucide="inbox" style="width:28px;height:28px;margin-bottom:8px"></i><br>لا توجد طلبات جديدة تحتاج إلى معالجة.</div>';if(window.lucide)lucide.createIcons();return}
-  box.innerHTML=rows.map(r=>requestCard(r)).join('');
-  box.querySelectorAll('[data-save-request]').forEach(btn=>btn.onclick=()=>reviewRequest(btn.dataset.saveRequest));box.querySelectorAll('[data-start-request]').forEach(btn=>btn.onclick=()=>setRequestStatus(btn.dataset.startRequest,'in_review'));
-  box.querySelectorAll('[data-reject-request]').forEach(btn=>btn.onclick=()=>setRequestStatus(btn.dataset.rejectRequest,'rejected'));
-  box.querySelectorAll('[data-calc-south]').forEach(btn=>btn.onclick=()=>calculateRequestSouth(btn.dataset.calcSouth));
-  box.querySelectorAll('[data-open-profile]').forEach(btn=>btn.onclick=()=>openEmployeeProfile(btn.dataset.openProfile));box.querySelectorAll('[data-open-document]').forEach(btn=>btn.onclick=()=>openRequestDocument(btn.dataset.openDocument));box.querySelectorAll('[data-quick-reply]').forEach(btn=>btn.onclick=()=>{const ta=$('admin-note-'+btn.dataset.quickReply);if(ta){ta.value=ta.value?ta.value+'\n'+btn.dataset.text:btn.dataset.text;ta.focus()}});
-  if(window.lucide)lucide.createIcons();
-}
-function isoToday(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
-function formatMonths(v){const n=Number(v);if(!Number.isFinite(n)||n<=0)return '—';const y=Math.floor(n/12),m=n%12;return y&&m?`${y} سنة و ${m} شهر`:y?`${y} سنة`:`${m} شهر`}
-function diffMonths(a,b){if(!a||!b)return 0;const da=new Date(String(a).slice(0,10)+'T00:00:00'),dbb=new Date(String(b).slice(0,10)+'T00:00:00');if(isNaN(da.getTime())||isNaN(dbb.getTime())||dbb<da)return 0;let months=(dbb.getFullYear()-da.getFullYear())*12+(dbb.getMonth()-da.getMonth());if(dbb.getDate()<da.getDate())months--;return Math.max(0,months)}
-function calculateRequestSouth(id){const start=$('south-start-'+id)?.value,calc=$('south-calc-'+id)?.value;if(!start||!calc){alert('أدخل تاريخ بداية الخدمة وتاريخ الحساب أولًا.');return}if(calc<start){alert('تاريخ الحساب لا يمكن أن يسبق بداية الخدمة.');return}const actual=diffMonths(start,calc),fullYears=Math.floor(actual/12),bonus=fullYears*SOUTH_MONTHS_PER_FULL_YEAR,total=actual+bonus;$('south-actual-'+id).value=formatMonths(actual);$('south-bonus-'+id).value=formatMonths(bonus);$('south-total-'+id).value=formatMonths(total)}
-function requestCard(r){
-  const p=r.career_profiles||{};const status=r.status||'pending';const [label,badge]=requestStatusLabel(status);const isArchive=(status==='resolved'||status==='rejected'||r.archived_at);const type=r.request_type==='grade_review'?'مراجعة تاريخ سريان الدرجة':r.request_type==='rank_review'?'طلب دراسة المسار/الترقية في الرتبة':r.request_type==='south_review'?'مراجعة أقدمية الجنوب':r.request_type==='position_review'?'مراجعة المنصب أو المسؤوليات':'استفسار حول المسار المهني';
-  const southSaved=r.south_counted_months!=null;
-  const employeeName=p.employee_name_ar||'غير مسجل';const rank=p.current_rank||'الرتبة غير مسجلة';
-  if(isArchive){
-    return `<div class="request-card ${esc(status)}" id="request-${esc(r.id)}"><div class="request-top"><div><button class="request-employee" type="button" data-open-profile="${esc(r.id)}"><i data-lucide="user-round"></i>${esc(employeeName)}</button><div class="request-rank">${esc(rank)}</div><div class="request-meta">${esc(type)} — أرسل في ${esc(new Date(r.created_at).toLocaleString('ar-DZ'))}</div></div><span class="badge ${badge}">${label}</span></div><div class="smart-summary"><b>ملخص منظم:</b><br>${esc(r.smart_summary||r.message||'—')}</div><div class="request-summary"><div class="request-summary-item"><small>تاريخ سريان الدرجة</small><b>${esc(fmtDate(r.grade_effective_date))}</b></div><div class="request-summary-item"><small>تاريخ الترقية في الرتبة</small><b>${esc(fmtDate(r.promotion_date))}</b></div><div class="request-summary-item"><small>الرتبة</small><b>${esc(r.promotion_rank||'—')}</b></div><div class="request-summary-item"><small>المنصب المستهدف</small><b>${esc(r.promotion_position||'—')}</b></div></div>${southSaved?`<div class="archive-info">☀️ أقدمية الجنوب المحتسبة: <b>${esc(formatMonths(r.south_counted_months))}</b> — من ${esc(fmtDate(r.south_start_date))} إلى ${esc(fmtDate(r.south_calc_date))}</div>`:''}<div class="request-message"><b>طلب الموظف:</b><br>${esc(r.message||'')}</div>${r.admin_note?`<div class="request-message"><b>إجابة/ملاحظة المسؤول:</b><br>${esc(r.admin_note)}</div>`:''}<div class="archive-info"><i data-lucide="archive" style="width:15px;vertical-align:-3px"></i> تم نقل الطلب إلى الأرشيف بعد المعالجة مع الاحتفاظ بسجل الإجابة.${r.document_path?` <button type="button" class="btn secondary" data-open-document="${esc(r.id)}" style="margin-right:8px;padding:6px 9px">فتح الوثيقة</button>`:''}</div></div>`;
+
+    employees =
+      Array.isArray(r.data)
+        ? r.data
+        : [];
+
+  }catch(e){
+
+    console.warn(
+      'Manual employee preload skipped:',
+      e.message
+    );
+
   }
-  return `<div class="request-card ${esc(status)}" id="request-${esc(r.id)}"><div class="request-top"><div><button class="request-employee" type="button" data-open-profile="${esc(r.id)}"><i data-lucide="user-round"></i>${esc(employeeName)}</button><div class="request-rank">${esc(rank)}</div><div class="request-meta">${esc(type)} — أرسل في ${esc(new Date(r.created_at).toLocaleString('ar-DZ'))}</div></div><span class="badge ${badge}">${label}</span></div><div class="smart-summary"><b>ملخص الطلب:</b><br>${esc(r.smart_summary||r.message||'—')} ${r.has_document?`<div style="margin-top:5px"><span class="badge">📎 ${esc(r.document_type||'وثيقة مذكورة')}</span></div>`:''}</div><div class="request-fields"><div><div class="mini-label">تاريخ سريان الدرجة</div><input id="grade-date-${esc(r.id)}" type="date" value="${esc(r.grade_effective_date||'')}"></div><div><div class="mini-label">تاريخ الترقية في الرتبة</div><input id="promotion-date-${esc(r.id)}" type="date" value="${esc(r.promotion_date||'')}"></div><div><div class="mini-label">الرتبة التي سيرقى لها</div><input id="promotion-rank-${esc(r.id)}" value="${esc(r.promotion_rank||'')}" placeholder="تُحدد بعد دراسة الملف"></div><div><div class="mini-label">المنصب المستهدف</div><input id="promotion-position-${esc(r.id)}" value="${esc(r.promotion_position||'')}" placeholder="المنصب عند الاقتضاء"></div><div style="grid-column:1/-1"><div class="mini-label">أقدمية الجنوب</div><div class="south-review-box"><div class="south-review-grid"><div><span>بداية الخدمة</span><input id="south-start-${esc(r.id)}" type="date" value="${esc(r.south_start_date||p.appointment_date||'')}"></div><div><span>تاريخ الحساب</span><input id="south-calc-${esc(r.id)}" type="date" value="${esc(r.south_calc_date||isoToday())}"></div><div><span>الأقدمية الفعلية</span><input id="south-actual-${esc(r.id)}" value="${esc(r.south_actual_months!=null?formatMonths(r.south_actual_months):'—')}" readonly></div><div><span>أقدمية الجنوب الإضافية</span><input id="south-bonus-${esc(r.id)}" value="${esc(r.south_bonus_months!=null?formatMonths(r.south_bonus_months):'—')}" readonly></div><div><span>الأقدمية المحتسبة</span><input id="south-total-${esc(r.id)}" value="${esc(r.south_counted_months!=null?formatMonths(r.south_counted_months):'—')}" readonly></div></div><div class="request-actions" style="margin-top:9px"><button type="button" class="btn gold" data-calc-south="${esc(r.id)}"><i data-lucide="calculator"></i>حساب أقدمية الجنوب</button></div><div class="south-note">النتيجة المحسوبة تحفظ مع الإجابة وتظهر للموظف.</div></div></div><div style="grid-column:1/-1"><div class="mini-label">الإجابة / ملاحظة المسؤول</div><div class="quick-replies"><button type="button" class="quick-reply" data-quick-reply="${esc(r.id)}" data-text="تمت دراسة طلبكم ومراجعة المعطيات المسجلة في الملف المهني.">تمت الدراسة</button><button type="button" class="quick-reply" data-quick-reply="${esc(r.id)}" data-text="يرجى استكمال المعلومات أو إرفاق الوثيقة المطلوبة حتى يتسنى استكمال الدراسة.">استكمال المعلومات</button><button type="button" class="quick-reply" data-quick-reply="${esc(r.id)}" data-text="تم تحديث المعطيات محل الطلب وفق ما تم اعتماده في المراجعة.">تم تحديث البيانات</button><button type="button" class="quick-reply" data-quick-reply="${esc(r.id)}" data-text="الطلب غير معتمد حاليًا، ويمكن إعادة دراسته عند توفر المعطيات أو الوثائق اللازمة.">غير معتمد حاليًا</button></div><textarea id="admin-note-${esc(r.id)}" rows="3" maxlength="1000" placeholder="اكتب جوابًا مختصرًا وواضحًا للموظف...">${esc(r.admin_note||'')}</textarea></div></div><div class="request-actions">${status==='pending'?`<button class="btn secondary" data-start-request="${esc(r.id)}"><i data-lucide="play-circle"></i>بدء الدراسة</button>`:''}${r.document_path?`<button class="btn secondary" data-open-document="${esc(r.id)}"><i data-lucide="paperclip"></i>فتح الوثيقة</button>`:''}<button class="btn primary" data-save-request="${esc(r.id)}"><i data-lucide="send"></i>حفظ الإجابة وأرشفة الطلب</button><button class="btn secondary" data-reject-request="${esc(r.id)}"><i data-lucide="circle-x"></i>غير معتمد حاليًا</button></div></div>`;
+
 }
-async function openRequestDocument(id){const r=requests.find(x=>String(x.id)===String(id));if(!r?.document_path){alert('لا توجد وثيقة مرفقة بهذا الطلب.');return}const {data,error}=await db.storage.from('career-documents').createSignedUrl(r.document_path,300);if(error||!data?.signedUrl){alert('تعذر فتح الوثيقة: '+(error?.message||'خطأ غير معروف'));return}window.open(data.signedUrl,'_blank','noopener,noreferrer')}
-async function startRequestReview(id){return setRequestStatus(id,'in_review')}
+
+/* =========================
+   التقاعد
+========================= */
+
+function retirementDate(
+  birth,
+  age
+){
+
+  const d =
+    parseDate(birth);
+
+  if(!d)return null;
+
+  d.setFullYear(
+    d.getFullYear() +
+    Number(age || 60)
+  );
+
+  return d
+    .toISOString()
+    .slice(0,10);
+}
+
+async function loadRetirement(){
+
+  const box =
+    $('retirementTable');
+
+  const status =
+    $('retirementStatus');
+
+  box.innerHTML =
+    '<div class="empty">جارٍ تحميل بيانات التقاعد...</div>';
+
+  status.innerHTML = '';
+
+  try{
+
+    const ids =
+      manualIds();
+
+    if(!ids.length){
+
+      box.innerHTML =
+        '<div class="empty">لا توجد موظفين مضافون يدويًا في هذه النسخة بعد.</div>';
+
+      return;
+    }
+
+    const [
+      er,
+      rr
+    ] = await Promise.all([
+
+      db
+        .from('employees')
+        .select('*')
+        .in('id',ids),
+
+      db
+        .from('retirement_rules')
+        .select('*')
+        .eq('active',true)
+
+    ]);
+
+    if(er.error)throw er.error;
+
+    const emps =
+      Array.isArray(er.data)
+        ? er.data
+        : [];
+
+    const rules =
+      Array.isArray(rr.data)
+        ? rr.data
+        : [];
+
+    const today =
+      isoToday();
+
+    const rule =
+      rules
+        .filter(r =>
+          !r.valid_from ||
+          today >= String(
+            r.valid_from
+          ).slice(0,10)
+        )
+        .filter(r =>
+          !r.valid_to ||
+          today <= String(
+            r.valid_to
+          ).slice(0,10)
+        )
+        .sort((a,b)=>
+          String(b.valid_from || '')
+          .localeCompare(
+            String(a.valid_from || '')
+          )
+        )[0];
+
+    const age =
+      Number(
+        rule?.minimum_age_years
+      ) || 60;
+
+    const rows =
+      emps
+        .map(e => {
+
+          const birth =
+            e.birth_date ||
+            e.employee_birth_date ||
+            e.date_naissance ||
+            e.dob;
+
+          return {
+            ...e,
+            _birth:birth,
+            _ret:retirementDate(
+              birth,
+              age
+            )
+          };
+
+        })
+        .filter(e => e._ret);
+
+    if(!rows.length){
+
+      box.innerHTML =
+        '<div class="empty">الموظفون المضافون يدويًا بهذه المرحلة لا تحتوي استمارتهم على تاريخ الميلاد؛ لذلك لا يمكن حساب تاريخ التقاعد لهم حاليًا. يمكن إضافة تاريخ الميلاد لاحقًا عند اعتماد الحقول الجديدة.</div>';
+
+      return;
+    }
+
+    box.innerHTML = `
+
+      <div class="status ok">
+
+        سن التقاعد المستعمل:
+        ${age} سنة
+
+        — قاعدة
+        ${esc(
+          rule?.rule_name_ar ||
+          'القاعدة الفعالة'
+        )}
+
+      </div>
+
+      <div style="overflow-x:auto">
+
+        <table class="employee-table">
+
+          <thead>
+
+            <tr>
+              <th>الاسم واللقب</th>
+              <th>تاريخ الميلاد</th>
+              <th>تاريخ التعيين</th>
+              <th>تاريخ التقاعد المتوقع</th>
+              <th>الحالة</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            ${rows.map(e => {
+
+              const due =
+                parseDate(e._ret) <=
+                parseDate(today);
+
+              return `
+
+                <tr>
+
+                  <td>
+                    ${esc(getName(e))}
+                  </td>
+
+                  <td>
+                    ${fmtDate(e._birth)}
+                  </td>
+
+                  <td>
+                    ${fmtDate(
+                      getAppointment(e)
+                    )}
+                  </td>
+
+                  <td>
+                    ${fmtDate(e._ret)}
+                  </td>
+
+                  <td>
+                    <span class="badge">
+                      ${due
+                        ? 'بلغ الموعد'
+                        : 'قيد المتابعة'}
+                    </span>
+                  </td>
+
+                </tr>
+
+              `;
+
+            }).join('')}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    `;
+
+  }catch(e){
+
+    console.error(e);
+
+    status.innerHTML =
+      '<div class="status error">تعذر تحميل التقاعد: ' +
+      esc(
+        e.message ||
+        'خطأ غير معروف'
+      ) +
+      '</div>';
+
+    box.innerHTML =
+      '<div class="empty">تحقق من اتصال Supabase ومن جدول retirement_rules.</div>';
+
+  }
+
+}
+
+/* =========================
+   الطلبات
+========================= */
+
+async function loadRequests(){
+
+  const box =
+    $('requestsList');
+
+  const status =
+    $('requestsStatus');
+
+  if(!box)return;
+
+  box.innerHTML =
+    '<div class="empty">جارٍ تحميل طلبات الموظفين...</div>';
+
+  status.innerHTML = '';
+
+  try{
+
+    const r =
+      await db
+        .from('career_requests')
+        .select('*,career_profiles(*)')
+        .order(
+          'created_at',
+          {ascending:false}
+        );
+
+    if(r.error)throw r.error;
+
+    requests =
+      Array.isArray(r.data)
+        ? r.data
+        : [];
+
+    const active =
+      requests.filter(
+        x =>
+          x.status === 'pending' ||
+          x.status === 'in_review'
+      );
+
+    const archive =
+      requests.filter(
+        x =>
+          x.status === 'resolved' ||
+          x.status === 'rejected' ||
+          x.archived_at
+      );
+
+    if($('statRequests')){
+
+      $('statRequests').textContent =
+        String(active.length);
+
+    }
+
+    if($('pendingBadge')){
+
+      $('pendingBadge').textContent =
+        String(active.length);
+
+    }
+
+    if($('activeRequestsCount')){
+
+      $('activeRequestsCount').textContent =
+        String(active.length);
+
+    }
+
+    if($('archiveRequestsCount')){
+
+      $('archiveRequestsCount').textContent =
+        String(archive.length);
+
+    }
+
+    renderRequestView(
+      currentRequestView === 'archive'
+        ? 'archive'
+        : 'active'
+    );
+
+  }catch(e){
+
+    console.error(e);
+
+    box.innerHTML =
+      '<div class="empty">تعذر تحميل الطلبات. تأكد من إنشاء جدول career_requests وcareer_profiles وفق ملف SQL المرفق.</div>';
+
+    status.innerHTML =
+      '<div class="status error">' +
+      esc(
+        e.message ||
+        'خطأ غير معروف'
+      ) +
+      '</div>';
+
+  }
+
+}
+
+function requestStatusLabel(status){
+
+  if(status === 'resolved'){
+    return ['تمت الإجابة','ok'];
+  }
+
+  if(status === 'rejected'){
+    return ['غير معتمد حاليًا','no'];
+  }
+
+  if(status === 'in_review'){
+    return ['قيد الدراسة','wait'];
+  }
+
+  return ['جديد','wait'];
+}
+
+let currentRequestView = 'active';
+
+function renderRequestView(view){
+
+  currentRequestView = view;
+
+  document
+    .querySelectorAll('.request-tab')
+    .forEach(b =>
+      b.classList.toggle(
+        'active',
+        b.dataset.requestView === view
+      )
+    );
+
+  const box =
+    $('requestsList');
+
+  if(!box)return;
+
+  const baseRows =
+    view === 'archive'
+      ? requests.filter(
+          x =>
+            x.status === 'resolved' ||
+            x.status === 'rejected' ||
+            x.archived_at
+        )
+      : requests.filter(
+          x =>
+            x.status === 'pending' ||
+            x.status === 'in_review'
+        );
+
+  const q =
+    String(
+      $('requestSearch')?.value || ''
+    )
+      .trim()
+      .toLowerCase();
+
+  const rows =
+    q
+      ? baseRows.filter(x => {
+
+          const p =
+            x.career_profiles || {};
+
+          return [
+            p.employee_name_ar,
+            p.current_rank,
+            x.title,
+            x.message,
+            x.request_subject,
+            x.request_type
+          ]
+          .some(v =>
+            String(v || '')
+              .toLowerCase()
+              .includes(q)
+          );
+
+        })
+      : baseRows;
+
+  if(!rows.length){
+
+    box.innerHTML =
+      view === 'archive'
+
+        ? `
+          <div class="empty">
+
+            <i
+              data-lucide="archive"
+              style="width:28px;height:28px;margin-bottom:8px">
+            </i>
+
+            <br>
+
+            الأرشيف فارغ حاليًا.
+
+          </div>
+        `
+
+        : `
+          <div class="empty">
+
+            <i
+              data-lucide="inbox"
+              style="width:28px;height:28px;margin-bottom:8px">
+            </i>
+
+            <br>
+
+            لا توجد طلبات جديدة تحتاج إلى معالجة.
+
+          </div>
+        `;
+
+    if(window.lucide){
+      lucide.createIcons();
+    }
+
+    return;
+  }
+
+  box.innerHTML =
+    rows
+      .map(r => requestCard(r))
+      .join('');
+
+  box
+    .querySelectorAll('[data-save-request]')
+    .forEach(btn =>
+      btn.onclick =
+        () => reviewRequest(
+          btn.dataset.saveRequest
+        )
+    );
+
+  box
+    .querySelectorAll('[data-start-request]')
+    .forEach(btn =>
+      btn.onclick =
+        () => setRequestStatus(
+          btn.dataset.startRequest,
+          'in_review'
+        )
+    );
+
+  box
+    .querySelectorAll('[data-reject-request]')
+    .forEach(btn =>
+      btn.onclick =
+        () => setRequestStatus(
+          btn.dataset.rejectRequest,
+          'rejected'
+        )
+    );
+
+  box
+    .querySelectorAll('[data-calc-south]')
+    .forEach(btn =>
+      btn.onclick =
+        () => calculateRequestSouth(
+          btn.dataset.calcSouth
+        )
+    );
+
+  box
+    .querySelectorAll('[data-open-profile]')
+    .forEach(btn =>
+      btn.onclick =
+        () => openEmployeeProfile(
+          btn.dataset.openProfile
+        )
+    );
+
+  box
+    .querySelectorAll('[data-open-document]')
+    .forEach(btn =>
+      btn.onclick =
+        () => openRequestDocument(
+          btn.dataset.openDocument
+        )
+    );
+
+  box
+    .querySelectorAll('[data-quick-reply]')
+    .forEach(btn =>
+      btn.onclick = () => {
+
+        const ta =
+          $('admin-note-' +
+            btn.dataset.quickReply);
+
+        if(ta){
+
+          ta.value =
+            ta.value
+              ? ta.value +
+                '\n' +
+                btn.dataset.text
+              : btn.dataset.text;
+
+          ta.focus();
+
+        }
+
+      }
+    );
+
+  if(window.lucide){
+    lucide.createIcons();
+  }
+
+}
+
+function calculateRequestSouth(id){
+
+  const start =
+    $('south-start-'+id)?.value;
+
+  const calc =
+    $('south-calc-'+id)?.value;
+
+  if(!start || !calc){
+
+    alert(
+      'أدخل تاريخ بداية الخدمة وتاريخ الحساب أولًا.'
+    );
+
+    return;
+  }
+
+  if(calc < start){
+
+    alert(
+      'تاريخ الحساب لا يمكن أن يسبق بداية الخدمة.'
+    );
+
+    return;
+  }
+
+  const actual =
+    diffMonths(
+      start,
+      calc
+    );
+
+  const fullYears =
+    Math.floor(
+      actual / 12
+    );
+
+  const bonus =
+    fullYears *
+    SOUTH_MONTHS_PER_FULL_YEAR;
+
+  const total =
+    actual + bonus;
+
+  $('south-actual-'+id).value =
+    formatMonths(actual);
+
+  $('south-bonus-'+id).value =
+    formatMonths(bonus);
+
+  $('south-total-'+id).value =
+    formatMonths(total);
+
+}
+
+function requestCard(r){
+
+  const p =
+    r.career_profiles || {};
+
+  const status =
+    r.status || 'pending';
+
+  const [
+    label,
+    badge
+  ] =
+    requestStatusLabel(status);
+
+  const isArchive =
+    status === 'resolved' ||
+    status === 'rejected' ||
+    r.archived_at;
+
+  const type =
+    r.request_type === 'grade_review'
+      ? 'مراجعة تاريخ سريان الدرجة'
+      : r.request_type === 'rank_review'
+        ? 'طلب دراسة المسار/الترقية في الرتبة'
+        : r.request_type === 'south_review'
+          ? 'مراجعة أقدمية الجنوب'
+          : r.request_type === 'position_review'
+            ? 'مراجعة المنصب أو المسؤوليات'
+            : 'استفسار حول المسار المهني';
+
+  const southSaved =
+    r.south_counted_months != null;
+
+  const employeeName =
+    p.employee_name_ar ||
+    'غير مسجل';
+
+  const rank =
+    p.current_rank ||
+    'الرتبة غير مسجلة';
+
+  if(isArchive){
+
+    return `
+
+      <div
+        class="request-card ${esc(status)}"
+        id="request-${esc(r.id)}">
+
+        <div class="request-top">
+
+          <div>
+
+            <button
+              class="request-employee"
+              type="button"
+              data-open-profile="${esc(r.id)}">
+
+              <i data-lucide="user-round"></i>
+
+              ${esc(employeeName)}
+
+            </button>
+
+            <div class="request-rank">
+              ${esc(rank)}
+            </div>
+
+            <div class="request-meta">
+              ${esc(type)}
+              —
+              أرسل في
+              ${esc(
+                new Date(
+                  r.created_at
+                ).toLocaleString('ar-DZ')
+              )}
+            </div>
+
+          </div>
+
+          <span class="badge ${badge}">
+            ${label}
+          </span>
+
+        </div>
+
+        <div class="smart-summary">
+
+          <b>ملخص منظم:</b>
+          <br>
+
+          ${esc(
+            r.smart_summary ||
+            r.message ||
+            '—'
+          )}
+
+        </div>
+
+        <div class="request-summary">
+
+          <div class="request-summary-item">
+            <small>تاريخ سريان الدرجة</small>
+            <b>${esc(
+              fmtDate(
+                r.grade_effective_date
+              )
+            )}</b>
+          </div>
+
+          <div class="request-summary-item">
+            <small>تاريخ الترقية في الرتبة</small>
+            <b>${esc(
+              fmtDate(
+                r.promotion_date
+              )
+            )}</b>
+          </div>
+
+          <div class="request-summary-item">
+            <small>الرتبة</small>
+            <b>${esc(
+              r.promotion_rank ||
+              '—'
+            )}</b>
+          </div>
+
+          <div class="request-summary-item">
+            <small>المنصب المستهدف</small>
+            <b>${esc(
+              r.promotion_position ||
+              '—'
+            )}</b>
+          </div>
+
+        </div>
+
+        ${
+          southSaved
+            ? `
+              <div class="archive-info">
+                ☀️ أقدمية الجنوب المحتسبة:
+                <b>
+                  ${esc(
+                    formatMonths(
+                      r.south_counted_months
+                    )
+                  )}
+                </b>
+                —
+                من
+                ${esc(
+                  fmtDate(
+                    r.south_start_date
+                  )
+                )}
+                إلى
+                ${esc(
+                  fmtDate(
+                    r.south_calc_date
+                  )
+                )}
+              </div>
+            `
+            : ''
+        }
+
+        <div class="request-message">
+
+          <b>طلب الموظف:</b>
+          <br>
+
+          ${esc(
+            r.message ||
+            ''
+          )}
+
+        </div>
+
+        ${
+          r.admin_note
+            ? `
+              <div class="request-message">
+
+                <b>إجابة/ملاحظة المسؤول:</b>
+                <br>
+
+                ${esc(
+                  r.admin_note
+                )}
+
+              </div>
+            `
+            : ''
+        }
+
+        <div class="archive-info">
+
+          <i
+            data-lucide="archive"
+            style="width:15px;vertical-align:-3px">
+          </i>
+
+          تم نقل الطلب إلى الأرشيف بعد المعالجة مع الاحتفاظ بسجل الإجابة.
+
+          ${
+            r.document_path
+              ? `
+                <button
+                  type="button"
+                  class="btn secondary"
+                  data-open-document="${esc(r.id)}"
+                  style="margin-right:8px;padding:6px 9px">
+
+                  فتح الوثيقة
+
+                </button>
+              `
+              : ''
+          }
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+  return `
+
+    <div
+      class="request-card ${esc(status)}"
+      id="request-${esc(r.id)}">
+
+      <div class="request-top">
+
+        <div>
+
+          <button
+            class="request-employee"
+            type="button"
+            data-open-profile="${esc(r.id)}">
+
+            <i data-lucide="user-round"></i>
+
+            ${esc(employeeName)}
+
+          </button>
+
+          <div class="request-rank">
+            ${esc(rank)}
+          </div>
+
+          <div class="request-meta">
+
+            ${esc(type)}
+            —
+            أرسل في
+            ${esc(
+              new Date(
+                r.created_at
+              ).toLocaleString('ar-DZ')
+            )}
+
+          </div>
+
+        </div>
+
+        <span class="badge ${badge}">
+          ${label}
+        </span>
+
+      </div>
+
+      <div class="smart-summary">
+
+        <b>ملخص الطلب:</b>
+        <br>
+
+        ${esc(
+          r.smart_summary ||
+          r.message ||
+          '—'
+        )}
+
+        ${
+          r.has_document
+            ? `
+              <div style="margin-top:5px">
+                <span class="badge">
+                  📎
+                  ${esc(
+                    r.document_type ||
+                    'وثيقة مذكورة'
+                  )}
+                </span>
+              </div>
+            `
+            : ''
+        }
+
+      </div>
+
+      <div class="request-fields">
+
+        <div>
+
+          <div class="mini-label">
+            تاريخ سريان الدرجة
+          </div>
+
+          <input
+            id="grade-date-${esc(r.id)}"
+            type="date"
+            value="${esc(
+              r.grade_effective_date ||
+              ''
+            )}">
+
+        </div>
+
+        <div>
+
+          <div class="mini-label">
+            تاريخ الترقية في الرتبة
+          </div>
+
+          <input
+            id="promotion-date-${esc(r.id)}"
+            type="date"
+            value="${esc(
+              r.promotion_date ||
+              ''
+            )}">
+
+        </div>
+
+        <div>
+
+          <div class="mini-label">
+            الرتبة التي سيرقى لها
+          </div>
+
+          <input
+            id="promotion-rank-${esc(r.id)}"
+            value="${esc(
+              r.promotion_rank ||
+              ''
+            )}"
+            placeholder="تُحدد بعد دراسة الملف">
+
+        </div>
+
+        <div>
+
+          <div class="mini-label">
+            المنصب المستهدف
+          </div>
+
+          <input
+            id="promotion-position-${esc(r.id)}"
+            value="${esc(
+              r.promotion_position ||
+              ''
+            )}"
+            placeholder="المنصب عند الاقتضاء">
+
+        </div>
+
+        <div style="grid-column:1/-1">
+
+          <div class="mini-label">
+            أقدمية الجنوب
+          </div>
+
+          <div class="south-review-box">
+
+            <div class="south-review-grid">
+
+              <div>
+
+                <span>
+                  بداية الخدمة
+                </span>
+
+                <input
+                  id="south-start-${esc(r.id)}"
+                  type="date"
+                  value="${esc(
+                    r.south_start_date ||
+                    p.appointment_date ||
+                    ''
+                  )}">
+
+              </div>
+
+              <div>
+
+                <span>
+                  تاريخ الحساب
+                </span>
+
+                <input
+                  id="south-calc-${esc(r.id)}"
+                  type="date"
+                  value="${esc(
+                    r.south_calc_date ||
+                    isoToday()
+                  )}">
+
+              </div>
+
+              <div>
+
+                <span>
+                  الأقدمية الفعلية
+                </span>
+
+                <input
+                  id="south-actual-${esc(r.id)}"
+                  value="${esc(
+                    r.south_actual_months != null
+                      ? formatMonths(
+                          r.south_actual_months
+                        )
+                      : '—'
+                  )}"
+                  readonly>
+
+              </div>
+
+              <div>
+
+                <span>
+                  أقدمية الجنوب الإضافية
+                </span>
+
+                <input
+                  id="south-bonus-${esc(r.id)}"
+                  value="${esc(
+                    r.south_bonus_months != null
+                      ? formatMonths(
+                          r.south_bonus_months
+                        )
+                      : '—'
+                  )}"
+                  readonly>
+
+              </div>
+
+              <div>
+
+                <span>
+                  الأقدمية المحتسبة
+                </span>
+
+                <input
+                  id="south-total-${esc(r.id)}"
+                  value="${esc(
+                    r.south_counted_months != null
+                      ? formatMonths(
+                          r.south_counted_months
+                        )
+                      : '—'
+                  )}"
+                  readonly>
+
+              </div>
+
+            </div>
+
+            <div
+              class="request-actions"
+              style="margin-top:9px">
+
+              <button
+                type="button"
+                class="btn gold"
+                data-calc-south="${esc(r.id)}">
+
+                <i data-lucide="calculator"></i>
+                حساب أقدمية الجنوب
+
+              </button>
+
+            </div>
+
+            <div class="south-note">
+              النتيجة المحسوبة تحفظ مع الإجابة وتظهر للموظف.
+            </div>
+
+          </div>
+
+        </div>
+
+        <div style="grid-column:1/-1">
+
+          <div class="mini-label">
+            الإجابة / ملاحظة المسؤول
+          </div>
+
+          <div class="quick-replies">
+
+            <button
+              type="button"
+              class="quick-reply"
+              data-quick-reply="${esc(r.id)}"
+              data-text="تمت دراسة طلبكم ومراجعة المعطيات المسجلة في الملف المهني.">
+              تمت الدراسة
+            </button>
+
+            <button
+              type="button"
+              class="quick-reply"
+              data-quick-reply="${esc(r.id)}"
+              data-text="يرجى استكمال المعلومات أو إرفاق الوثيقة المطلوبة حتى يتسنى استكمال الدراسة.">
+              استكمال المعلومات
+            </button>
+
+            <button
+              type="button"
+              class="quick-reply"
+              data-quick-reply="${esc(r.id)}"
+              data-text="تم تحديث المعطيات محل الطلب وفق ما تم اعتماده في المراجعة.">
+              تم تحديث البيانات
+            </button>
+
+            <button
+              type="button"
+              class="quick-reply"
+              data-quick-reply="${esc(r.id)}"
+              data-text="الطلب غير معتمد حاليًا، ويمكن إعادة دراسته عند توفر المعطيات أو الوثائق اللازمة.">
+              غير معتمد حاليًا
+            </button>
+
+          </div>
+
+          <textarea
+            id="admin-note-${esc(r.id)}"
+            rows="3"
+            maxlength="1000"
+            placeholder="اكتب جوابًا مختصرًا وواضحًا للموظف...">${esc(
+              r.admin_note || ''
+            )}</textarea>
+
+```
+    </div>
+
+  </div>
+
+  <div class="request-actions">
+
+    ${
+      status === 'pending'
+        ? `
+          <button
+            class="btn secondary"
+            data-start-request="${esc(r.id)}"
+            type="button">
+
+            <i data-lucide="play-circle"></i>
+            بدء الدراسة
+
+          </button>
+        `
+        : ''
+    }
+
+    ${
+      r.document_path
+        ? `
+          <button
+            class="btn secondary"
+            data-open-document="${esc(r.id)}"
+            type="button">
+
+            <i data-lucide="paperclip"></i>
+            فتح الوثيقة
+
+          </button>
+        `
+        : ''
+    }
+
+    <button
+      class="btn primary"
+      data-save-request="${esc(r.id)}"
+      type="button">
+
+      <i data-lucide="send"></i>
+      حفظ الإجابة وأرشفة الطلب
+
+    </button>
+
+    <button
+      class="btn secondary"
+      data-reject-request="${esc(r.id)}"
+      type="button">
+
+      <i data-lucide="circle-x"></i>
+      غير معتمد حاليًا
+
+    </button>
+
+  </div>
+
+</div>
+```
+
+`;
+
+}
+
+/* =========================
+الوثائق
+========================= */
+
+async function openRequestDocument(id){
+
+const r =
+requests.find(
+x =>
+String(x.id) ===
+String(id)
+);
+
+if(!r?.document_path){
+
+```
+alert(
+  'لا توجد وثيقة مرفقة بهذا الطلب.'
+);
+
+return;
+```
+
+}
+
+const {
+data,
+error
+} =
+await db
+.storage
+.from('career-documents')
+.createSignedUrl(
+r.document_path,
+300
+);
+
+if(
+error ||
+!data?.signedUrl
+){
+
+```
+alert(
+  'تعذر فتح الوثيقة: ' +
+  (
+    error?.message ||
+    'خطأ غير معروف'
+  )
+);
+
+return;
+```
+
+}
+
+window.open(
+data.signedUrl,
+'_blank',
+'noopener,noreferrer'
+);
+
+}
+
+/* =========================
+مراجعة الطلب
+========================= */
+
 async function reviewRequest(id){
-  const southStart=$('south-start-'+id)?.value||null,southCalc=$('south-calc-'+id)?.value||null;let southActual=Number.NaN,southBonus=Number.NaN,southTotal=Number.NaN;
-  if(southStart&&southCalc&&southCalc>=southStart){southActual=diffMonths(southStart,southCalc);southBonus=Math.floor(southActual/12)*SOUTH_MONTHS_PER_FULL_YEAR;southTotal=southActual+southBonus}else if(southStart||southCalc){alert('تحقق من تواريخ أقدمية الجنوب قبل الحفظ.');return}
-  const note=$('admin-note-'+id)?.value.trim()||null;if(!note){if(!confirm('لم تكتب ملاحظة/إجابة للمسؤول. هل تريد المتابعة وإغلاق الطلب دون نص؟'))return}
-  const payload={grade_effective_date:$('grade-date-'+id)?.value||null,promotion_date:$('promotion-date-'+id)?.value||null,promotion_rank:$('promotion-rank-'+id)?.value.trim()||null,promotion_position:$('promotion-position-'+id)?.value.trim()||null,south_start_date:southStart,south_calc_date:southCalc,south_actual_months:Number.isFinite(southActual)?southActual:null,south_bonus_months:Number.isFinite(southBonus)?southBonus:null,south_counted_months:Number.isFinite(southTotal)?southTotal:null,admin_note:note,status:'resolved',archived_at:new Date().toISOString(),reviewed_at:new Date().toISOString(),reviewed_by:currentUser?.id||null};
-  const r=await db.from('career_requests').update(payload).eq('id',id);if(r.error){alert('تعذر حفظ الإجابة: '+r.error.message);return}await loadRequests();
+
+const southStart =
+$('south-start-'+id)?.value ||
+null;
+
+const southCalc =
+$('south-calc-'+id)?.value ||
+null;
+
+let southActual =
+Number.NaN;
+
+let southBonus =
+Number.NaN;
+
+let southTotal =
+Number.NaN;
+
+if(
+southStart &&
+southCalc &&
+southCalc >= southStart
+){
+
+```
+southActual =
+  diffMonths(
+    southStart,
+    southCalc
+  );
+
+southBonus =
+  Math.floor(
+    southActual / 12
+  ) *
+  SOUTH_MONTHS_PER_FULL_YEAR;
+
+southTotal =
+  southActual +
+  southBonus;
+```
+
+}else if(
+southStart ||
+southCalc
+){
+
+```
+alert(
+  'تحقق من تواريخ أقدمية الجنوب قبل الحفظ.'
+);
+
+return;
+```
+
 }
-async function setRequestStatus(id,status){const note=prompt(status==='rejected'?'اكتب ملاحظة توضح سبب عدم اعتماد الطلب (اختياري):':'ملاحظة المسؤول (اختياري):','');const r=await db.from('career_requests').update({status,admin_note:note||null,archived_at:new Date().toISOString(),reviewed_at:new Date().toISOString(),reviewed_by:currentUser?.id||null}).eq('id',id);if(r.error){alert('تعذر تحديث حالة الطلب: '+r.error.message);return}await loadRequests()}
+
+const note =
+$('admin-note-'+id)
+?.value
+.trim() ||
+null;
+
+if(!note){
+
+```
+if(!confirm(
+  'لم تكتب ملاحظة/إجابة للمسؤول. هل تريد المتابعة وإغلاق الطلب دون نص؟'
+)){
+  return;
+}
+```
+
+}
+
+const payload = {
+
+```
+grade_effective_date:
+  $('grade-date-'+id)
+    ?.value ||
+  null,
+
+promotion_date:
+  $('promotion-date-'+id)
+    ?.value ||
+  null,
+
+promotion_rank:
+  $('promotion-rank-'+id)
+    ?.value
+    .trim() ||
+  null,
+
+promotion_position:
+  $('promotion-position-'+id)
+    ?.value
+    .trim() ||
+  null,
+
+south_start_date:
+  southStart,
+
+south_calc_date:
+  southCalc,
+
+south_actual_months:
+  Number.isFinite(
+    southActual
+  )
+    ? southActual
+    : null,
+
+south_bonus_months:
+  Number.isFinite(
+    southBonus
+  )
+    ? southBonus
+    : null,
+
+south_counted_months:
+  Number.isFinite(
+    southTotal
+  )
+    ? southTotal
+    : null,
+
+admin_note:
+  note,
+
+status:'resolved',
+
+archived_at:
+  new Date().toISOString(),
+
+reviewed_at:
+  new Date().toISOString(),
+
+reviewed_by:
+  currentUser?.id ||
+  null
+```
+
+};
+
+const r =
+await db
+.from('career_requests')
+.update(payload)
+.eq('id',id);
+
+if(r.error){
+
+```
+alert(
+  'تعذر حفظ الإجابة: ' +
+  r.error.message
+);
+
+return;
+```
+
+}
+
+await loadRequests();
+
+}
+
+/* =========================
+تغيير حالة الطلب
+========================= */
+
+async function setRequestStatus(
+id,
+status
+){
+
+const note =
+prompt(
+status === 'rejected'
+? 'اكتب ملاحظة توضح سبب عدم اعتماد الطلب (اختياري):'
+: 'ملاحظة المسؤول (اختياري):',
+''
+);
+
+const r =
+await db
+.from('career_requests')
+.update({
+
+```
+    status,
+
+    admin_note:
+      note || null,
+
+    archived_at:
+      new Date().toISOString(),
+
+    reviewed_at:
+      new Date().toISOString(),
+
+    reviewed_by:
+      currentUser?.id ||
+      null
+
+  })
+  .eq('id',id);
+```
+
+if(r.error){
+
+```
+alert(
+  'تعذر تحديث حالة الطلب: ' +
+  r.error.message
+);
+
+return;
+```
+
+}
+
+await loadRequests();
+
+}
+
+/* =========================
+ملف الموظف
+========================= */
+
 function openEmployeeProfile(id){
-  const r=requests.find(x=>String(x.id)===String(id));const p=r?.career_profiles||{};if(!r)return;
-  const body=$('employeeModalBody');$('employeeModalTitle').textContent=p.employee_name_ar||'معلومات الموظف';
-  body.innerHTML=`<div class="profile-hero"><div class="profile-avatar"><i data-lucide="user-round"></i></div><div><div class="profile-name">${esc(p.employee_name_ar||'غير مسجل')}</div><div class="profile-rank">${esc(p.current_rank||'الرتبة غير مسجلة')} ${p.is_high_position?'<span class="badge">منصب عالٍ</span>':''}</div></div></div><div class="profile-grid"><div class="profile-item"><div class="label">الاسم واللقب</div><div class="value">${esc(p.employee_name_ar||'—')}</div></div><div class="profile-item"><div class="label">الرتبة الحالية</div><div class="value">${esc(p.current_rank||'—')}</div></div><div class="profile-item"><div class="label">تاريخ التعيين</div><div class="value">${esc(fmtDate(p.appointment_date))}</div></div><div class="profile-item"><div class="label">الدرجة الحالية</div><div class="value">${esc(p.current_grade||'—')}</div></div><div class="profile-item"><div class="label">تاريخ بداية الدرجة</div><div class="value">${esc(fmtDate(p.grade_start_date))}</div></div><div class="profile-item"><div class="label">تاريخ آخر ترقية في الرتبة</div><div class="value">${esc(fmtDate(p.last_rank_promotion_date))}</div></div><div class="profile-item"><div class="label">المنصب الحالي</div><div class="value">${esc(p.current_position||'—')}${p.is_high_position?' <span class="badge">منصب عالٍ</span>':''}</div></div><div class="profile-item"><div class="label">تاريخ بداية المنصب</div><div class="value">${esc(fmtDate(p.position_start_date))}</div></div><div class="profile-item" style="grid-column:1/-1"><div class="label">المهام والمسؤوليات</div><div class="value">${esc(p.position_responsibilities||'—')}</div></div></div><div class="profile-request"><h4>الطلب الحالي</h4><p><b>${esc(r.title||requestStatusLabel(r.status)[0])}</b>\n${esc(r.message||'لا توجد تفاصيل إضافية.')}</p></div><div class="modal-actions"><button class="btn secondary" type="button" id="modalCloseAction"><i data-lucide="x"></i>إغلاق</button></div>`;
-  $('employeeProfileModal').classList.remove('hidden');if(window.lucide)lucide.createIcons();$('modalCloseAction').onclick=closeEmployeeProfile;
+
+const r =
+requests.find(
+x =>
+String(x.id) ===
+String(id)
+);
+
+const p =
+r?.career_profiles ||
+{};
+
+if(!r)return;
+
+const body =
+$('employeeModalBody');
+
+$('employeeModalTitle')
+.textContent =
+p.employee_name_ar ||
+'معلومات الموظف';
+
+body.innerHTML = `
+
+```
+<div class="profile-hero">
+
+  <div class="profile-avatar">
+    <i data-lucide="user-round"></i>
+  </div>
+
+  <div>
+
+    <div class="profile-name">
+      ${esc(
+        p.employee_name_ar ||
+        'غير مسجل'
+      )}
+    </div>
+
+    <div class="profile-rank">
+
+      ${esc(
+        p.current_rank ||
+        'الرتبة غير مسجلة'
+      )}
+
+      ${
+        p.is_high_position
+          ? '<span class="badge">منصب عالٍ</span>'
+          : ''
+      }
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="profile-grid">
+
+  <div class="profile-item">
+
+    <div class="label">
+      الاسم واللقب
+    </div>
+
+    <div class="value">
+      ${esc(
+        p.employee_name_ar ||
+        '—'
+      )}
+    </div>
+
+  </div>
+
+  <div class="profile-item">
+
+    <div class="label">
+      الرتبة الحالية
+    </div>
+
+    <div class="value">
+      ${esc(
+        p.current_rank ||
+        '—'
+      )}
+    </div>
+
+  </div>
+
+  <div class="profile-item">
+
+    <div class="label">
+      تاريخ التعيين
+    </div>
+
+    <div class="value">
+      ${esc(
+        fmtDate(
+          p.appointment_date
+        )
+      )}
+    </div>
+
+  </div>
+
+  <div class="profile-item">
+
+    <div class="label">
+      الدرجة الحالية
+    </div>
+
+    <div class="value">
+      ${esc(
+        p.current_grade ||
+        '—'
+      )}
+    </div>
+
+  </div>
+
+  <div class="profile-item">
+
+    <div class="label">
+      تاريخ بداية الدرجة
+    </div>
+
+    <div class="value">
+      ${esc(
+        fmtDate(
+          p.grade_start_date
+        )
+      )}
+    </div>
+
+  </div>
+
+  <div class="profile-item">
+
+    <div class="label">
+      تاريخ آخر ترقية في الرتبة
+    </div>
+
+    <div class="value">
+      ${esc(
+        fmtDate(
+          p.last_rank_promotion_date
+        )
+      )}
+    </div>
+
+  </div>
+
+  <div class="profile-item">
+
+    <div class="label">
+      المنصب الحالي
+    </div>
+
+    <div class="value">
+
+      ${esc(
+        p.current_position ||
+        '—'
+      )}
+
+      ${
+        p.is_high_position
+          ? ' <span class="badge">منصب عالٍ</span>'
+          : ''
+      }
+
+    </div>
+
+  </div>
+
+  <div class="profile-item">
+
+    <div class="label">
+      تاريخ بداية المنصب
+    </div>
+
+    <div class="value">
+      ${esc(
+        fmtDate(
+          p.position_start_date
+        )
+      )}
+    </div>
+
+  </div>
+
+  <div
+    class="profile-item"
+    style="grid-column:1/-1">
+
+    <div class="label">
+      المهام والمسؤوليات
+    </div>
+
+    <div class="value">
+      ${esc(
+        p.position_responsibilities ||
+        '—'
+      )}
+    </div>
+
+  </div>
+
+</div>
+
+<div class="profile-request">
+
+  <h4>
+    الطلب الحالي
+  </h4>
+
+  <p>
+
+    <b>
+      ${esc(
+        r.title ||
+        requestStatusLabel(
+          r.status
+        )[0]
+      )}
+    </b>
+
+    \n
+
+    ${esc(
+      r.message ||
+      'لا توجد تفاصيل إضافية.'
+    )}
+
+  </p>
+
+</div>
+
+<div class="modal-actions">
+
+  <button
+    class="btn secondary"
+    type="button"
+    id="modalCloseAction">
+
+    <i data-lucide="x"></i>
+    إغلاق
+
+  </button>
+
+</div>
+```
+
+`;
+
+$('employeeProfileModal')
+.classList
+.remove('hidden');
+
+if(window.lucide){
+lucide.createIcons();
 }
-function closeEmployeeProfile(){$('employeeProfileModal')?.classList.add('hidden')}
-$('refreshRequestsBtn').onclick=loadRequests;$('requestSearch').addEventListener('input',()=>renderRequestView(currentRequestView));
-document.querySelectorAll('[data-request-view]').forEach(b=>b.onclick=()=>renderRequestView(b.dataset.requestView));
-$('closeEmployeeModal').onclick=closeEmployeeProfile;
-$('employeeProfileModal').addEventListener('click',e=>{if(e.target.id==='employeeProfileModal')closeEmployeeProfile()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeEmployeeProfile()});
-$('refreshNotificationsBtn').onclick=loadNotifications;
-$('markNotificationsBtn').onclick=markNotificationsRead;
-$('refreshRetirementBtn').onclick=loadRetirement;
+
+$('modalCloseAction').onclick =
+closeEmployeeProfile;
+
+}
+
+function closeEmployeeProfile(){
+
+$('employeeProfileModal')
+?.classList
+.add('hidden');
+
+}
+
+/* =========================
+الأحداث
+========================= */
+
+$('refreshRequestsBtn').onclick =
+loadRequests;
+
+$('requestSearch').addEventListener(
+'input',
+() =>
+renderRequestView(
+currentRequestView
+)
+);
+
+document
+.querySelectorAll(
+'[data-request-view]'
+)
+.forEach(b =>
+b.onclick =
+() =>
+renderRequestView(
+b.dataset.requestView
+)
+);
+
+$('closeEmployeeModal').onclick =
+closeEmployeeProfile;
+
+$('employeeProfileModal')
+.addEventListener(
+'click',
+e => {
+
+```
+  if(
+    e.target.id ===
+    'employeeProfileModal'
+  ){
+
+    closeEmployeeProfile();
+
+  }
+
+}
+```
+
+);
+
+document.addEventListener(
+'keydown',
+e => {
+
+```
+if(e.key === 'Escape'){
+  closeEmployeeProfile();
+}
+```
+
+}
+);
+
+$('refreshNotificationsBtn').onclick =
+loadNotifications;
+
+$('markNotificationsBtn').onclick =
+markNotificationsRead;
+
+$('refreshRetirementBtn').onclick =
+loadRetirement;
+
+/* =========================
+التحقق من المسؤول
+========================= */
 
 async function checkAdmin(){
-  try{
-    if(typeof window.supabase==='undefined')throw new Error('مكتبة Supabase غير متاحة.');
-    if(typeof SUPABASE_URL==='undefined'||typeof SUPABASE_ANON_KEY==='undefined'||!String(SUPABASE_URL).trim()||!String(SUPABASE_ANON_KEY).trim())throw new Error('إعدادات Supabase غير مكتملة في config.js.');
-    db=window.db||window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);window.db=db;
-    const {data,error}=await db.auth.getSession();if(error)throw error;if(!data.session)throw new Error('لا توجد جلسة تسجيل دخول.');
-    currentUser=data.session.user;$('userEmail').textContent=currentUser.email||'';
-    const roleRes=await db.from('user_roles').select('role').eq('user_id',currentUser.id).maybeSingle();
-    const profileRes=await db.from('employees').select('role').eq('user_id',currentUser.id).maybeSingle();
-    const isAdmin=roleRes.data?.role==='admin'||profileRes.data?.role==='admin';
-    if(!isAdmin)throw new Error('هذا الحساب لا يملك صلاحية المسؤول.');
-    await loadOptionalGradeRules();await loadEmployees();await loadRequests();await loadNotifications();$('loading').classList.add('hidden');const stat=$('statEmployees');if(stat)stat.textContent=String(employees.length);renderNotices();if(window.lucide)lucide.createIcons();
-  }catch(e){console.error(e);$('loading').textContent='⚠️ '+(e.message||'تعذر التحقق من الصلاحيات')+' — سيتم الرجوع إلى صفحة الدخول.';setTimeout(()=>location.href='index.html',2200)}
-}
-$('logoutBtn').onclick=async()=>{try{if(db)await db.auth.signOut()}finally{location.href='index.html'}};
-checkAdmin();
-setInterval(()=>{if(db&&currentUser){loadNotifications();loadRequests();}},30000);
-})();
-</script>
 
-<!-- PWA Install Banner -->
-<div id="pwaInstallBanner" class="pwa-install-banner" hidden>
-  <div class="pwa-install-icon"><img src="./logo%20(2).png" alt="شعار منصة المسار المهني"></div>
-  <div class="pwa-install-content">
-    <strong>ثبّت منصة المسار المهني</strong>
-    <span>أضف المنصة إلى هاتفك للوصول إليها بسرعة من الشاشة الرئيسية.</span>
+try{
+
+```
+if(
+  typeof window.supabase ===
+  'undefined'
+){
+
+  throw new Error(
+    'مكتبة Supabase غير متاحة.'
+  );
+
+}
+
+if(
+  typeof SUPABASE_URL ===
+  'undefined' ||
+  typeof SUPABASE_ANON_KEY ===
+  'undefined' ||
+  !String(
+    SUPABASE_URL
+  ).trim() ||
+  !String(
+    SUPABASE_ANON_KEY
+  ).trim()
+){
+
+  throw new Error(
+    'إعدادات Supabase غير مكتملة في config.js.'
+  );
+
+}
+
+db =
+  window.db ||
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+window.db = db;
+
+const {
+  data,
+  error
+} =
+  await db.auth.getSession();
+
+if(error)throw error;
+
+if(!data.session){
+
+  throw new Error(
+    'لا توجد جلسة تسجيل دخول.'
+  );
+
+}
+
+currentUser =
+  data.session.user;
+
+$('userEmail').textContent =
+  currentUser.email || '';
+
+const roleRes =
+  await db
+    .from('user_roles')
+    .select('role')
+    .eq(
+      'user_id',
+      currentUser.id
+    )
+    .maybeSingle();
+
+const profileRes =
+  await db
+    .from('employees')
+    .select('role')
+    .eq(
+      'user_id',
+      currentUser.id
+    )
+    .maybeSingle();
+
+const isAdmin =
+  roleRes.data?.role === 'admin' ||
+  profileRes.data?.role === 'admin';
+
+if(!isAdmin){
+
+  throw new Error(
+    'هذا الحساب لا يملك صلاحية المسؤول.'
+  );
+
+}
+
+await loadOptionalGradeRules();
+
+await loadEmployees();
+
+await loadRequests();
+
+await loadNotifications();
+
+$('loading')
+  .classList
+  .add('hidden');
+
+const stat =
+  $('statEmployees');
+
+if(stat){
+
+  stat.textContent =
+    String(
+      employees.length
+    );
+
+}
+
+renderNotices();
+
+if(window.lucide){
+  lucide.createIcons();
+}
+```
+
+}catch(e){
+
+```
+console.error(e);
+
+$('loading').textContent =
+  '⚠️ ' +
+  (
+    e.message ||
+    'تعذر التحقق من الصلاحيات'
+  ) +
+  ' — سيتم الرجوع إلى صفحة الدخول.';
+
+setTimeout(
+  () =>
+    location.href =
+      'index.html',
+  2200
+);
+```
+
+}
+
+}
+
+/* =========================
+تسجيل الخروج
+========================= */
+
+$('logoutBtn').onclick =
+async () => {
+
+```
+try{
+
+  if(db){
+    await db.auth.signOut();
+  }
+
+}finally{
+
+  location.href =
+    'index.html';
+
+}
+```
+
+};
+
+/* =========================
+التشغيل
+========================= */
+
+checkAdmin();
+
+setInterval(
+() => {
+
+```
+if(
+  db &&
+  currentUser
+){
+
+  loadNotifications();
+
+  loadRequests();
+
+}
+```
+
+},
+30000
+);
+
+})(); </script>
+
+<!-- =========================
+     PWA Install Banner
+========================= -->
+
+<div
+  id="pwaInstallBanner"
+  class="pwa-install-banner"
+  hidden>
+
+  <div class="pwa-install-icon">
+
+```
+<img
+  src="./logo%20(2).png"
+  alt="شعار منصة المسار المهني">
+```
+
   </div>
-  <button id="pwaInstallBtn" type="button">تثبيت التطبيق</button>
-  <button id="pwaInstallClose" class="pwa-install-close" type="button" aria-label="إغلاق">×</button>
+
+  <div class="pwa-install-content">
+
+```
+<strong>
+  ثبّت منصة المسار المهني
+</strong>
+
+<span>
+  أضف المنصة إلى هاتفك للوصول إليها بسرعة من الشاشة الرئيسية.
+</span>
+```
+
+  </div>
+
+<button
+ id="pwaInstallBtn"
+ type="button">
+
+```
+تثبيت التطبيق
+```
+
+  </button>
+
+<button
+ id="pwaInstallClose"
+ class="pwa-install-close"
+ type="button"
+ aria-label="إغلاق">
+
+```
+×
+```
+
+  </button>
+
 </div>
-<style>
-.pwa-install-banner{position:fixed;z-index:99999;right:18px;left:18px;bottom:18px;max-width:620px;margin:auto;display:flex;align-items:center;gap:13px;padding:14px 16px;border:1px solid rgba(109,74,255,.18);border-radius:20px;background:rgba(255,255,255,.97);box-shadow:0 18px 50px rgba(25,20,60,.20);backdrop-filter:blur(14px);font-family:Cairo,Arial,sans-serif;direction:rtl}.pwa-install-banner[hidden]{display:none!important}.pwa-install-icon{width:52px;height:52px;flex:0 0 52px;border-radius:15px;overflow:hidden;background:#f5f2ff;display:grid;place-items:center;border:1px solid rgba(109,74,255,.12)}.pwa-install-icon img{width:100%;height:100%;object-fit:contain}.pwa-install-content{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.pwa-install-content strong{font-size:15px;color:#241d4f}.pwa-install-content span{font-size:12px;line-height:1.6;color:#6b6780}.pwa-install-banner button#pwaInstallBtn{border:0;border-radius:12px;padding:10px 15px;background:#6d4aff;color:#fff;font-family:inherit;font-weight:700;cursor:pointer;white-space:nowrap}.pwa-install-banner button#pwaInstallBtn:hover{filter:brightness(.96)}.pwa-install-close{width:32px;height:32px;border:0;background:transparent;color:#777;font-size:22px;line-height:1;cursor:pointer;padding:0}.pwa-ios-note{position:fixed;z-index:99998;right:18px;left:18px;bottom:18px;max-width:560px;margin:auto;padding:14px 16px;border-radius:18px;background:#241d4f;color:#fff;font-family:Cairo,Arial,sans-serif;direction:rtl;box-shadow:0 18px 50px rgba(25,20,60,.25);font-size:13px;line-height:1.8}.pwa-ios-note button{float:left;border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer}
-@media(max-width:600px){.pwa-install-banner{right:10px;left:10px;bottom:10px;padding:12px}.pwa-install-icon{width:46px;height:46px;flex-basis:46px}.pwa-install-content strong{font-size:13px}.pwa-install-content span{font-size:11px}.pwa-install-banner button#pwaInstallBtn{padding:9px 11px;font-size:12px}}
-</style>
+
 <script>
 (function(){
-  const swPath='./sw.js';
+
+  const swPath = './sw.js';
+
   if('serviceWorker' in navigator){
-    window.addEventListener('load',()=>navigator.serviceWorker.register(swPath,{scope:'./'}).catch(()=>{}));
+
+    window.addEventListener(
+      'load',
+      () =>
+        navigator.serviceWorker
+          .register(
+            swPath,
+            {scope:'./'}
+          )
+          .catch(() => {})
+    );
+
   }
-  let deferredPrompt=null;
-  const banner=()=>document.getElementById('pwaInstallBanner');
-  const installBtn=()=>document.getElementById('pwaInstallBtn');
-  const closeBtn=()=>document.getElementById('pwaInstallClose');
-  const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
-  const wasDismissed=()=>{try{return sessionStorage.getItem('pwaInstallDismissed')==='1'}catch(e){return false}};
-  const show=()=>{if(!isStandalone()&&!wasDismissed()&&banner()) banner().hidden=false};
-  const hide=()=>{if(banner()) banner().hidden=true};
-  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;show()});
-  window.addEventListener('appinstalled',()=>{deferredPrompt=null;hide()});
-  document.addEventListener('click',e=>{
-    if(e.target && e.target.id==='pwaInstallBtn'){
-      if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.finally(()=>{deferredPrompt=null;hide()})}
-      else {showIOSHint()}
+
+  let deferredPrompt = null;
+
+  const banner =
+    () =>
+      document.getElementById(
+        'pwaInstallBanner'
+      );
+
+  const isStandalone =
+    () =>
+      window.matchMedia(
+        '(display-mode: standalone)'
+      ).matches ||
+      window.navigator.standalone === true;
+
+  const wasDismissed =
+    () => {
+
+      try{
+
+        return sessionStorage.getItem(
+          'pwaInstallDismissed'
+        ) === '1';
+
+      }catch(e){
+
+        return false;
+
+      }
+
+    };
+
+  const show =
+    () => {
+
+      if(
+        !isStandalone() &&
+        !wasDismissed() &&
+        banner()
+      ){
+
+        banner().hidden = false;
+
+      }
+
+    };
+
+  const hide =
+    () => {
+
+      if(banner()){
+        banner().hidden = true;
+      }
+
+    };
+
+  window.addEventListener(
+    'beforeinstallprompt',
+    e => {
+
+      e.preventDefault();
+
+      deferredPrompt = e;
+
+      show();
+
     }
-    if(e.target && e.target.id==='pwaInstallClose'){try{sessionStorage.setItem('pwaInstallDismissed','1')}catch(err){} hide()}
-  });
+  );
+
+  window.addEventListener(
+    'appinstalled',
+    () => {
+
+      deferredPrompt = null;
+
+      hide();
+
+    }
+  );
+
+  document.addEventListener(
+    'click',
+    e => {
+
+      if(
+        e.target &&
+        e.target.id ===
+        'pwaInstallBtn'
+      ){
+
+        if(deferredPrompt){
+
+          deferredPrompt
+            .prompt();
+
+          deferredPrompt
+            .userChoice
+            .finally(() => {
+
+              deferredPrompt = null;
+
+              hide();
+
+            });
+
+        }else{
+
+          showIOSHint();
+
+        }
+
+      }
+
+      if(
+        e.target &&
+        e.target.id ===
+        'pwaInstallClose'
+      ){
+
+        try{
+
+          sessionStorage.setItem(
+            'pwaInstallDismissed',
+            '1'
+          );
+
+        }catch(err){}
+
+        hide();
+
+      }
+
+    }
+  );
+
   function showIOSHint(){
-    if(!/iphone|ipad|ipod/i.test(navigator.userAgent)) return;
-    if(document.getElementById('pwaIosNote')) return;
-    const n=document.createElement('div');n.id='pwaIosNote';n.className='pwa-ios-note';
-    n.innerHTML='<button aria-label="إغلاق">×</button><strong>لتثبيت المنصة على iPhone</strong><br>اضغط على زر المشاركة ثم اختر <b>إضافة إلى الشاشة الرئيسية</b>.';
-    n.querySelector('button').onclick=()=>n.remove();document.body.appendChild(n);
+
+    if(
+      !/iphone|ipad|ipod/i
+        .test(
+          navigator.userAgent
+        )
+    ){
+
+      return;
+
+    }
+
+    if(
+      document.getElementById(
+        'pwaIosNote'
+      )
+    ){
+
+      return;
+
+    }
+
+    const n =
+      document.createElement(
+        'div'
+      );
+
+    n.id =
+      'pwaIosNote';
+
+    n.className =
+      'pwa-ios-note';
+
+    n.innerHTML = `
+      <button
+        aria-label="إغلاق">
+        ×
+      </button>
+
+      <strong>
+        لتثبيت المنصة على iPhone
+      </strong>
+
+      <br>
+
+      اضغط على زر المشاركة ثم اختر
+      <b>
+        إضافة إلى الشاشة الرئيسية
+      </b>.
+    `;
+
+    n.querySelector(
+      'button'
+    ).onclick =
+      () => n.remove();
+
+    document.body.appendChild(n);
+
   }
-  window.addEventListener('load',()=>setTimeout(()=>{if(!isStandalone()&&!wasDismissed()&&/Android/i.test(navigator.userAgent))show()},1200));
+
+  window.addEventListener(
+    'load',
+    () =>
+      setTimeout(
+        () => {
+
+          if(
+            !isStandalone() &&
+            !wasDismissed() &&
+            /Android/i.test(
+              navigator.userAgent
+            )
+          ){
+
+            show();
+
+          }
+
+        },
+        1200
+      )
+  );
+
 })();
 </script>
 
