@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -130,7 +130,7 @@
           showError("هذا الحساب ليس لديه صلاحيات المسؤول.");
           return;
         }
-        location.href = "admin.html";
+        location.href = "./admin.html";
         return;
       }
 
@@ -140,7 +140,7 @@
         return;
       }
 
-      location.href = "employee.html";
+      location.href = "./employee.html";
     }catch(e){
       console.error(e);
       showError(e.message?.includes("Invalid login credentials")
@@ -169,7 +169,7 @@
       const {data, error} = await client.auth.signUp({email, password});
       if(error) throw error;
       if(data.session){
-        location.href = "employee.html";
+        location.href = "./employee.html";
         return;
       }
       showSuccess("تم إنشاء الحساب بنجاح. تحقق من بريدك الإلكتروني واضغط رابط التأكيد قبل تسجيل الدخول. إذا لم تصل الرسالة، يمكنك إعادة إرسالها.");
@@ -209,7 +209,7 @@
         console.error(error);
         return;
       }
-      location.href = profile?.role === "admin" ? "admin.html" : "employee.html";
+      location.href = profile?.role === "admin" ? "./admin.html" : "./employee.html";
     }catch(e){
       console.error(e);
     }
