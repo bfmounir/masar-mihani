@@ -25,6 +25,7 @@ button,input,select,textarea{font:inherit}.topbar{height:70px;background:rgba(25
 .stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:0 0 16px}.stat-card{background:#fff;border:1px solid var(--border);border-radius:15px;padding:15px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);min-height:86px}.stat-icon{width:43px;height:43px;border-radius:12px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;flex:none}.stat-icon.gold{background:var(--gold-soft);color:#9A7A20}.stat-icon.green{background:var(--success-soft);color:var(--success)}.stat-icon.blue{background:#EEF5FB;color:#4D789A}.stat-icon svg{width:21px;height:21px}.stat-label{font-size:11px;color:var(--muted);margin-bottom:4px}.stat-value{font-size:20px;font-weight:900;color:#4B3A60}
 .notice-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.notice-head strong{display:flex;align-items:center;gap:8px;color:#57466A}.notice-list{display:grid;gap:9px}.notice-item{padding:13px;border-radius:12px;background:var(--surface-soft);border-right:3px solid var(--gold);line-height:1.8}.notice-item .date{font-size:10px;color:#968D9D;margin-top:6px}.notice-item .delete-notice{float:left;padding:5px 8px;font-size:10px}
 .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-weight:800;color:#51475A;font-size:12px}.field input,.field select,.field textarea{width:100%;padding:12px 13px;border:1px solid #DDD5E5;border-radius:11px;font:inherit;background:#FEFDFF;color:#302A38;outline:none;transition:.2s}.field input:focus,.field select:focus,.field textarea:focus{border-color:#9B84BD;box-shadow:0 0 0 3px rgba(111,82,163,.08);background:#fff}.field small{color:#8B8292;line-height:1.6}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.btn{border:0;border-radius:10px;padding:10px 14px;font:inherit;font-weight:900;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;justify-content:center;gap:7px}.btn svg{width:16px;height:16px}.btn:hover{transform:translateY(-1px)}.btn.primary{background:var(--primary);color:#fff;box-shadow:0 6px 15px rgba(111,82,163,.18)}.btn.primary:hover{background:#634692}.btn.secondary{background:#F2EEF6;color:var(--primary-dark)}.btn.secondary:hover{background:#EAE3F0}.btn.danger{background:var(--danger-soft);color:#A24D55}.btn.gold{background:var(--gold-soft);color:#80641A}.result{margin-top:16px}.status{padding:12px;border-radius:11px;background:#F8F5FA;color:#665B70;line-height:1.8;border:1px solid #ECE5F0}.status.ok{background:var(--success-soft);color:#2E704D;border-color:#CFE9D9}.status.error{background:var(--danger-soft);color:#A24D55;border-color:#F0D0D4}.empty{text-align:center;color:#93899B;padding:30px 15px}.employee-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:14px;overflow:hidden;border:1px solid var(--border);border-radius:12px}.employee-table th,.employee-table td{padding:11px;border-bottom:1px solid #EFEAF2;text-align:right;font-size:12px}.employee-table th{background:#F4F0F8;color:#5C4775;font-weight:900}.employee-table tbody tr:last-child td{border-bottom:0}.employee-table tbody tr:hover{background:#FCFAFE}.badge{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;background:#F4F0F8;color:#675477;font-size:10px;font-weight:900}.calc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:15px}.metric{background:#FCFBFD;border:1px solid var(--border);border-radius:13px;padding:14px}.metric .label{font-size:11px;color:#7F7487}.metric .value{font-size:18px;font-weight:900;color:#5B4474;margin-top:5px}.warning{color:#80641A;background:var(--warning-soft);border:1px solid #F0DEAA;padding:12px;border-radius:11px;line-height:1.8}.loading{position:fixed;inset:0;background:#F8F6FB;display:grid;place-items:center;z-index:100;font-weight:900;color:#65498A;padding:20px;text-align:center}.loading-inner{text-align:center}.spinner{width:32px;height:32px;border:3px solid #E5DDF0;border-top-color:#8064B2;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}@keyframes spin{to{transform:rotate(360deg)}}.hidden{display:none!important}.section-note{display:flex;align-items:flex-start;gap:9px;padding:12px 13px;background:#F9F7FC;border:1px solid var(--border);border-radius:12px;color:#756A80;line-height:1.8;margin-bottom:14px}.section-note svg{width:18px;flex:none;color:var(--primary);margin-top:2px}
+.request-card{background:#fff;border:1px solid var(--border);border-radius:15px;padding:17px;margin-bottom:11px;box-shadow:var(--shadow)}.request-card.pending{border-right:4px solid var(--gold)}.request-card.resolved{border-right:4px solid var(--success)}.request-card.rejected{border-right:4px solid var(--danger)}.request-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.request-title{font-size:14px;font-weight:900;color:#57446D}.request-meta{font-size:10px;color:#948A9D;margin-top:5px}.request-message{background:#FAF8FC;border:1px solid #EEE8F3;border-radius:11px;padding:11px;margin:12px 0;line-height:1.8;color:#62596A}.request-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.request-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.mini-label{font-size:10px;font-weight:900;color:#6D6275;margin-bottom:4px}.request-card input,.request-card textarea{width:100%;padding:10px;border:1px solid #DDD5E5;border-radius:9px;background:#FEFDFF;outline:none}.request-card input:focus,.request-card textarea:focus{border-color:#9B84BD;box-shadow:0 0 0 3px rgba(128,100,178,.08)}
 @media(max-width:1050px){.stats-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:900px){.sidebar{width:210px}.content{margin-right:210px}.form-grid{grid-template-columns:1fr}.calc-grid{grid-template-columns:1fr 1fr}}@media(max-width:650px){.sidebar{position:static;width:100%;height:auto;border-left:0;border-bottom:1px solid var(--border);display:flex;overflow:auto;gap:5px;padding:8px;box-shadow:none}.sidebar .menu-title{display:none}.menu-item{min-width:max-content;justify-content:center}.content{margin-right:0;padding:145px 12px 25px}.topbar{height:62px;padding:0 12px}.brand h1{font-size:14px}.brand small{font-size:9px}.user-chip{display:none}.logout span{display:none}.stats-grid{grid-template-columns:1fr 1fr}.calc-grid{grid-template-columns:1fr}.header h2{font-size:21px}.notice-head{align-items:flex-start;flex-direction:column}}@media(max-width:420px){.stats-grid{grid-template-columns:1fr}.btn{width:100%}}
 </style>
 </head>
@@ -37,6 +38,7 @@ button,input,select,textarea{font:inherit}.topbar{height:70px;background:rgba(25
 <aside class="sidebar">
   <div class="menu-title">الرئيسية</div>
   <button class="menu-item active" data-section="homeSection"><i data-lucide="bell-ring"></i><span>التنبيهات الداخلية</span></button>
+  <button class="menu-item" data-section="requestsSection"><i data-lucide="inbox"></i><span>طلبات الموظفين <span id="pendingBadge" class="badge" style="margin-right:4px">0</span></span></button>
   <div class="menu-title">المتابعة</div>
   <button class="menu-item" data-section="employeesSection"><i data-lucide="user-round-plus"></i><span>إضافة موظف</span></button>
   <button class="menu-item" data-section="southSection"><i data-lucide="sun-medium"></i><span>أقدمية الجنوب</span></button>
@@ -48,8 +50,8 @@ button,input,select,textarea{font:inherit}.topbar{height:70px;background:rgba(25
   <div class="stats-grid">
     <div class="stat-card"><div class="stat-icon"><i data-lucide="users"></i></div><div><div class="stat-label">الموظفون المضافون بهذه النسخة</div><div class="stat-value" id="statEmployees">0</div></div></div>
     <div class="stat-card"><div class="stat-icon gold"><i data-lucide="bell"></i></div><div><div class="stat-label">التنبيهات الحالية</div><div class="stat-value" id="statNotices">0</div></div></div>
+    <div class="stat-card"><div class="stat-icon" style="background:#F2EDF8;color:#8064B2"><i data-lucide="inbox"></i></div><div><div class="stat-label">طلبات قيد الدراسة</div><div class="stat-value" id="statRequests">0</div></div></div>
     <div class="stat-card"><div class="stat-icon green"><i data-lucide="hourglass"></i></div><div><div class="stat-label">متابعة الأقدمية</div><div class="stat-value">مفعلة</div></div></div>
-    <div class="stat-card"><div class="stat-icon blue"><i data-lucide="calendar-check-2"></i></div><div><div class="stat-label">متابعة التقاعد</div><div class="stat-value">متاحة</div></div></div>
   </div>
   <div class="notice">
     <div class="notice-head"><strong><i data-lucide="megaphone"></i> التنبيهات</strong><button class="btn primary" id="addNoticeBtn"><i data-lucide="plus"></i>إضافة تنبيه</button></div>
@@ -60,6 +62,13 @@ button,input,select,textarea{font:inherit}.topbar{height:70px;background:rgba(25
     <div class="form-grid"><div class="field full"><label>نص التنبيه</label><textarea id="noticeText" rows="3" placeholder="اكتب التنبيه الداخلي..."></textarea></div></div>
     <div class="actions"><button class="btn primary" id="saveNoticeBtn"><i data-lucide="save"></i>حفظ التنبيه</button><button class="btn secondary" id="cancelNoticeBtn"><i data-lucide="x"></i>إلغاء</button></div>
   </div>
+</section>
+<section id="requestsSection" class="section">
+  <div class="header"><h2><i data-lucide="inbox"></i>طلبات الموظفين</h2><p>تظهر هنا طلبات الموظفين المسجلين في المنصة. يراجع المسؤول المعلومات ثم يثبت التواريخ والنتيجة الإدارية المناسبة.</p></div>
+  <div class="section-note"><i data-lucide="shield-check"></i><div>البيانات المعروضة في هذا القسم للمراجعة الإدارية. لا يتم اعتبار النتيجة قرار ترقية آليًا؛ المسؤول هو من يراجع المعطيات ويثبت تاريخ سريان الدرجة أو تاريخ الترقية في الرتبة والرتبة/المنصب المستهدف عند الاقتضاء.</div></div>
+  <div class="actions"><button class="btn primary" id="refreshRequestsBtn"><i data-lucide="refresh-cw"></i>تحديث الطلبات</button></div>
+  <div id="requestsStatus" class="result"></div>
+  <div id="requestsList" class="result"><div class="empty">جارٍ تحميل الطلبات...</div></div>
 </section>
 <section id="employeesSection" class="section">
   <div class="header"><h2><i data-lucide="user-round-plus"></i>إضافة موظف</h2><p>إدخال يدوي بسيط للبيانات الأساسية اللازمة لمتابعة الأقدمية والاستحقاق الزمني.</p></div>
@@ -100,6 +109,7 @@ const $=id=>document.getElementById(id);
 let db=window.db||null;
 let currentUser=null;
 let employees=[];
+let requests=[];
 const MANUAL_IDS_KEY='career_platform_manual_employee_ids_v2';
 const NOTICE_KEY='career_internal_notices_v2';
 const SOUTH_MONTHS_PER_FULL_YEAR=6;
@@ -136,7 +146,7 @@ function activeGradeRule(grade,date){
   return r?{min:Number(r.min_months??r.minimum_months??r.min??30),medium:Number(r.medium_months??r.average_months??r.medium??36),max:Number(r.max_months??r.maximum_months??r.max??42),validFrom:r.valid_from||null,validTo:r.valid_to||null}:DEFAULT_GRADE_RULE;
 }
 function clearMenus(){document.querySelectorAll('.menu-item').forEach(b=>b.classList.remove('active'))}
-function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));const section=$(id);if(section)section.classList.add('active');document.querySelectorAll('.menu-item').forEach(b=>b.classList.toggle('active',b.dataset.section===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='retirementSection')loadRetirement()}
+function showSection(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));const section=$(id);if(section)section.classList.add('active');document.querySelectorAll('.menu-item').forEach(b=>b.classList.toggle('active',b.dataset.section===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='retirementSection')loadRetirement();if(id==='requestsSection')loadRequests()}
 document.querySelectorAll('.menu-item').forEach(b=>b.addEventListener('click',()=>showSection(b.dataset.section)));
 if(window.lucide)lucide.createIcons();
 
@@ -203,6 +213,34 @@ async function loadRetirement(){
     box.innerHTML=`<div class="status ok">سن التقاعد المستعمل: ${age} سنة — قاعدة ${esc(rule?.rule_name_ar||'القاعدة الفعالة')}</div><table class="employee-table"><thead><tr><th>الاسم واللقب</th><th>تاريخ الميلاد</th><th>تاريخ التعيين</th><th>تاريخ التقاعد المتوقع</th><th>الحالة</th></tr></thead><tbody>${rows.map(e=>{const due=parseDate(e._ret)<=parseDate(today);return `<tr><td>${esc(getName(e))}</td><td>${fmtDate(e._birth)}</td><td>${fmtDate(getAppointment(e))}</td><td>${fmtDate(e._ret)}</td><td><span class="badge">${due?'بلغ الموعد':'قيد المتابعة'}</span></td></tr>`}).join('')}</tbody></table>`
   }catch(e){console.error(e);status.innerHTML='<div class="status error">تعذر تحميل التقاعد: '+esc(e.message||'خطأ غير معروف')+'</div>';box.innerHTML='<div class="empty">تحقق من اتصال Supabase ومن جدول retirement_rules.</div>'}
 }
+async function loadRequests(){
+  const box=$('requestsList'),status=$('requestsStatus'); if(!box)return;
+  box.innerHTML='<div class="empty">جارٍ تحميل طلبات الموظفين...</div>';status.innerHTML='';
+  try{
+    const r=await db.from('career_requests').select('*,career_profiles(employee_name_ar,appointment_date,current_grade,grade_start_date,current_rank)').order('created_at',{ascending:false});
+    if(r.error)throw r.error;
+    requests=Array.isArray(r.data)?r.data:[];
+    const pending=requests.filter(x=>x.status==='pending').length;
+    if($('statRequests'))$('statRequests').textContent=String(pending);
+    if($('pendingBadge'))$('pendingBadge').textContent=String(pending);
+    if(!requests.length){box.innerHTML='<div class="empty">لا توجد طلبات موظفين حاليًا.</div>';if(window.lucide)lucide.createIcons();return}
+    box.innerHTML=requests.map(r=>requestCard(r)).join('');
+    box.querySelectorAll('[data-save-request]').forEach(btn=>btn.onclick=()=>reviewRequest(btn.dataset.saveRequest));
+    box.querySelectorAll('[data-reject-request]').forEach(btn=>btn.onclick=()=>setRequestStatus(btn.dataset.rejectRequest,'rejected'));
+    if(window.lucide)lucide.createIcons();
+  }catch(e){console.error(e);box.innerHTML='<div class="empty">تعذر تحميل الطلبات. تأكد من إنشاء جدول career_requests وcareer_profiles وفق ملف SQL المرفق.</div>';status.innerHTML='<div class="status error">'+esc(e.message||'خطأ غير معروف')+'</div>'}
+}
+function requestCard(r){
+  const p=r.career_profiles||{};const status=r.status||'pending';const label=status==='resolved'?'تمت المراجعة':status==='rejected'?'مرفوض/غير معتمد حاليًا':'قيد الدراسة';
+  const badge=status==='resolved'?'ok':status==='rejected'?'no':'wait';
+  return `<div class="request-card ${esc(status)}" id="request-${esc(r.id)}"><div class="request-top"><div><div class="request-title"><i data-lucide="file-search-2" style="width:17px;vertical-align:-3px;color:var(--primary)"></i> ${esc(r.title||'طلب متابعة مهنية')}</div><div class="request-meta">الموظف: <b>${esc(p.employee_name_ar||'غير مسجل')}</b> — أرسل في ${esc(new Date(r.created_at).toLocaleString('ar-DZ'))}</div></div><span class="badge ${badge}">${label}</span></div><div class="request-message"><b>${esc(r.request_type==='grade_review'?'مراجعة تاريخ سريان الدرجة':r.request_type==='rank_review'?'طلب دراسة ترقية في الرتبة':'استفسار حول المسار المهني')}</b><br>${esc(r.message)}</div><div class="request-fields"><div><div class="mini-label">تاريخ سريان الدرجة</div><input id="grade-date-${esc(r.id)}" type="date" value="${esc(r.grade_effective_date||'')}"></div><div><div class="mini-label">تاريخ الترقية في الرتبة</div><input id="promotion-date-${esc(r.id)}" type="date" value="${esc(r.promotion_date||'')}"></div><div><div class="mini-label">الرتبة التي سيرقى لها</div><input id="promotion-rank-${esc(r.id)}" value="${esc(r.promotion_rank||'')}" placeholder="تُحدد بعد دراسة الملف"></div><div><div class="mini-label">المنصب المستهدف</div><input id="promotion-position-${esc(r.id)}" value="${esc(r.promotion_position||'')}" placeholder="المنصب عند الاقتضاء"></div><div style="grid-column:1/-1"><div class="mini-label">ملاحظة المسؤول</div><textarea id="admin-note-${esc(r.id)}" rows="3" placeholder="أسباب/ملاحظات المراجعة...">${esc(r.admin_note||'')}</textarea></div></div><div class="request-actions"><button class="btn primary" data-save-request="${esc(r.id)}"><i data-lucide="save"></i>حفظ المراجعة وتبليغ الموظف</button><button class="btn secondary" data-reject-request="${esc(r.id)}"><i data-lucide="circle-x"></i>وضع الطلب كغير معتمد</button></div></div>`;
+}
+async function reviewRequest(id){
+  const payload={grade_effective_date:$('grade-date-'+id)?.value||null,promotion_date:$('promotion-date-'+id)?.value||null,promotion_rank:$('promotion-rank-'+id)?.value.trim()||null,promotion_position:$('promotion-position-'+id)?.value.trim()||null,admin_note:$('admin-note-'+id)?.value.trim()||null,status:'resolved',reviewed_at:new Date().toISOString(),reviewed_by:currentUser?.id||null};
+  const r=await db.from('career_requests').update(payload).eq('id',id);if(r.error){alert('تعذر حفظ المراجعة: '+r.error.message);return}await loadRequests();
+}
+async function setRequestStatus(id,status){const note=prompt(status==='rejected'?'اكتب ملاحظة توضح سبب عدم اعتماد الطلب (اختياري):':'ملاحظة المسؤول (اختياري):','');const r=await db.from('career_requests').update({status,admin_note:note||null,reviewed_at:new Date().toISOString(),reviewed_by:currentUser?.id||null}).eq('id',id);if(r.error){alert('تعذر تحديث حالة الطلب: '+r.error.message);return}await loadRequests()}
+$('refreshRequestsBtn').onclick=loadRequests;
 $('refreshRetirementBtn').onclick=loadRetirement;
 
 async function checkAdmin(){
@@ -216,7 +254,7 @@ async function checkAdmin(){
     const profileRes=await db.from('employees').select('role').eq('user_id',currentUser.id).maybeSingle();
     const isAdmin=roleRes.data?.role==='admin'||profileRes.data?.role==='admin';
     if(!isAdmin)throw new Error('هذا الحساب لا يملك صلاحية المسؤول.');
-    await loadOptionalGradeRules();await loadEmployees();$('loading').classList.add('hidden');const stat=$('statEmployees');if(stat)stat.textContent=String(employees.length);renderNotices();if(window.lucide)lucide.createIcons();
+    await loadOptionalGradeRules();await loadEmployees();await loadRequests();$('loading').classList.add('hidden');const stat=$('statEmployees');if(stat)stat.textContent=String(employees.length);renderNotices();if(window.lucide)lucide.createIcons();
   }catch(e){console.error(e);$('loading').textContent='⚠️ '+(e.message||'تعذر التحقق من الصلاحيات')+' — سيتم الرجوع إلى صفحة الدخول.';setTimeout(()=>location.href='index.html',2200)}
 }
 $('logoutBtn').onclick=async()=>{try{if(db)await db.auth.signOut()}finally{location.href='index.html'}};
