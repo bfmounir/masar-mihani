@@ -1,229 +1,1976 @@
-
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
 <title>منصة المسار المهني</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
+
+<script src="./config.js"></script>
+
 <style>
-:root{--brand-purple:#6F52A3;--brand-purple-dark:#584084;--brand-gold:#C9A84A;--brand-gold-light:#F7F0D8;--bg-light:#F7F5FA;--shadow-sm:0 4px 15px rgba(74,55,105,.07);--shadow-md:0 12px 32px rgba(74,55,105,.11)}
 
-*{box-sizing:border-box}html,body{min-height:100%}body{margin:0;font-family:Arial,Tahoma,sans-serif;background:radial-gradient(circle at 15% 15%,#F7F0D8 0,#F4F0F8 34%,#FAF7FC 72%);min-height:100vh;display:flex;align-items:center;justify-content:center;color:#302537;padding:24px;position:relative;overflow:auto}body:before,body:after{content:"";position:fixed;border-radius:50%;filter:blur(2px);pointer-events:none;z-index:0}body:before{width:360px;height:360px;background:rgba(111,82,163,.08);top:-150px;right:-100px}body:after{width:300px;height:300px;background:rgba(201,168,74,.08);bottom:-130px;left:-100px}.login-container{width:100%;max-width:980px;position:relative;z-index:1}.login-shell{display:grid;grid-template-columns:1fr 1.08fr;background:rgba(255,255,255,.88);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.85);border-radius:30px;overflow:hidden;box-shadow:0 25px 70px rgba(74,55,105,.11)}.welcome{padding:48px 42px;background:linear-gradient(145deg,#8064B2,#6F52A3 55%,#584084);color:#fff;display:flex;flex-direction:column;justify-content:center;position:relative}.welcome:after{content:"";position:absolute;width:220px;height:220px;border:1px solid rgba(212,175,55,.16);border-radius:50%;left:-90px;bottom:-80px}.brand-mark{width:78px;height:78px;border-radius:24px;background:rgba(212,175,55,.16);border:1px solid rgba(212,175,55,.35);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;margin-bottom:24px;box-shadow:0 12px 28px rgba(74,55,105,.09)}.welcome h2{margin:0 0 10px;font-size:29px;line-height:1.35}.welcome .institution{font-size:15px;line-height:1.9;opacity:.9}.feature-list{margin:28px 0 0;padding:0;list-style:none;display:grid;gap:12px}.feature-list li{padding:11px 13px;border-radius:13px;background:rgba(255,255,255,.09);border-color:rgba(212,175,55,.20);border:1px solid rgba(255,255,255,.10);font-size:13px}.login-card{background:#fff;padding:42px 40px}.login-head{text-align:center;margin-bottom:25px}.login-head h1{margin:0 0 8px;color:#6F52A3;font-size:26px}.login-head p{margin:0;color:#75677D;font-size:13px;line-height:1.8}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:5px;background:#F3EEF6;border:1px solid #EADFF0;border-radius:14px;margin-bottom:18px}.tab{border:0;background:transparent;color:#66586D;padding:12px 8px;border-radius:10px;cursor:pointer;font-weight:bold;font-size:14px;transition:.2s}.tab:hover{background:#F1EAF5}.tab.active{background:#6F52A3;color:#fff;box-shadow:0 5px 14px rgba(74,55,105,.13)}.login-types{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px}.type-btn{border:1px solid #D9CBE0;background:#FCFAFD;color:#5A4A61;padding:12px;border-radius:12px;cursor:pointer;font-weight:bold;font-size:13px;transition:.2s}.type-btn:hover{border-color:#C6A6D7}.type-btn.active{background:#F1EAF5;color:#6F52A3;border-color:#6F52A3}.form-group{margin-bottom:16px}label{display:block;margin-bottom:7px;color:#493B50;font-size:13px;font-weight:bold}input{width:100%;padding:14px 15px;border:1px solid #D9CBE0;border-radius:12px;outline:none;font-size:15px;background:#FCFAFD;direction:ltr;text-align:left;transition:.2s}input:hover{border-color:#B89AC8}input:focus{border-color:#6F52A3;box-shadow:0 0 0 4px rgba(74,21,112,.09);background:#fff}.main-btn{width:100%;border:0;background:linear-gradient(135deg,#6F52A3,#6A2992);color:#fff;padding:14px;border-radius:12px;cursor:pointer;font-size:15px;font-weight:bold;margin-top:4px;box-shadow:0 9px 20px rgba(74,55,105,.13);transition:transform .18s,box-shadow .18s}.main-btn:hover{transform:translateY(-1px);box-shadow:0 12px 25px rgba(74,55,105,.17)}.main-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}.message{display:none;padding:12px 13px;border-radius:11px;margin-bottom:17px;font-size:13px;line-height:1.7}.message.error{display:block;background:#fff0f0;color:#a52828;border:1px solid #f2d1d1}.message.success{display:block;background:#eaf8ef;color:#18733c;border:1px solid #ccebd6}.hidden{display:none}.footer{text-align:center;margin-top:20px;color:#8A7B91;font-size:11px;line-height:1.8;border-top:1px solid #EEE7F1;padding-top:16px}.secure-note{display:flex;justify-content:center;gap:6px;align-items:center;margin-top:9px;color:#75677D;font-size:11px}.secure-dot{width:7px;height:7px;border-radius:50%;background:#29a36a;box-shadow:0 0 0 4px rgba(41,163,106,.10)}@media(max-width:760px){body{padding:12px}.login-shell{grid-template-columns:1fr}.welcome{padding:28px 25px}.welcome h2{font-size:23px}.feature-list{display:none}.login-card{padding:30px 22px}.brand-mark{width:64px;height:64px;font-size:30px;margin-bottom:17px}}@media(max-width:430px){.login-types{grid-template-columns:1fr}.login-head h1{font-size:23px}.login-card{padding:25px 17px}.welcome{padding:24px 20px}}
+:root{
+    --primary:#6F52A3;
+    --primary-dark:#584084;
+    --primary-light:#F3EFF9;
+    --gold:#C9A84A;
+    --gold-dark:#AA820A;
 
-.welcome .institution{color:var(--brand-gold-light)}
-.brand-mark{background:linear-gradient(135deg,var(--brand-gold),#AA820A)!important;color:#fff;border-color:rgba(255,255,255,.3)!important}
-.login-shell{border-color:rgba(212,175,55,.20)}
-.tab.active{background:linear-gradient(135deg,var(--brand-purple),var(--brand-purple-dark));box-shadow:0 5px 14px rgba(74,55,105,.13)}
-.type-btn.active{background:#F7F0D8;color:var(--brand-purple);border-color:var(--brand-gold)}
-.footer{border-top-color:#EADFF0}
+    --bg:#F7F5FA;
+    --text:#263238;
+    --muted:#707783;
+    --border:#E5DFF0;
+    --white:#FFFFFF;
+    --success:#16734A;
+    --error:#A52828;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+html,
+body{
+    min-height:100%;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Tahoma,sans-serif;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(111,82,163,.10),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at bottom left,
+            rgba(201,168,74,.08),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #F6F3FA 0%,
+            #FBFAFC 50%,
+            #F1EDF7 100%
+        );
+
+    color:var(--text);
+
+    min-height:100vh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:28px;
+
+    position:relative;
+    overflow:auto;
+}
+
+body:before,
+body:after{
+    content:"";
+    position:fixed;
+    border-radius:50%;
+    pointer-events:none;
+    z-index:0;
+}
+
+body:before{
+    width:430px;
+    height:430px;
+    top:-220px;
+    right:-160px;
+    background:rgba(111,82,163,.08);
+}
+
+body:after{
+    width:350px;
+    height:350px;
+    bottom:-190px;
+    left:-140px;
+    background:rgba(201,168,74,.07);
+}
+
+.login-container{
+    width:100%;
+    max-width:1080px;
+    position:relative;
+    z-index:1;
+}
+
+.login-shell{
+    display:grid;
+    grid-template-columns:1.02fr 1fr;
+
+    background:var(--white);
+
+    border:1px solid var(--border);
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 18px 50px rgba(70,48,100,.12);
+}
+
+/* =========================
+   الجانب التعريفي
+========================= */
+
+.welcome{
+    padding:50px 44px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #6F52A3,
+            #7659AA 52%,
+            #8A6ABC
+        );
+
+    color:#fff;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+
+    position:relative;
+    overflow:hidden;
+}
+
+.welcome:before{
+    content:"";
+    position:absolute;
+
+    width:300px;
+    height:300px;
+
+    border:1px solid rgba(255,255,255,.14);
+
+    border-radius:50%;
+
+    left:-150px;
+    bottom:-150px;
+}
+
+.welcome:after{
+    content:"";
+    position:absolute;
+
+    width:180px;
+    height:180px;
+
+    border:1px solid rgba(201,168,74,.30);
+
+    border-radius:50%;
+
+    right:-90px;
+    top:-90px;
+}
+
+.brand-mark{
+    width:72px;
+    height:72px;
+
+    border-radius:16px;
+
+    background:#fff;
+
+    color:var(--primary);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:32px;
+    font-weight:bold;
+
+    margin-bottom:24px;
+
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.16);
+
+    position:relative;
+    z-index:1;
+}
+
+.welcome h2{
+    margin:0 0 11px;
+
+    font-size:30px;
+
+    line-height:1.4;
+
+    position:relative;
+    z-index:1;
+}
+
+.welcome .institution{
+    font-size:14px;
+
+    line-height:1.9;
+
+    opacity:.94;
+
+    position:relative;
+    z-index:1;
+}
+
+.feature-list{
+    margin:28px 0 0;
+
+    padding:0;
+
+    list-style:none;
+
+    display:grid;
+
+    gap:10px;
+
+    position:relative;
+    z-index:1;
+}
+
+.feature-list li{
+    padding:12px 14px;
+
+    border-radius:11px;
+
+    background:rgba(255,255,255,.10);
+
+    border:1px solid rgba(255,255,255,.13);
+
+    font-size:13px;
+
+    line-height:1.6;
+}
+
+.feature-list li:before{
+    content:"✓";
+
+    display:inline-flex;
+
+    width:22px;
+    height:22px;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:rgba(201,168,74,.20);
+
+    color:#F5DA92;
+
+    margin-left:8px;
+
+    font-weight:bold;
+}
+
+/* =========================
+   بطاقة الدخول
+========================= */
+
+.login-card{
+    background:#fff;
+
+    padding:44px 42px;
+}
+
+.login-head{
+    text-align:center;
+
+    margin-bottom:24px;
+}
+
+.login-head h1{
+    margin:0 0 8px;
+
+    color:var(--primary);
+
+    font-size:27px;
+}
+
+.login-head p{
+    margin:0;
+
+    color:var(--muted);
+
+    font-size:13px;
+
+    line-height:1.8;
+}
+
+/* =========================
+   التبويبات
+========================= */
+
+.tabs{
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:6px;
+
+    padding:5px;
+
+    background:#F7F4FA;
+
+    border:1px solid var(--border);
+
+    border-radius:11px;
+
+    margin-bottom:18px;
+}
+
+.tab{
+    border:0;
+
+    background:transparent;
+
+    color:#707783;
+
+    padding:11px 8px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    font-family:inherit;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    transition:.2s;
+}
+
+.tab:hover{
+    background:#EEE8F5;
+
+    color:var(--primary);
+}
+
+.tab.active{
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--primary-dark)
+        );
+
+    color:#fff;
+
+    box-shadow:
+        0 5px 14px rgba(88,64,132,.20);
+}
+
+/* =========================
+   نوع الدخول
+========================= */
+
+.login-types{
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:8px;
+
+    margin-bottom:20px;
+}
+
+.type-btn{
+    border:1px solid #DDD6E7;
+
+    background:#FBFAFC;
+
+    color:#68717B;
+
+    padding:12px;
+
+    border-radius:9px;
+
+    cursor:pointer;
+
+    font-family:inherit;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    transition:.2s;
+}
+
+.type-btn:hover{
+    border-color:#BDAFD1;
+
+    background:#F7F3FA;
+}
+
+.type-btn.active{
+    background:#F7F0D8;
+
+    color:var(--primary);
+
+    border-color:var(--gold);
+}
+
+/* =========================
+   النماذج
+========================= */
+
+.form-group{
+    margin-bottom:16px;
+}
+
+label{
+    display:block;
+
+    margin-bottom:7px;
+
+    color:#344054;
+
+    font-size:13px;
+
+    font-weight:bold;
+}
+
+input{
+    width:100%;
+
+    padding:13px 14px;
+
+    border:1px solid #D9D2E3;
+
+    border-radius:9px;
+
+    outline:none;
+
+    font-size:14px;
+
+    background:#FCFBFD;
+
+    direction:ltr;
+
+    text-align:left;
+
+    font-family:inherit;
+
+    transition:.2s;
+}
+
+input:hover{
+    border-color:#BBAFC9;
+}
+
+input:focus{
+    border-color:var(--primary);
+
+    box-shadow:
+        0 0 0 3px rgba(111,82,163,.09);
+
+    background:#fff;
+}
+
+.main-btn{
+    width:100%;
+
+    border:0;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--primary-dark)
+        );
+
+    color:#fff;
+
+    padding:13px 15px;
+
+    border-radius:9px;
+
+    cursor:pointer;
+
+    font-family:inherit;
+
+    font-size:14px;
+
+    font-weight:bold;
+
+    margin-top:4px;
+
+    box-shadow:
+        0 7px 17px rgba(88,64,132,.18);
+
+    transition:.2s;
+}
+
+.main-btn:hover{
+    transform:translateY(-1px);
+
+    box-shadow:
+        0 10px 22px rgba(88,64,132,.24);
+}
+
+.main-btn:disabled{
+    opacity:.6;
+
+    cursor:not-allowed;
+
+    transform:none;
+}
+
+.secondary-btn{
+    width:100%;
+
+    border:1px solid var(--gold);
+
+    background:#FBF7E9;
+
+    color:#806313;
+
+    padding:12px 15px;
+
+    border-radius:9px;
+
+    cursor:pointer;
+
+    font-family:inherit;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    margin-top:10px;
+
+    transition:.2s;
+}
+
+.secondary-btn:hover{
+    background:#F7F0D8;
+}
+
+/* =========================
+   الرسائل
+========================= */
+
+.message{
+    display:none;
+
+    padding:11px 12px;
+
+    border-radius:9px;
+
+    margin-bottom:16px;
+
+    font-size:12px;
+
+    line-height:1.7;
+}
+
+.message.error{
+    display:block;
+
+    background:#FDECEC;
+
+    color:var(--error);
+
+    border:1px solid #F2D1D1;
+}
+
+.message.success{
+    display:block;
+
+    background:#EAF7F0;
+
+    color:var(--success);
+
+    border:1px solid #CDE8D8;
+}
+
+.hidden{
+    display:none !important;
+}
+
+/* =========================
+   التذييل
+========================= */
+
+.footer{
+    text-align:center;
+
+    margin-top:20px;
+
+    color:#7B8794;
+
+    font-size:11px;
+
+    line-height:1.8;
+
+    border-top:1px solid #EEE9F3;
+
+    padding-top:15px;
+}
+
+.secure-note{
+    display:flex;
+
+    justify-content:center;
+
+    gap:7px;
+
+    align-items:center;
+
+    margin-top:8px;
+
+    color:#667085;
+
+    font-size:11px;
+}
+
+.secure-dot{
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:#2F855A;
+
+    box-shadow:
+        0 0 0 4px rgba(47,133,90,.10);
+}
+
+/* =========================
+   الجوال
+========================= */
+
+@media(max-width:850px){
+
+    body{
+        padding:15px;
+    }
+
+    .login-shell{
+        grid-template-columns:1fr;
+    }
+
+    .welcome{
+        padding:34px 30px;
+    }
+
+    .welcome h2{
+        font-size:25px;
+    }
+
+    .feature-list{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .login-card{
+        padding:34px 28px;
+    }
+}
+
+@media(max-width:560px){
+
+    .feature-list{
+        display:none;
+    }
+
+    .welcome{
+        text-align:center;
+
+        padding:28px 22px;
+    }
+
+    .brand-mark{
+        margin:0 auto 17px;
+
+        width:62px;
+        height:62px;
+
+        font-size:28px;
+    }
+
+    .welcome h2{
+        font-size:23px;
+    }
+
+    .login-card{
+        padding:28px 20px;
+    }
+
+    .login-types,
+    .tabs{
+        grid-template-columns:1fr;
+    }
+
+    .login-head h1{
+        font-size:24px;
+    }
+
+    .login-head{
+        margin-bottom:20px;
+    }
+}
+
+@media(max-width:380px){
+
+    body{
+        padding:8px;
+    }
+
+    .login-card{
+        padding:24px 15px;
+    }
+
+    .welcome{
+        padding:24px 16px;
+    }
+}
+
 </style>
+
 </head>
+
 <body>
-<div class="login-container"><div class="login-shell">
-<div class="welcome"><div class="brand-mark">م</div><h2>منصة المسار المهني</h2><div class="institution">المؤسسة العمومية الإستشفائية بأولف<br>نظام رقمي لإدارة ومتابعة المسار المهني للموظفين</div><ul class="feature-list"><li>👤 إدخال ومتابعة البيانات الأساسية</li><li>⏳ متابعة الأقدمية والاستحقاق الزمني</li><li>🔔 التنبيهات الداخلية والمتابعة الإدارية</li></ul></div><div class="login-card">
-<div class="login-head"><h1>تسجيل الدخول</h1><p>الوصول الآمن إلى نظام إدارة الموظفين والمسار المهني</p></div>
+
+<div class="login-container">
+
+<div class="login-shell">
+
+<!-- =========================
+     الجانب التعريفي
+========================= -->
+
+<div class="welcome">
+
+<div class="brand-mark">
+    م
+</div>
+
+<h2>
+    منصة المسار المهني
+</h2>
+
+<div class="institution">
+
+    المؤسسة العمومية الإستشفائية بأولف
+
+    <br>
+
+    نظام رقمي لإدارة ومتابعة المسار المهني للموظفين
+
+</div>
+
+<ul class="feature-list">
+
+<li>
+    👤 إدخال ومتابعة البيانات الأساسية
+</li>
+
+<li>
+    ⏳ متابعة الأقدمية والاستحقاق الزمني
+</li>
+
+<li>
+    🔔 التنبيهات الداخلية والمتابعة الإدارية
+</li>
+
+</ul>
+
+</div>
+
+
+<!-- =========================
+     بطاقة الدخول
+========================= -->
+
+<div class="login-card">
+
+<div class="login-head">
+
+<h1>
+    تسجيل الدخول
+</h1>
+
+<p>
+    الوصول الآمن إلى نظام إدارة الموظفين والمسار المهني
+</p>
+
+</div>
+
+
+<!-- =========================
+     التبويبات
+========================= -->
 
 <div class="tabs">
-<button id="loginTab" class="tab active" type="button" onclick="showMode('login')">تسجيل الدخول</button>
-<button id="signupTab" class="tab" type="button" onclick="showMode('signup')">إنشاء حساب موظف</button>
+
+<button
+    id="loginTab"
+    class="tab active"
+    type="button"
+    onclick="showMode('login')">
+
+    تسجيل الدخول
+
+</button>
+
+<button
+    id="signupTab"
+    class="tab"
+    type="button"
+    onclick="showMode('signup')">
+
+    إنشاء حساب موظف
+
+</button>
+
 </div>
 
-<div id="message" class="message"></div><button id="resendBtn" type="button" class="main-btn hidden" style="margin-bottom:16px;background:linear-gradient(135deg,#C9A84A,#AA820A)" onclick="resendConfirmation()">إعادة إرسال رسالة تأكيد البريد</button>
+
+<div
+    id="message"
+    class="message">
+</div>
+
+
+<button
+    id="resendBtn"
+    type="button"
+    class="secondary-btn hidden"
+    onclick="resendConfirmation()">
+
+    إعادة إرسال رسالة تأكيد البريد
+
+</button>
+
+
+<!-- =========================
+     تسجيل الدخول
+========================= -->
 
 <div id="loginPanel">
+
 <div class="login-types">
-<button type="button" id="employeeType" class="type-btn active" onclick="selectLoginType('employee')">دخول الموظف</button>
-<button type="button" id="adminType" class="type-btn" onclick="selectLoginType('admin')">دخول المسؤول</button>
+
+<button
+    type="button"
+    id="employeeType"
+    class="type-btn active"
+    onclick="selectLoginType('employee')">
+
+    دخول الموظف
+
+</button>
+
+<button
+    type="button"
+    id="adminType"
+    class="type-btn"
+    onclick="selectLoginType('admin')">
+
+    دخول المسؤول
+
+</button>
+
 </div>
+
+
 <form onsubmit="login(event)">
-<div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="loginEmail" placeholder="example@email.com" autocomplete="email" required></div>
-<div class="form-group"><label>كلمة المرور</label><input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" autocomplete="current-password" required></div>
-<button id="loginBtn" class="main-btn" type="submit">تسجيل الدخول</button>
-</form>
+
+<div class="form-group">
+
+<label>
+    البريد الإلكتروني
+</label>
+
+<input
+    type="email"
+    id="loginEmail"
+    placeholder="example@email.com"
+    autocomplete="email"
+    required>
+
 </div>
 
-<div id="signupPanel" class="hidden">
+
+<div class="form-group">
+
+<label>
+    كلمة المرور
+</label>
+
+<input
+    type="password"
+    id="loginPassword"
+    placeholder="أدخل كلمة المرور"
+    autocomplete="current-password"
+    required>
+
+</div>
+
+
+<button
+    id="loginBtn"
+    class="main-btn"
+    type="submit">
+
+    تسجيل الدخول
+
+</button>
+
+</form>
+
+</div>
+
+
+<!-- =========================
+     إنشاء حساب
+========================= -->
+
+<div
+    id="signupPanel"
+    class="hidden">
+
 <form onsubmit="signUp(event)">
-<div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="signupEmail" placeholder="example@email.com" autocomplete="email" required></div>
-<div class="form-group"><label>كلمة المرور</label><input type="password" id="signupPassword" placeholder="اختر كلمة مرور لا تقل عن 6 أحرف" minlength="6" autocomplete="new-password" required></div>
-<div class="form-group"><label>تأكيد كلمة المرور</label><input type="password" id="confirmPassword" placeholder="أعد كتابة كلمة المرور" minlength="6" autocomplete="new-password" required></div>
-<button id="signupBtn" class="main-btn" type="submit">إنشاء الحساب والانتقال لإدخال المعلومات</button>
-</form>
+
+<div class="form-group">
+
+<label>
+    البريد الإلكتروني
+</label>
+
+<input
+    type="email"
+    id="signupEmail"
+    placeholder="example@email.com"
+    autocomplete="email"
+    required>
+
 </div>
 
-<div class="footer">بعد إنشاء الحساب، يقوم الموظف بإدخال معلوماته بنفسه، وتبقى المراجعة والمتابعة للمسؤول.<div class="secure-note"><span class="secure-dot"></span> جلسة دخول محمية عبر نظام المصادقة</div></div>
-</div></div></div>
+
+<div class="form-group">
+
+<label>
+    كلمة المرور
+</label>
+
+<input
+    type="password"
+    id="signupPassword"
+    placeholder="اختر كلمة مرور لا تقل عن 6 أحرف"
+    minlength="6"
+    autocomplete="new-password"
+    required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+    تأكيد كلمة المرور
+</label>
+
+<input
+    type="password"
+    id="confirmPassword"
+    placeholder="أعد كتابة كلمة المرور"
+    minlength="6"
+    autocomplete="new-password"
+    required>
+
+</div>
+
+
+<button
+    id="signupBtn"
+    class="main-btn"
+    type="submit">
+
+    إنشاء الحساب والانتقال لإدخال المعلومات
+
+</button>
+
+</form>
+
+</div>
+
+
+<div class="footer">
+
+بعد إنشاء الحساب، يقوم الموظف بإدخال معلوماته بنفسه، وتبقى المراجعة والمتابعة للمسؤول.
+
+<div class="secure-note">
+
+<span class="secure-dot"></span>
+
+جلسة دخول محمية عبر نظام المصادقة
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 
 <script>
+
 (function(){
-  // عميل محلي داخل نطاق مغلق لتجنب أي تعارض مع config.js أو الصفحات الأخرى.
-  const client = window.db || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  let loginType = "employee";
 
-  function showMode(mode){
+"use strict";
+
+
+/* ==========================================
+   التحقق من إعدادات Supabase
+========================================== */
+
+if(
+    typeof window.supabase === "undefined"
+){
+
+    console.error(
+        "Supabase library was not loaded."
+    );
+
+    return;
+}
+
+
+if(
+    typeof SUPABASE_URL === "undefined" ||
+    typeof SUPABASE_ANON_KEY === "undefined"
+){
+
+    console.error(
+        "Supabase configuration is missing."
+    );
+
+    return;
+}
+
+
+/* ==========================================
+   إنشاء عميل Supabase
+========================================== */
+
+const client =
+    window.db ||
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+/* ==========================================
+   نوع تسجيل الدخول
+========================================== */
+
+let loginType = "employee";
+
+
+/* ==========================================
+   أدوات المسارات
+========================================== */
+
+/*
+    هذه الطريقة تجعل GitHub Pages يستخدم
+    نفس مجلد index.html مهما كان اسم المستودع.
+
+    مثال:
+
+    https://bfmounir.github.io/masar-mihani/
+
+    الموظف:
+
+    https://bfmounir.github.io/masar-mihani/employees.html
+
+    المسؤول:
+
+    https://bfmounir.github.io/masar-mihani/admin.html
+*/
+
+function goToPage(page){
+
+    const url =
+        new URL(
+            page,
+            window.location.href
+        );
+
+    window.location.assign(url.href);
+}
+
+
+/* ==========================================
+   إظهار تبويب الدخول / التسجيل
+========================================== */
+
+function showMode(mode){
+
     clearMessage();
-    document.getElementById("loginPanel").classList.toggle("hidden", mode !== "login");
-    document.getElementById("signupPanel").classList.toggle("hidden", mode !== "signup");
-    document.getElementById("loginTab").classList.toggle("active", mode === "login");
-    document.getElementById("signupTab").classList.toggle("active", mode === "signup");
-  }
 
-  function selectLoginType(type){
+    document
+        .getElementById("loginPanel")
+        .classList
+        .toggle(
+            "hidden",
+            mode !== "login"
+        );
+
+    document
+        .getElementById("signupPanel")
+        .classList
+        .toggle(
+            "hidden",
+            mode !== "signup"
+        );
+
+    document
+        .getElementById("loginTab")
+        .classList
+        .toggle(
+            "active",
+            mode === "login"
+        );
+
+    document
+        .getElementById("signupTab")
+        .classList
+        .toggle(
+            "active",
+            mode === "signup"
+        );
+
+}
+
+
+/* ==========================================
+   اختيار نوع الحساب
+========================================== */
+
+function selectLoginType(type){
+
     loginType = type;
-    document.getElementById("employeeType").classList.toggle("active", type === "employee");
-    document.getElementById("adminType").classList.toggle("active", type === "admin");
+
+    document
+        .getElementById("employeeType")
+        .classList
+        .toggle(
+            "active",
+            type === "employee"
+        );
+
+    document
+        .getElementById("adminType")
+        .classList
+        .toggle(
+            "active",
+            type === "admin"
+        );
+
     clearMessage();
-  }
 
-  function showError(t){
-    const m = document.getElementById("message");
-    m.className = "message error";
-    m.textContent = t;
-  }
+}
 
-  function showSuccess(t){
-    const m = document.getElementById("message");
-    m.className = "message success";
-    m.textContent = t;
-  }
 
-  function clearMessage(){
-    const m = document.getElementById("message");
-    m.className = "message";
-    m.textContent = "";
-    const r=document.getElementById("resendBtn"); if(r)r.classList.add("hidden");
-  }
+/* ==========================================
+   الرسائل
+========================================== */
 
-  async function login(event){
+function showError(text){
+
+    const message =
+        document.getElementById("message");
+
+    message.className =
+        "message error";
+
+    message.textContent =
+        text;
+
+}
+
+
+function showSuccess(text){
+
+    const message =
+        document.getElementById("message");
+
+    message.className =
+        "message success";
+
+    message.textContent =
+        text;
+
+}
+
+
+function clearMessage(){
+
+    const message =
+        document.getElementById("message");
+
+    message.className =
+        "message";
+
+    message.textContent =
+        "";
+
+}
+
+
+/* ==========================================
+   إظهار زر إعادة إرسال التأكيد
+========================================== */
+
+function showResendButton(){
+
+    document
+        .getElementById("resendBtn")
+        .classList
+        .remove("hidden");
+
+}
+
+
+function hideResendButton(){
+
+    document
+        .getElementById("resendBtn")
+        .classList
+        .add("hidden");
+
+}
+
+
+/* ==========================================
+   تسجيل الدخول
+========================================== */
+
+async function login(event){
+
     event.preventDefault();
+
     clearMessage();
-    const email = document.getElementById("loginEmail").value.trim();
-    const password = document.getElementById("loginPassword").value;
-    const btn = document.getElementById("loginBtn");
-    btn.disabled = true;
-    btn.textContent = "جاري تسجيل الدخول...";
+
+    hideResendButton();
+
+
+    const email =
+        document
+            .getElementById("loginEmail")
+            .value
+            .trim();
+
+
+    const password =
+        document
+            .getElementById("loginPassword")
+            .value;
+
+
+    const button =
+        document
+            .getElementById("loginBtn");
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "جاري تسجيل الدخول...";
+
+
     try{
-      const {data, error} = await client.auth.signInWithPassword({email, password});
-      if(error) throw error;
-      // التحقق من صلاحية المسؤول من جدول user_roles، مع إبقاء employees
-      // كمصدر احتياطي للتوافق مع الحسابات القديمة.
-      const {data: roleRow, error: roleError} = await client
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", data.user.id)
-        .maybeSingle();
-      if(roleError) console.warn("تعذر قراءة user_roles:", roleError);
 
-      const {data: profile, error: profileError} = await client
-        .from("employees")
-        .select("role")
-        .eq("user_id", data.user.id)
-        .maybeSingle();
-      if(profileError) console.warn("تعذر قراءة دور الموظف:", profileError);
+        /* -------------------------------
+           تسجيل الدخول في Supabase
+        -------------------------------- */
 
-      const isAdmin = roleRow?.role === "admin" || profile?.role === "admin";
+        const {
+            data,
+            error
+        } =
+            await client.auth.signInWithPassword({
 
-      if(loginType === "admin"){
-        if(!isAdmin){
-          await client.auth.signOut();
-          showError("هذا الحساب ليس لديه صلاحيات المسؤول.");
-          return;
+                email:email,
+
+                password:password
+
+            });
+
+
+        if(error){
+
+            /*
+                إذا كان الحساب يحتاج إلى
+                تأكيد البريد الإلكتروني
+            */
+
+            if(
+                error.message &&
+                (
+                    error.message
+                        .toLowerCase()
+                        .includes("email not confirmed")
+                )
+            ){
+
+                showError(
+                    "يجب تأكيد البريد الإلكتروني أولًا. افتح رسالة التأكيد المرسلة إلى بريدك الإلكتروني."
+                );
+
+                showResendButton();
+
+                return;
+            }
+
+
+            throw error;
         }
-        location.href = "./admin.html";
-        return;
-      }
 
-      if(isAdmin){
-        await client.auth.signOut();
-        showError("هذا حساب مسؤول. اختر دخول المسؤول.");
-        return;
-      }
 
-      location.href = "./employee.html";
-    }catch(e){
-      console.error(e);
-      showError(e.message?.includes("Invalid login credentials")
-        ? "البريد الإلكتروني أو كلمة المرور غير صحيحة."
-        : (e.message || "حدث خطأ أثناء تسجيل الدخول."));
-    }finally{
-      btn.disabled = false;
-      btn.textContent = "تسجيل الدخول";
+        const user =
+            data?.user;
+
+
+        if(!user){
+
+            throw new Error(
+                "تعذر الحصول على بيانات الحساب."
+            );
+        }
+
+
+        /* -------------------------------
+           البحث عن ملف الموظف
+        -------------------------------- */
+
+        let profile = null;
+
+
+        const {
+            data:employeeProfile,
+            error:profileError
+        } =
+            await client
+                .from("employees")
+                .select("*")
+                .eq(
+                    "user_id",
+                    user.id
+                )
+                .maybeSingle();
+
+
+        if(
+            profileError &&
+            profileError.code !== "PGRST116"
+        ){
+
+            console.error(
+                "Employee profile error:",
+                profileError
+            );
+
+            /*
+                لا نمنع الموظف من الدخول
+                إذا كان ملف employees غير موجود
+                أو لم يتم إنشاؤه بعد.
+            */
+        }
+        else{
+
+            profile =
+                employeeProfile;
+        }
+
+
+        /* ======================================
+           دخول المسؤول
+        ====================================== */
+
+        if(loginType === "admin"){
+
+            if(
+                !profile ||
+                profile.role !== "admin"
+            ){
+
+                /*
+                    محاولة إضافية من جدول user_roles
+                */
+
+                let isAdmin = false;
+
+
+                try{
+
+                    const {
+                        data:roleData
+                    } =
+                        await client
+                            .from("user_roles")
+                            .select("role")
+                            .eq(
+                                "user_id",
+                                user.id
+                            )
+                            .maybeSingle();
+
+
+                    if(
+                        roleData &&
+                        roleData.role === "admin"
+                    ){
+
+                        isAdmin = true;
+                    }
+
+                }
+                catch(roleError){
+
+                    console.warn(
+                        "user_roles check failed:",
+                        roleError
+                    );
+
+                }
+
+
+                if(!isAdmin){
+
+                    await client.auth.signOut();
+
+                    showError(
+                        "هذا الحساب ليس لديه صلاحيات المسؤول."
+                    );
+
+                    return;
+                }
+            }
+
+
+            /*
+                المسار الصحيح للمسؤول
+            */
+
+            goToPage("./admin.html");
+
+            return;
+        }
+
+
+        /* ======================================
+           منع المسؤول من الدخول كموظف
+        ====================================== */
+
+        if(
+            profile &&
+            profile.role === "admin"
+        ){
+
+            await client.auth.signOut();
+
+            showError(
+                "هذا حساب مسؤول. اختر دخول المسؤول."
+            );
+
+            return;
+        }
+
+
+        /* ======================================
+           دخول الموظف
+        ====================================== */
+
+        /*
+            اسم الملف الصحيح هو:
+
+            employees.html
+
+            وليس:
+
+            employee.html
+        */
+
+        goToPage("./employees.html");
+
     }
-  }
+    catch(error){
 
-  async function signUp(event){
+        console.error(
+            "Login error:",
+            error
+        );
+
+
+        const errorMessage =
+            error?.message || "";
+
+
+        if(
+            errorMessage
+                .toLowerCase()
+                .includes(
+                    "invalid login credentials"
+                )
+        ){
+
+            showError(
+                "البريد الإلكتروني أو كلمة المرور غير صحيحة."
+            );
+
+        }
+        else if(
+            errorMessage
+                .toLowerCase()
+                .includes(
+                    "email not confirmed"
+                )
+        ){
+
+            showError(
+                "يجب تأكيد البريد الإلكتروني أولًا."
+            );
+
+            showResendButton();
+
+        }
+        else{
+
+            showError(
+                errorMessage ||
+                "حدث خطأ أثناء تسجيل الدخول."
+            );
+        }
+
+    }
+    finally{
+
+        button.disabled = false;
+
+        button.textContent =
+            "تسجيل الدخول";
+
+    }
+
+}
+
+
+/* ==========================================
+   إنشاء حساب موظف
+========================================== */
+
+async function signUp(event){
+
     event.preventDefault();
+
     clearMessage();
-    const email = document.getElementById("signupEmail").value.trim();
-    const password = document.getElementById("signupPassword").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    hideResendButton();
+
+
+    const email =
+        document
+            .getElementById("signupEmail")
+            .value
+            .trim();
+
+
+    const password =
+        document
+            .getElementById("signupPassword")
+            .value;
+
+
+    const confirmPassword =
+        document
+            .getElementById("confirmPassword")
+            .value;
+
+
     if(password !== confirmPassword){
-      showError("كلمتا المرور غير متطابقتين.");
-      return;
-    }
-    const btn = document.getElementById("signupBtn");
-    btn.disabled = true;
-    btn.textContent = "جاري إنشاء الحساب...";
-    try{
-      const {data, error} = await client.auth.signUp({email, password});
-      if(error) throw error;
-      if(data.session){
-        location.href = "./employee.html";
-        return;
-      }
-      showSuccess("تم إنشاء الحساب بنجاح. تحقق من بريدك الإلكتروني واضغط رابط التأكيد قبل تسجيل الدخول. إذا لم تصل الرسالة، يمكنك إعادة إرسالها.");
-      const resend=document.getElementById("resendBtn"); if(resend)resend.classList.remove("hidden");
-      showMode("login");
-      document.getElementById("loginEmail").value = email;
-    }catch(e){
-      console.error(e);
-      showError(e.message || "تعذر إنشاء الحساب.");
-    }finally{
-      btn.disabled = false;
-      btn.textContent = "إنشاء الحساب والانتقال لإدخال المعلومات";
-    }
-  }
 
-  async function resendConfirmation(){
+        showError(
+            "كلمتا المرور غير متطابقتين."
+        );
+
+        return;
+    }
+
+
+    if(password.length < 6){
+
+        showError(
+            "كلمة المرور يجب ألا تقل عن 6 أحرف."
+        );
+
+        return;
+    }
+
+
+    const button =
+        document
+            .getElementById("signupBtn");
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "جاري إنشاء الحساب...";
+
+
+    try{
+
+        const {
+            data,
+            error
+        } =
+            await client.auth.signUp({
+
+                email:email,
+
+                password:password
+
+            });
+
+
+        if(error){
+
+            throw error;
+        }
+
+
+        /*
+            إذا كان Supabase يسمح بالجلسة
+            مباشرة بعد إنشاء الحساب
+        */
+
+        if(data?.session){
+
+            goToPage("./employees.html");
+
+            return;
+        }
+
+
+        /*
+            إذا كانت المصادقة تتطلب
+            تأكيد البريد الإلكتروني
+        */
+
+        showSuccess(
+            "تم إنشاء الحساب بنجاح. افتح رسالة تأكيد البريد الإلكتروني، ثم عد إلى المنصة وسجّل الدخول."
+        );
+
+
+        showResendButton();
+
+
+        showMode("login");
+
+
+        document
+            .getElementById("loginEmail")
+            .value =
+            email;
+
+    }
+    catch(error){
+
+        console.error(
+            "Signup error:",
+            error
+        );
+
+
+        showError(
+            error?.message ||
+            "تعذر إنشاء الحساب."
+        );
+
+    }
+    finally{
+
+        button.disabled = false;
+
+        button.textContent =
+            "إنشاء الحساب والانتقال لإدخال المعلومات";
+
+    }
+
+}
+
+
+/* ==========================================
+   إعادة إرسال رسالة تأكيد البريد
+========================================== */
+
+async function resendConfirmation(){
+
     clearMessage();
-    const email=document.getElementById("loginEmail").value.trim()||document.getElementById("signupEmail").value.trim();
-    if(!email){showError("أدخل البريد الإلكتروني أولًا.");return;}
-    const btn=document.getElementById("resendBtn");btn.disabled=true;btn.textContent="جاري إرسال الرسالة...";
-    try{const {error}=await client.auth.resend({type:"signup",email});if(error)throw error;showSuccess("تمت إعادة إرسال رسالة تأكيد البريد. افحص البريد الوارد ومجلد الرسائل غير المرغوب فيها.");}
-    catch(e){showError(e.message||"تعذر إعادة إرسال رسالة التأكيد.");}
-    finally{btn.disabled=false;btn.textContent="إعادة إرسال رسالة تأكيد البريد";}
-  }
 
-  async function checkExistingSession(){
-    try{
-      const {data} = await client.auth.getSession();
-      const session = data?.session;
-      if(!session?.user) return;
-      const {data: profile, error} = await client
-        .from("employees")
-        .select("role")
-        .eq("user_id", session.user.id)
-        .maybeSingle();
-      if(error){
-        console.error(error);
+
+    const emailInput =
+        document.getElementById("loginEmail");
+
+
+    const email =
+        emailInput
+            .value
+            .trim();
+
+
+    if(!email){
+
+        showError(
+            "أدخل البريد الإلكتروني أولًا."
+        );
+
         return;
-      }
-      location.href = profile?.role === "admin" ? "./admin.html" : "./employee.html";
-    }catch(e){
-      console.error(e);
     }
-  }
 
-  // الدوال التالية تُعرّض فقط للـ HTML inline handlers، بينما يبقى عميل Supabase محلياً.
-  window.showMode = showMode;
-  window.selectLoginType = selectLoginType;
-  window.login = login;
-  window.signUp = signUp;
-  window.resendConfirmation = resendConfirmation;
 
-  checkExistingSession();
+    try{
+
+        const {
+            error
+        } =
+            await client.auth.resend({
+
+                type:"signup",
+
+                email:email
+
+            });
+
+
+        if(error){
+
+            throw error;
+        }
+
+
+        showSuccess(
+            "تمت محاولة إعادة إرسال رسالة تأكيد البريد. تحقق من البريد الوارد ومجلد الرسائل غير المرغوب فيها."
+        );
+
+    }
+    catch(error){
+
+        console.error(
+            "Resend confirmation error:",
+            error
+        );
+
+
+        showError(
+            error?.message ||
+            "تعذر إعادة إرسال رسالة التأكيد."
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   فحص الجلسة الحالية
+========================================== */
+
+async function checkExistingSession(){
+
+    try{
+
+        const {
+            data
+        } =
+            await client.auth.getSession();
+
+
+        const session =
+            data?.session;
+
+
+        if(
+            !session?.user
+        ){
+
+            return;
+        }
+
+
+        const userId =
+            session.user.id;
+
+
+        let role = null;
+
+
+        /* -------------------------------
+           فحص employees
+        -------------------------------- */
+
+        try{
+
+            const {
+                data:employeeProfile
+            } =
+                await client
+                    .from("employees")
+                    .select("role")
+                    .eq(
+                        "user_id",
+                        userId
+                    )
+                    .maybeSingle();
+
+
+            if(employeeProfile){
+
+                role =
+                    employeeProfile.role;
+            }
+
+        }
+        catch(error){
+
+            console.warn(
+                "employees role check failed:",
+                error
+            );
+
+        }
+
+
+        /* -------------------------------
+           فحص user_roles إذا لزم الأمر
+        -------------------------------- */
+
+        if(!role){
+
+            try{
+
+                const {
+                    data:roleData
+                } =
+                    await client
+                        .from("user_roles")
+                        .select("role")
+                        .eq(
+                            "user_id",
+                            userId
+                        )
+                        .maybeSingle();
+
+
+                if(roleData){
+
+                    role =
+                        roleData.role;
+                }
+
+            }
+            catch(error){
+
+                console.warn(
+                    "user_roles check failed:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* -------------------------------
+           التوجيه
+        -------------------------------- */
+
+        if(role === "admin"){
+
+            goToPage("./admin.html");
+
+        }
+        else{
+
+            /*
+                الملف الصحيح:
+                employees.html
+            */
+
+            goToPage("./employees.html");
+
+        }
+
+    }
+    catch(error){
+
+        console.error(
+            "Session check error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   إتاحة الدوال للأزرار
+========================================== */
+
+window.showMode =
+    showMode;
+
+
+window.selectLoginType =
+    selectLoginType;
+
+
+window.login =
+    login;
+
+
+window.signUp =
+    signUp;
+
+
+window.resendConfirmation =
+    resendConfirmation;
+
+
+/* ==========================================
+   بدء فحص الجلسة
+========================================== */
+
+checkExistingSession();
+
+
 })();
+
 </script>
+
 </body>
+
 </html>
