@@ -119,6 +119,30 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
 .manager-role{font-size:10px;padding:6px 9px;border-radius:10px;background:#F7F0D8;color:#6D5720;border:1px solid #E8D99E;font-weight:900;white-space:nowrap}
 @media(max-width:650px){.manager-row{align-items:flex-start;flex-direction:column}.manager-row .btn{width:100%}}
 
+/* ===== نظام الصلاحيات وسجل التدقيق ===== */
+.permission-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}
+.permission-item{display:flex;align-items:flex-start;gap:9px;padding:11px 12px;border:1px solid var(--border);border-radius:12px;background:#FCFBFD;cursor:pointer;transition:.2s}
+.permission-item:hover{background:#F8F4FC;border-color:#DCCEEA}
+.permission-item input{margin-top:3px;accent-color:var(--primary);width:16px;height:16px;flex:none}
+.permission-item strong{display:block;font-size:11px;color:#4F3B65}
+.permission-item small{display:block;margin-top:2px;font-size:9px;color:#8B8191;line-height:1.6}
+.permission-owner-lock{display:flex;align-items:center;gap:7px;padding:11px 12px;border-radius:12px;background:#FFF8E8;border:1px solid #EEDDAA;color:#765C1D;font-size:10px;font-weight:800;margin-top:12px}
+.manager-permissions-summary{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.manager-permission-badge{display:inline-flex;align-items:center;padding:4px 7px;border-radius:999px;background:#F0EAF8;color:#5D4380;border:1px solid #E0D4EC;font-size:9px;font-weight:900}
+.manager-permission-empty{font-size:10px;color:#A04E57;background:#FCEDEF;border:1px solid #F0D0D4;border-radius:10px;padding:8px 10px;margin-top:8px}
+.audit-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:13px}
+.audit-search{flex:1;min-width:220px;padding:10px 12px;border:1px solid var(--border);border-radius:11px;background:#fff;outline:none;font-family:inherit;font-size:11px}
+.audit-table-wrap{overflow:auto;border:1px solid var(--border);border-radius:13px}
+.audit-table{width:100%;border-collapse:collapse;min-width:850px}
+.audit-table th,.audit-table td{padding:10px 11px;border-bottom:1px solid #EEE8F2;text-align:right;vertical-align:top;font-size:10px;line-height:1.7}
+.audit-table th{background:#F5F1F8;color:#5B4670;font-weight:900;position:sticky;top:0}
+.audit-table tr:last-child td{border-bottom:0}
+.audit-action{font-weight:900;color:#5A4079}
+.audit-result{display:inline-flex;padding:4px 7px;border-radius:999px;background:#EAF6EF;color:#2E704D;font-weight:900;font-size:9px}
+.audit-result.error{background:#FCEDEF;color:#A24D55}
+.role-permission-note{padding:12px;border-radius:12px;background:linear-gradient(135deg,#F8F4FC,#FFFDF8);border:1px solid #E8DEEF;color:#6C6075;line-height:1.8;font-size:10px}
+@media(max-width:760px){.permission-grid{grid-template-columns:1fr}.audit-search{min-width:100%;flex-basis:100%}}
+
 </style>
 
 <!-- PWA: منصة المسار المهني -->
@@ -148,7 +172,8 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
   <button class="menu-item" data-section="requestsSection"><i data-lucide="inbox"></i><span>طلبات الموظفين <span id="pendingBadge" class="badge" style="margin-right:4px">0</span></span></button>
   <div class="menu-title">المتابعة</div>
   <button class="menu-item" data-section="employeesSection"><i data-lucide="user-round-plus"></i><span>إضافة موظف</span></button>
-  <button class="menu-item owner-only" data-section="managersSection"><i data-lucide="shield-user"></i><span>إدارة المسيرين</span></button>
+  <button class="menu-item owner-only" data-section="managersSection"><i data-lucide="shield-user"></i><span>إدارة المسيرين والصلاحيات</span></button>
+  <button class="menu-item owner-only" data-section="auditSection"><i data-lucide="file-clock"></i><span>سجل العمليات والتدقيق</span></button>
   <button class="menu-item" data-section="southSection"><i data-lucide="sun-medium"></i><span>أقدمية الجنوب</span></button>
   <button class="menu-item" data-section="retirementSection"><i data-lucide="calendar-clock"></i><span>التقاعد</span></button>
 </aside>
@@ -187,7 +212,7 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
     <div class="form-grid"><div class="field full"><label>نص التنبيه</label><textarea id="noticeText" rows="3" placeholder="اكتب التنبيه الداخلي..."></textarea></div></div>
     <div class="actions"><button class="btn primary" id="saveNoticeBtn"><i data-lucide="save"></i>حفظ التنبيه</button><button class="btn secondary" id="cancelNoticeBtn"><i data-lucide="x"></i>إلغاء</button></div>
   </div>
-  <div class="card notification-sender" style="margin-top:14px">
+  <div class="card notification-sender permission-controlled" data-permission="send_notifications" style="margin-top:14px">
     <div class="notice-head"><strong><i data-lucide="send"></i> إرسال تنبيه مباشر إلى موظف</strong><span class="badge">يظهر داخل حساب الموظف</span></div>
     <div class="section-note" style="margin-bottom:12px"><i data-lucide="info"></i><div>استخدم هذا القسم لإرسال تنبيه إداري مباشر إلى موظف محدد. سيظهر التنبيه في قسم «إشعاراتي» داخل حسابه.</div></div>
     <div class="form-grid">
@@ -200,7 +225,7 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
     <div id="notificationSendStatus" class="result"></div>
   </div>
 </section>
-<section id="requestsSection" class="section">
+<section id="requestsSection" class="section permission-controlled" data-permission="view_requests">
   <div class="header"><h2><i data-lucide="inbox"></i>مركز طلبات الموظفين</h2><p>واجهة منظمة لاستقبال الطلبات، فتح ملف الموظف، معالجة الطلب، ثم نقله تلقائيًا إلى الأرشيف مع الاحتفاظ الكامل بسجل الإجابة.</p></div>
   <div class="section-note"><i data-lucide="shield-check"></i><div>البيانات المعروضة للمراجعة الإدارية. لا تصدر المنصة قرار ترقية آليًا؛ المسؤول هو من يراجع المعطيات ويثبت النتيجة والتواريخ والرتبة أو المنصب عند الاقتضاء.</div></div>
   <div class="request-toolbar">
@@ -217,7 +242,7 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
     <div id="employeeModalBody"></div>
   </div>
 </div>
-<section id="employeesSection" class="section">
+<section id="employeesSection" class="section permission-controlled" data-permission="add_employees">
   <div class="header"><h2><i data-lucide="user-round-plus"></i>إضافة موظف</h2><p>إدخال يدوي بسيط للبيانات الأساسية اللازمة لمتابعة الأقدمية والاستحقاق الزمني.</p></div>
   <div class="card">
     <div class="form-grid">
@@ -232,21 +257,42 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
   </div>
 </section>
 <section id="managersSection" class="section owner-only-section">
-  <div class="header"><h2><i data-lucide="shield-user"></i>إدارة المسيرين</h2><p>إضافة مسيرين مساعدين من الموظفين المسجلين في المنصة لمساعدتك في متابعة الطلبات والرد على تساؤلات الموظفين.</p></div>
-  <div class="section-note"><i data-lucide="shield-check"></i><div>المسير المساعد يحصل على صلاحيات الإدارة ومعالجة طلبات الموظفين. التحكم في إضافة أو سحب صلاحية المسير يبقى حصريًا لمسؤول المنصة الرئيسي.</div></div>
+  <div class="header"><h2><i data-lucide="shield-user"></i>إدارة المسيرين والصلاحيات</h2><p>إنشاء المسير المساعد وتحديد الصلاحيات التي يحتاجها بدقة. لا يحصل المسير على صلاحيات المسؤول الرئيسي.</p></div>
+  <div class="section-note"><i data-lucide="shield-check"></i><div>المسؤول الرئيسي وحده يستطيع منح أو سحب دور المسير، وتحديد صلاحياته، وإدارة المستخدمين. كل عملية منح أو سحب صلاحية تُسجل في سجل التدقيق.</div></div>
   <div class="card">
     <div class="form-grid">
       <div class="field full"><label>الموظف الذي سيصبح مسيرًا *</label><select id="managerEmployeeSelect"><option value="">جارٍ تحميل الموظفين...</option></select></div>
     </div>
-    <div class="actions"><button class="btn primary" id="grantManagerBtn"><i data-lucide="shield-plus"></i>منح صلاحية مسير</button><button class="btn secondary" id="refreshManagersBtn"><i data-lucide="refresh-cw"></i>تحديث القائمة</button></div>
+    <div class="actions"><button class="btn primary" id="grantManagerBtn"><i data-lucide="shield-plus"></i>منح دور مسير مساعد</button><button class="btn secondary" id="refreshManagersBtn"><i data-lucide="refresh-cw"></i>تحديث القائمة</button></div>
     <div id="managerStatus" class="result"></div>
   </div>
   <div class="card" style="margin-top:14px">
-    <div class="notice-head"><strong><i data-lucide="users-round"></i>المسيرون الحاليون</strong><span class="badge">صلاحيات الإدارة المساعدة</span></div>
+    <div class="notice-head"><strong><i data-lucide="users-round"></i>المسيرون الحاليون</strong><span class="badge">تحديد الصلاحيات لكل مسير</span></div>
     <div id="managersList" class="result"><div class="empty">جارٍ تحميل المسيرين...</div></div>
   </div>
 </section>
-<section id="southSection" class="section">
+
+<section id="auditSection" class="section owner-only-section">
+  <div class="header"><h2><i data-lucide="file-clock"></i>سجل العمليات والتدقيق</h2><p>سجل مركزي للعمليات الإدارية المتعلقة بالصلاحيات وإدارة المنصة، متاح للمسؤول الرئيسي فقط.</p></div>
+  <div class="section-note"><i data-lucide="lock-keyhole"></i><div>يُستخدم هذا السجل لمتابعة من قام بالعملية، ونوعها، والجهة المستهدفة، والنتيجة والتوقيت. لا يمكن للمسير المساعد حذف السجل أو تعديل الصلاحيات المحجوزة للمسؤول الرئيسي.</div></div>
+  <div class="card">
+    <div class="audit-toolbar">
+      <input id="auditSearch" class="audit-search" placeholder="بحث في السجل حسب العملية أو الوصف أو المستخدم..." aria-label="بحث في سجل التدقيق">
+      <button class="btn primary" id="refreshAuditBtn"><i data-lucide="refresh-cw"></i>تحديث السجل</button>
+    </div>
+    <div id="auditStatus" class="result"></div>
+    <div id="auditList" class="result"><div class="empty">اضغط تحديث لعرض سجل العمليات.</div></div>
+  </div>
+</section>
+
+<div id="managerPermissionsModal" class="modal-backdrop hidden">
+  <div class="employee-modal" role="dialog" aria-modal="true" aria-labelledby="managerPermissionsTitle">
+    <div class="modal-head"><div><div class="modal-kicker">إدارة الصلاحيات</div><h3 id="managerPermissionsTitle">صلاحيات المسير المساعد</h3></div><button class="modal-close" id="closeManagerPermissions" type="button"><i data-lucide="x"></i></button></div>
+    <div id="managerPermissionsBody"></div>
+  </div>
+</div>
+
+<section id="southSection" class="section permission-controlled" data-permission="calculate_south">
   <div class="header"><h2><i data-lucide="sun-medium"></i>أقدمية الجنوب</h2><p>حساب مستقل للأقدمية الفعلية والأقدمية الإضافية وفق القاعدة المعتمدة في هذه النسخة.</p></div>
   <div class="card">
     <div class="form-grid"><div class="field"><label>تاريخ بداية الخدمة</label><input id="southStartDate" type="date"></div><div class="field"><label>تاريخ الحساب</label><input id="southCalcDate" type="date"></div></div>
@@ -255,7 +301,7 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
   </div>
   <div class="warning" style="margin-top:14px">قاعدة الحساب في هذه النسخة قابلة للتعديل. القيمة الافتراضية: 6 أشهر إضافية عن كل سنة خدمة فعلية كاملة.</div>
 </section>
-<section id="retirementSection" class="section">
+<section id="retirementSection" class="section permission-controlled" data-permission="view_retirement">
   <div class="header"><h2><i data-lucide="calendar-clock"></i>التقاعد</h2><p>متابعة تاريخ التقاعد للموظفين الذين تتوفر لهم بيانات الميلاد وقاعدة التقاعد في Supabase.</p></div>
   <div class="card">
     <div class="actions"><button class="btn primary" id="refreshRetirementBtn"><i data-lucide="refresh-cw"></i>تحديث بيانات التقاعد</button></div>
@@ -313,6 +359,7 @@ document.querySelectorAll('.menu-item').forEach(b=>b.addEventListener('click',()
 if(window.lucide)lucide.createIcons();
 
 async function loadNotificationEmployees(){
+  if(!hasPermission('send_notifications'))return;
   const select=$('notificationEmployee');
   if(!select||!db)return;
   select.innerHTML='<option value="">جارٍ تحميل الموظفين...</option>';
@@ -384,7 +431,7 @@ async function saveEmployee(){
   }catch(e){console.error(e);status.innerHTML='<div class="status error">تعذر حفظ الموظف: '+esc(e.message||'خطأ غير معروف')+'</div>'}
   finally{btn.disabled=false;btn.innerHTML='<i data-lucide="save"></i>حفظ الموظف'; if(window.lucide) lucide.createIcons()}
 }
-$('saveEmployeeBtn').onclick=saveEmployee;
+$('saveEmployeeBtn').onclick=()=>{if(!hasPermission('add_employees')){alert('ليست لديك صلاحية إضافة موظفين.');return}saveEmployee()};
 $('clearEmployeeBtn').onclick=()=>{['employeeName','appointmentDate','currentGrade','lastGradePromotionDate'].forEach(id=>$(id).value='');$('employeeStatus').innerHTML='';$('employeeCalculation').innerHTML='<div class="empty">بعد حفظ الموظف سيظهر حساب الاستحقاق الزمني هنا.</div>'};
 
 function renderEmployeeCalculation(e){
@@ -394,7 +441,7 @@ function renderEmployeeCalculation(e){
   html+=`</tbody></table><div class="warning" style="margin-top:12px">هذا حساب زمني للأقدمية والاستحقاق فقط، وليس قرارًا بالترقية. قاعدة المدد قابلة للضبط وربطها لاحقًا بتاريخ السريان الرسمي لكل درجة.</div></div>`;$('employeeCalculation').innerHTML=html
 }
 
-$('calculateSouthBtn').onclick=()=>{const s=$('southStartDate').value,e=$('southCalcDate').value||isoToday(),m=monthsBetween(s,e);if(m==null){$('southResult').innerHTML='<div class="status error">تحقق من التاريخين.</div>';return}const b=southBonus(m);$('southResult').innerHTML=`<div class="calc-grid"><div class="metric"><div class="label">الخدمة الفعلية</div><div class="value">${fmtMonths(m)}</div></div><div class="metric"><div class="label">الأقدمية الإضافية</div><div class="value">${fmtMonths(b)}</div></div><div class="metric"><div class="label">الخدمة المحتسبة</div><div class="value">${fmtMonths(m+b)}</div></div></div>`};
+$('calculateSouthBtn').onclick=()=>{if(!hasPermission('calculate_south')){alert('ليست لديك صلاحية حساب أقدمية الجنوب.');return}const s=$('southStartDate').value,e=$('southCalcDate').value||isoToday(),m=monthsBetween(s,e);if(m==null){$('southResult').innerHTML='<div class="status error">تحقق من التاريخين.</div>';return}const b=southBonus(m);$('southResult').innerHTML=`<div class="calc-grid"><div class="metric"><div class="label">الخدمة الفعلية</div><div class="value">${fmtMonths(m)}</div></div><div class="metric"><div class="label">الأقدمية الإضافية</div><div class="value">${fmtMonths(b)}</div></div><div class="metric"><div class="label">الخدمة المحتسبة</div><div class="value">${fmtMonths(m+b)}</div></div></div>`};
 $('southCalcDate').value=isoToday();
 
 async function loadOptionalGradeRules(){
@@ -410,6 +457,7 @@ async function loadEmployees(){
 }
 function retirementDate(birth,age){const d=parseDate(birth);if(!d)return null;d.setFullYear(d.getFullYear()+Number(age||60));return d.toISOString().slice(0,10)}
 async function loadRetirement(){
+  if(!hasPermission('view_retirement'))return;
   const box=$('retirementTable'),status=$('retirementStatus');box.innerHTML='<div class="empty">جارٍ تحميل بيانات التقاعد...</div>';status.innerHTML='';
   try{
     const ids=manualIds();
@@ -425,6 +473,7 @@ async function loadRetirement(){
   }catch(e){console.error(e);status.innerHTML='<div class="status error">تعذر تحميل التقاعد: '+esc(e.message||'خطأ غير معروف')+'</div>';box.innerHTML='<div class="empty">تحقق من اتصال Supabase ومن جدول retirement_rules.</div>'}
 }
 async function loadRequests(){
+  if(!hasPermission('view_requests'))return;
   const box=$('requestsList'),status=$('requestsStatus'); if(!box)return;
   box.innerHTML='<div class="empty">جارٍ تحميل طلبات الموظفين...</div>';status.innerHTML='';
   try{
@@ -454,6 +503,7 @@ function renderRequestView(view){
   box.querySelectorAll('[data-calc-south]').forEach(btn=>btn.onclick=()=>calculateRequestSouth(btn.dataset.calcSouth));
   box.querySelectorAll('[data-open-profile]').forEach(btn=>btn.onclick=()=>openEmployeeProfile(btn.dataset.openProfile));box.querySelectorAll('[data-open-document]').forEach(btn=>btn.onclick=()=>openRequestDocument(btn.dataset.openDocument));box.querySelectorAll('[data-quick-reply]').forEach(btn=>btn.onclick=()=>{const ta=$('admin-note-'+btn.dataset.quickReply);if(ta){ta.value=ta.value?ta.value+'\n'+btn.dataset.text:btn.dataset.text;ta.focus()}});
   if(window.lucide)lucide.createIcons();
+  applyRolePermissions();
 }
 function isoToday(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 function formatMonths(v){const n=Number(v);if(!Number.isFinite(n)||n<=0)return '—';const y=Math.floor(n/12),m=n%12;return y&&m?`${y} سنة و ${m} شهر`:y?`${y} سنة`:`${m} شهر`}
@@ -464,21 +514,25 @@ function requestCard(r){
   const southSaved=r.south_counted_months!=null;
   const employeeName=p.employee_name_ar||'غير مسجل';const rank=p.current_rank||'الرتبة غير مسجلة';
   if(isArchive){
-    return `<div class="request-card ${esc(status)}" id="request-${esc(r.id)}"><div class="request-top"><div><button class="request-employee" type="button" data-open-profile="${esc(r.id)}"><i data-lucide="user-round"></i>${esc(employeeName)}</button><div class="request-rank">${esc(rank)}</div><div class="request-meta">${esc(type)} — أرسل في ${esc(new Date(r.created_at).toLocaleString('ar-DZ'))}</div></div><span class="badge ${badge}">${label}</span></div><div class="smart-summary"><b>ملخص منظم:</b><br>${esc(r.smart_summary||r.message||'—')}</div><div class="request-summary"><div class="request-summary-item"><small>تاريخ سريان الدرجة</small><b>${esc(fmtDate(r.grade_effective_date))}</b></div><div class="request-summary-item"><small>تاريخ الترقية في الرتبة</small><b>${esc(fmtDate(r.promotion_date))}</b></div><div class="request-summary-item"><small>الرتبة</small><b>${esc(r.promotion_rank||'—')}</b></div><div class="request-summary-item"><small>المنصب المستهدف</small><b>${esc(r.promotion_position||'—')}</b></div></div>${southSaved?`<div class="archive-info">☀️ أقدمية الجنوب المحتسبة: <b>${esc(formatMonths(r.south_counted_months))}</b> — من ${esc(fmtDate(r.south_start_date))} إلى ${esc(fmtDate(r.south_calc_date))}</div>`:''}<div class="request-message"><b>طلب الموظف:</b><br>${esc(r.message||'')}</div>${r.admin_note?`<div class="request-message"><b>إجابة/ملاحظة المسؤول:</b><br>${esc(r.admin_note)}</div>`:''}<div class="archive-info"><i data-lucide="archive" style="width:15px;vertical-align:-3px"></i> تم نقل الطلب إلى الأرشيف بعد المعالجة مع الاحتفاظ بسجل الإجابة.${r.document_path?` <button type="button" class="btn secondary" data-open-document="${esc(r.id)}" style="margin-right:8px;padding:6px 9px">فتح الوثيقة</button>`:''}</div></div>`;
+    return `<div class="request-card ${esc(status)}" id="request-${esc(r.id)}"><div class="request-top"><div><button class="request-employee" type="button" data-open-profile="${esc(r.id)}" data-permission="view_employee_profiles"><i data-lucide="user-round"></i>${esc(employeeName)}</button><div class="request-rank">${esc(rank)}</div><div class="request-meta">${esc(type)} — أرسل في ${esc(new Date(r.created_at).toLocaleString('ar-DZ'))}</div></div><span class="badge ${badge}">${label}</span></div><div class="smart-summary"><b>ملخص منظم:</b><br>${esc(r.smart_summary||r.message||'—')}</div><div class="request-summary"><div class="request-summary-item"><small>تاريخ سريان الدرجة</small><b>${esc(fmtDate(r.grade_effective_date))}</b></div><div class="request-summary-item"><small>تاريخ الترقية في الرتبة</small><b>${esc(fmtDate(r.promotion_date))}</b></div><div class="request-summary-item"><small>الرتبة</small><b>${esc(r.promotion_rank||'—')}</b></div><div class="request-summary-item"><small>المنصب المستهدف</small><b>${esc(r.promotion_position||'—')}</b></div></div>${southSaved?`<div class="archive-info">☀️ أقدمية الجنوب المحتسبة: <b>${esc(formatMonths(r.south_counted_months))}</b> — من ${esc(fmtDate(r.south_start_date))} إلى ${esc(fmtDate(r.south_calc_date))}</div>`:''}<div class="request-message"><b>طلب الموظف:</b><br>${esc(r.message||'')}</div>${r.admin_note?`<div class="request-message"><b>إجابة/ملاحظة المسؤول:</b><br>${esc(r.admin_note)}</div>`:''}<div class="archive-info"><i data-lucide="archive" style="width:15px;vertical-align:-3px"></i> تم نقل الطلب إلى الأرشيف بعد المعالجة مع الاحتفاظ بسجل الإجابة.${r.document_path?` <button type="button" class="btn secondary" data-open-document="${esc(r.id)}" style="margin-right:8px;padding:6px 9px">فتح الوثيقة</button>`:''}</div></div>`;
   }
-  return `<div class="request-card ${esc(status)}" id="request-${esc(r.id)}"><div class="request-top"><div><button class="request-employee" type="button" data-open-profile="${esc(r.id)}"><i data-lucide="user-round"></i>${esc(employeeName)}</button><div class="request-rank">${esc(rank)}</div><div class="request-meta">${esc(type)} — أرسل في ${esc(new Date(r.created_at).toLocaleString('ar-DZ'))}</div></div><span class="badge ${badge}">${label}</span></div><div class="smart-summary"><b>ملخص الطلب:</b><br>${esc(r.smart_summary||r.message||'—')} ${r.has_document?`<div style="margin-top:5px"><span class="badge">📎 ${esc(r.document_type||'وثيقة مذكورة')}</span></div>`:''}</div><div class="request-fields"><div><div class="mini-label">تاريخ سريان الدرجة</div><input id="grade-date-${esc(r.id)}" type="date" value="${esc(r.grade_effective_date||'')}"></div><div><div class="mini-label">تاريخ الترقية في الرتبة</div><input id="promotion-date-${esc(r.id)}" type="date" value="${esc(r.promotion_date||'')}"></div><div><div class="mini-label">الرتبة التي سيرقى لها</div><input id="promotion-rank-${esc(r.id)}" value="${esc(r.promotion_rank||'')}" placeholder="تُحدد بعد دراسة الملف"></div><div><div class="mini-label">المنصب المستهدف</div><input id="promotion-position-${esc(r.id)}" value="${esc(r.promotion_position||'')}" placeholder="المنصب عند الاقتضاء"></div><div style="grid-column:1/-1"><div class="mini-label">أقدمية الجنوب</div><div class="south-review-box"><div class="south-review-grid"><div><span>بداية الخدمة</span><input id="south-start-${esc(r.id)}" type="date" value="${esc(r.south_start_date||p.appointment_date||'')}"></div><div><span>تاريخ الحساب</span><input id="south-calc-${esc(r.id)}" type="date" value="${esc(r.south_calc_date||isoToday())}"></div><div><span>الأقدمية الفعلية</span><input id="south-actual-${esc(r.id)}" value="${esc(r.south_actual_months!=null?formatMonths(r.south_actual_months):'—')}" readonly></div><div><span>أقدمية الجنوب الإضافية</span><input id="south-bonus-${esc(r.id)}" value="${esc(r.south_bonus_months!=null?formatMonths(r.south_bonus_months):'—')}" readonly></div><div><span>الأقدمية المحتسبة</span><input id="south-total-${esc(r.id)}" value="${esc(r.south_counted_months!=null?formatMonths(r.south_counted_months):'—')}" readonly></div></div><div class="request-actions" style="margin-top:9px"><button type="button" class="btn gold" data-calc-south="${esc(r.id)}"><i data-lucide="calculator"></i>حساب أقدمية الجنوب</button></div><div class="south-note">النتيجة المحسوبة تحفظ مع الإجابة وتظهر للموظف.</div></div></div><div style="grid-column:1/-1"><div class="mini-label">الإجابة / ملاحظة المسؤول</div><div class="quick-replies"><button type="button" class="quick-reply" data-quick-reply="${esc(r.id)}" data-text="تمت دراسة طلبكم ومراجعة المعطيات المسجلة في الملف المهني.">تمت الدراسة</button><button type="button" class="quick-reply" data-quick-reply="${esc(r.id)}" data-text="يرجى استكمال المعلومات أو إرفاق الوثيقة المطلوبة حتى يتسنى استكمال الدراسة.">استكمال المعلومات</button><button type="button" class="quick-reply" data-quick-reply="${esc(r.id)}" data-text="تم تحديث المعطيات محل الطلب وفق ما تم اعتماده في المراجعة.">تم تحديث البيانات</button><button type="button" class="quick-reply" data-quick-reply="${esc(r.id)}" data-text="الطلب غير معتمد حاليًا، ويمكن إعادة دراسته عند توفر المعطيات أو الوثائق اللازمة.">غير معتمد حاليًا</button></div><textarea id="admin-note-${esc(r.id)}" rows="3" maxlength="1000" placeholder="اكتب جوابًا مختصرًا وواضحًا للموظف...">${esc(r.admin_note||'')}</textarea></div></div><div class="request-actions">${status==='pending'?`<button class="btn secondary" data-start-request="${esc(r.id)}"><i data-lucide="play-circle"></i>بدء الدراسة</button>`:''}${r.document_path?`<button class="btn secondary" data-open-document="${esc(r.id)}"><i data-lucide="paperclip"></i>فتح الوثيقة</button>`:''}<button class="btn primary" data-save-request="${esc(r.id)}"><i data-lucide="send"></i>حفظ الإجابة وأرشفة الطلب</button><button class="btn secondary" data-reject-request="${esc(r.id)}"><i data-lucide="circle-x"></i>غير معتمد حاليًا</button></div></div>`;
+  return `<div class="request-card ${esc(status)}" id="request-${esc(r.id)}"><div class="request-top"><div><button class="request-employee" type="button" data-open-profile="${esc(r.id)}" data-permission="view_employee_profiles"><i data-lucide="user-round"></i>${esc(employeeName)}</button><div class="request-rank">${esc(rank)}</div><div class="request-meta">${esc(type)} — أرسل في ${esc(new Date(r.created_at).toLocaleString('ar-DZ'))}</div></div><span class="badge ${badge}">${label}</span></div><div class="smart-summary"><b>ملخص الطلب:</b><br>${esc(r.smart_summary||r.message||'—')} ${r.has_document?`<div style="margin-top:5px"><span class="badge">📎 ${esc(r.document_type||'وثيقة مذكورة')}</span></div>`:''}</div><div class="request-fields"><div><div class="mini-label">تاريخ سريان الدرجة</div><input id="grade-date-${esc(r.id)}" type="date" value="${esc(r.grade_effective_date||'')}"></div><div><div class="mini-label">تاريخ الترقية في الرتبة</div><input id="promotion-date-${esc(r.id)}" type="date" value="${esc(r.promotion_date||'')}"></div><div><div class="mini-label">الرتبة التي سيرقى لها</div><input id="promotion-rank-${esc(r.id)}" value="${esc(r.promotion_rank||'')}" placeholder="تُحدد بعد دراسة الملف"></div><div><div class="mini-label">المنصب المستهدف</div><input id="promotion-position-${esc(r.id)}" value="${esc(r.promotion_position||'')}" placeholder="المنصب عند الاقتضاء"></div><div style="grid-column:1/-1"><div class="mini-label">أقدمية الجنوب</div><div class="south-review-box"><div class="south-review-grid"><div><span>بداية الخدمة</span><input id="south-start-${esc(r.id)}" type="date" value="${esc(r.south_start_date||p.appointment_date||'')}"></div><div><span>تاريخ الحساب</span><input id="south-calc-${esc(r.id)}" type="date" value="${esc(r.south_calc_date||isoToday())}"></div><div><span>الأقدمية الفعلية</span><input id="south-actual-${esc(r.id)}" value="${esc(r.south_actual_months!=null?formatMonths(r.south_actual_months):'—')}" readonly></div><div><span>أقدمية الجنوب الإضافية</span><input id="south-bonus-${esc(r.id)}" value="${esc(r.south_bonus_months!=null?formatMonths(r.south_bonus_months):'—')}" readonly></div><div><span>الأقدمية المحتسبة</span><input id="south-total-${esc(r.id)}" value="${esc(r.south_counted_months!=null?formatMonths(r.south_counted_months):'—')}" readonly></div></div><div class="request-actions" style="margin-top:9px"><button type="button" class="btn gold" data-calc-south="${esc(r.id)}" data-permission="calculate_south"><i data-lucide="calculator"></i>حساب أقدمية الجنوب</button></div><div class="south-note">النتيجة المحسوبة تحفظ مع الإجابة وتظهر للموظف.</div></div></div><div style="grid-column:1/-1"><div class="mini-label">الإجابة / ملاحظة المسؤول</div><div class="quick-replies permission-controlled" data-permission="process_requests"><button type="button" class="quick-reply" data-quick-reply="${esc(r.id)}" data-text="تمت دراسة طلبكم ومراجعة المعطيات المسجلة في الملف المهني.">تمت الدراسة</button><button type="button" class="quick-reply" data-quick-reply="${esc(r.id)}" data-text="يرجى استكمال المعلومات أو إرفاق الوثيقة المطلوبة حتى يتسنى استكمال الدراسة.">استكمال المعلومات</button><button type="button" class="quick-reply" data-quick-reply="${esc(r.id)}" data-text="تم تحديث المعطيات محل الطلب وفق ما تم اعتماده في المراجعة.">تم تحديث البيانات</button><button type="button" class="quick-reply" data-quick-reply="${esc(r.id)}" data-text="الطلب غير معتمد حاليًا، ويمكن إعادة دراسته عند توفر المعطيات أو الوثائق اللازمة.">غير معتمد حاليًا</button></div><textarea data-permission="process_requests" id="admin-note-${esc(r.id)}" rows="3" maxlength="1000" placeholder="اكتب جوابًا مختصرًا وواضحًا للموظف...">${esc(r.admin_note||'')}</textarea></div></div><div class="request-actions">${status==='pending'&&hasPermission('process_requests')?`<button class="btn secondary" data-start-request="${esc(r.id)}"><i data-lucide="play-circle"></i>بدء الدراسة</button>`:''}${r.document_path?`<button class="btn secondary" data-open-document="${esc(r.id)}"><i data-lucide="paperclip"></i>فتح الوثيقة</button>`:''}${hasPermission('process_requests')?`<button class="btn primary" data-save-request="${esc(r.id)}"><i data-lucide="send"></i>حفظ الإجابة وأرشفة الطلب</button><button class="btn secondary" data-reject-request="${esc(r.id)}"><i data-lucide="circle-x"></i>غير معتمد حاليًا</button>`:''}</div></div>`;
 }
-async function openRequestDocument(id){const r=requests.find(x=>String(x.id)===String(id));if(!r?.document_path){alert('لا توجد وثيقة مرفقة بهذا الطلب.');return}const {data,error}=await db.storage.from('career-documents').createSignedUrl(r.document_path,300);if(error||!data?.signedUrl){alert('تعذر فتح الوثيقة: '+(error?.message||'خطأ غير معروف'));return}window.open(data.signedUrl,'_blank','noopener,noreferrer')}
+async function openRequestDocument(id){if(!hasPermission('view_employee_profiles')){alert('ليست لديك صلاحية فتح وثائق الموظفين.');return}const r=requests.find(x=>String(x.id)===String(id));if(!r?.document_path){alert('لا توجد وثيقة مرفقة بهذا الطلب.');return}const {data,error}=await db.storage.from('career-documents').createSignedUrl(r.document_path,300);if(error||!data?.signedUrl){alert('تعذر فتح الوثيقة: '+(error?.message||'خطأ غير معروف'));return}window.open(data.signedUrl,'_blank','noopener,noreferrer')}
 async function startRequestReview(id){return setRequestStatus(id,'in_review')}
 async function reviewRequest(id){
+  if(!hasPermission('process_requests')){alert('ليست لديك صلاحية معالجة الطلبات.');return}
   const southStart=$('south-start-'+id)?.value||null,southCalc=$('south-calc-'+id)?.value||null;let southActual=Number.NaN,southBonus=Number.NaN,southTotal=Number.NaN;
   if(southStart&&southCalc&&southCalc>=southStart){southActual=diffMonths(southStart,southCalc);southBonus=Math.floor(southActual/12)*SOUTH_MONTHS_PER_FULL_YEAR;southTotal=southActual+southBonus}else if(southStart||southCalc){alert('تحقق من تواريخ أقدمية الجنوب قبل الحفظ.');return}
   const note=$('admin-note-'+id)?.value.trim()||null;if(!note){if(!confirm('لم تكتب ملاحظة/إجابة للمسؤول. هل تريد المتابعة وإغلاق الطلب دون نص؟'))return}
   const payload={grade_effective_date:$('grade-date-'+id)?.value||null,promotion_date:$('promotion-date-'+id)?.value||null,promotion_rank:$('promotion-rank-'+id)?.value.trim()||null,promotion_position:$('promotion-position-'+id)?.value.trim()||null,south_start_date:southStart,south_calc_date:southCalc,south_actual_months:Number.isFinite(southActual)?southActual:null,south_bonus_months:Number.isFinite(southBonus)?southBonus:null,south_counted_months:Number.isFinite(southTotal)?southTotal:null,admin_note:note,status:'resolved',archived_at:new Date().toISOString(),reviewed_at:new Date().toISOString(),reviewed_by:currentUser?.id||null};
   const r=await db.from('career_requests').update(payload).eq('id',id);if(r.error){alert('تعذر حفظ الإجابة: '+r.error.message);return}await loadRequests();
 }
-async function setRequestStatus(id,status){const note=prompt(status==='rejected'?'اكتب ملاحظة توضح سبب عدم اعتماد الطلب (اختياري):':'ملاحظة المسؤول (اختياري):','');const r=await db.from('career_requests').update({status,admin_note:note||null,archived_at:new Date().toISOString(),reviewed_at:new Date().toISOString(),reviewed_by:currentUser?.id||null}).eq('id',id);if(r.error){alert('تعذر تحديث حالة الطلب: '+r.error.message);return}await loadRequests()}
+async function setRequestStatus(id,status){
+  if(!hasPermission('process_requests')){alert('ليست لديك صلاحية تغيير حالة الطلب.');return}
+const note=prompt(status==='rejected'?'اكتب ملاحظة توضح سبب عدم اعتماد الطلب (اختياري):':'ملاحظة المسؤول (اختياري):','');const r=await db.from('career_requests').update({status,admin_note:note||null,archived_at:new Date().toISOString(),reviewed_at:new Date().toISOString(),reviewed_by:currentUser?.id||null}).eq('id',id);if(r.error){alert('تعذر تحديث حالة الطلب: '+r.error.message);return}await loadRequests()}
 function openEmployeeProfile(id){
+  if(!hasPermission('view_employee_profiles')){alert('ليست لديك صلاحية مشاهدة ملفات الموظفين.');return}
   const r=requests.find(x=>String(x.id)===String(id));const p=r?.career_profiles||{};if(!r)return;
   const body=$('employeeModalBody');$('employeeModalTitle').textContent=p.employee_name_ar||'معلومات الموظف';
   body.innerHTML=`<div class="profile-hero"><div class="profile-avatar"><i data-lucide="user-round"></i></div><div><div class="profile-name">${esc(p.employee_name_ar||'غير مسجل')}</div><div class="profile-rank">${esc(p.current_rank||'الرتبة غير مسجلة')} ${p.is_high_position?'<span class="badge">منصب عالٍ</span>':''}</div></div></div><div class="profile-grid"><div class="profile-item"><div class="label">الاسم واللقب</div><div class="value">${esc(p.employee_name_ar||'—')}</div></div><div class="profile-item"><div class="label">الرتبة الحالية</div><div class="value">${esc(p.current_rank||'—')}</div></div><div class="profile-item"><div class="label">تاريخ التعيين</div><div class="value">${esc(fmtDate(p.appointment_date))}</div></div><div class="profile-item"><div class="label">الدرجة الحالية</div><div class="value">${esc(p.current_grade||'—')}</div></div><div class="profile-item"><div class="label">تاريخ بداية الدرجة</div><div class="value">${esc(fmtDate(p.grade_start_date))}</div></div><div class="profile-item"><div class="label">تاريخ آخر ترقية في الرتبة</div><div class="value">${esc(fmtDate(p.last_rank_promotion_date))}</div></div><div class="profile-item"><div class="label">المنصب الحالي</div><div class="value">${esc(p.current_position||'—')}${p.is_high_position?' <span class="badge">منصب عالٍ</span>':''}</div></div><div class="profile-item"><div class="label">تاريخ بداية المنصب</div><div class="value">${esc(fmtDate(p.position_start_date))}</div></div><div class="profile-item" style="grid-column:1/-1"><div class="label">المهام والمسؤوليات</div><div class="value">${esc(p.position_responsibilities||'—')}</div></div></div><div class="profile-request"><h4>الطلب الحالي</h4><p><b>${esc(r.title||requestStatusLabel(r.status)[0])}</b>\n${esc(r.message||'لا توجد تفاصيل إضافية.')}</p></div><div class="modal-actions"><button class="btn secondary" type="button" id="modalCloseAction"><i data-lucide="x"></i>إغلاق</button></div>`;
@@ -498,15 +552,137 @@ $('refreshRetirementBtn').onclick=loadRetirement;
 const OWNER_EMAIL='bfmounir@gmail.com';
 let currentRole='admin';
 let managerProfiles=[];
-function isOwner(){return String(currentUser?.email||'').toLowerCase()===OWNER_EMAIL}
+let permissionCatalog=[];
+let currentPermissions=new Set();
+let managerPermissionsCache=new Map();
+let auditRows=[];
+
+function isOwner(){
+  return String(currentUser?.email||'').toLowerCase()===OWNER_EMAIL;
+}
+
+function hasPermission(key){
+  return isOwner() || currentPermissions.has(String(key));
+}
+
 function showOwnerControls(){
   const visible=isOwner();
-  document.querySelectorAll('.owner-only,.owner-only-section').forEach(el=>el.style.display=visible?'':'none');
+  document.querySelectorAll('.owner-only,.owner-only-section').forEach(el=>{
+    el.style.display=visible?'':'none';
+  });
 }
+
+function hideElement(el){if(el)el.classList.add('hidden');}
+function showElement(el){if(el)el.classList.remove('hidden');}
+
+async function loadPermissionCatalog(){
+  permissionCatalog=[];
+  if(!db)return;
+  try{
+    const r=await db.from('career_permission_catalog').select('*').order('owner_only',{ascending:true}).order('permission_name_ar',{ascending:true});
+    if(r.error)throw r.error;
+    permissionCatalog=Array.isArray(r.data)?r.data:[];
+  }catch(e){
+    console.warn('Permission catalog unavailable:',e.message);
+  }
+}
+
+async function loadMyPermissions(){
+  currentPermissions=new Set();
+  if(isOwner()){
+    permissionCatalog.forEach(p=>currentPermissions.add(p.permission_key));
+    return;
+  }
+  if(currentRole!=='manager')return;
+  try{
+    const r=await db.rpc('get_manager_permissions',{p_user_id:currentUser.id});
+    if(r.error)throw r.error;
+    (Array.isArray(r.data)?r.data:[]).forEach(p=>currentPermissions.add(String(p.permission_key)));
+  }catch(e){
+    console.warn('Manager permissions unavailable:',e.message);
+  }
+}
+
+function permissionLabel(key){
+  const p=permissionCatalog.find(x=>String(x.permission_key)===String(key));
+  return p?.permission_name_ar||key;
+}
+
+function applyRolePermissions(){
+  const manager=currentRole==='manager'&&!isOwner();
+  if(!manager){
+    document.querySelectorAll('.permission-controlled').forEach(el=>el.classList.remove('hidden'));
+    return;
+  }
+
+  const menuPermissionMap={
+    requestsSection:'view_requests',
+    employeesSection:'add_employees',
+    southSection:'calculate_south',
+    retirementSection:'view_retirement'
+  };
+
+  Object.entries(menuPermissionMap).forEach(([section,key])=>{
+    const allowed=hasPermission(key);
+    document.querySelectorAll(`[data-section="${section}"]`).forEach(el=>el.classList.toggle('hidden',!allowed));
+    const target=$(section);
+    if(target)target.classList.toggle('hidden',!allowed);
+  });
+
+  const notificationSender=document.querySelector('.notification-sender');
+  const addNotice=document.getElementById('addNoticeBtn');
+  const noticeForm=document.getElementById('noticeForm');
+  const allowNotify=hasPermission('send_notifications');
+  notificationSender?.classList.toggle('hidden',!allowNotify);
+  addNotice?.classList.toggle('hidden',!allowNotify);
+  if(!allowNotify)noticeForm?.classList.add('hidden');
+
+  // أزرار المعالجة داخل الطلبات تُضبط لاحقًا أثناء بناء البطاقة.
+  document.querySelectorAll('[data-permission]').forEach(el=>{
+    const key=el.dataset.permission;
+    el.classList.toggle('hidden',!hasPermission(key));
+  });
+
+  // في الطلبات: من يملك المشاهدة دون المعالجة يرى البيانات للقراءة فقط.
+  const canProcess=hasPermission('process_requests');
+  document.querySelectorAll('#requestsSection input,#requestsSection textarea').forEach(el=>{
+    if(el.id==='requestSearch')return;
+    el.disabled=!canProcess;
+  });
+
+  // إذا لم تكن الصفحة الحالية متاحة للمسير، افتح أول قسم مسموح.
+  const active=document.querySelector('.section.active');
+  if(active?.classList.contains('hidden')){
+    const first=[...document.querySelectorAll('.menu-item:not(.hidden)')].find(b=>b.dataset.section);
+    if(first)showSection(first.dataset.section);
+  }
+}
+
+function canOpenSection(id){
+  if(isOwner())return true;
+  const map={requestsSection:'view_requests',employeesSection:'add_employees',southSection:'calculate_south',retirementSection:'view_retirement',auditSection:'view_audit',managersSection:'manage_managers'};
+  return !map[id]||hasPermission(map[id]);
+}
+
+function showSection(id){
+  if(!canOpenSection(id)){
+    alert('ليست لديك الصلاحية للوصول إلى هذا القسم.');
+    return;
+  }
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  const section=$(id);if(section)section.classList.add('active');
+  document.querySelectorAll('.menu-item').forEach(b=>b.classList.toggle('active',b.dataset.section===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='retirementSection'&&hasPermission('view_retirement'))loadRetirement();
+  if(id==='requestsSection'&&hasPermission('view_requests'))loadRequests();
+  if(id==='auditSection'&&isOwner())loadAuditLogs();
+}
+
+document.querySelectorAll('.menu-item').forEach(b=>b.addEventListener('click',()=>showSection(b.dataset.section)));
+
 async function loadManagers(){
   const list=$('managersList'),select=$('managerEmployeeSelect');
-  if(!list||!select)return;
-  if(!isOwner())return;
+  if(!list||!select||!isOwner())return;
   list.innerHTML='<div class="empty">جارٍ تحميل المسيرين...</div>';
   try{
     const [pRes,rRes]=await Promise.all([
@@ -520,60 +696,229 @@ async function loadManagers(){
     const roleMap=new Map(roles.map(r=>[String(r.user_id),r.role]));
     const managers=profiles.filter(p=>roleMap.get(String(p.user_id))==='manager');
     managerProfiles=managers;
-    const candidates=profiles.filter(p=>p.user_id && String(p.user_id)!==String(currentUser.id) && roleMap.get(String(p.user_id))!=='admin' && roleMap.get(String(p.user_id))!=='manager');
+
+    const candidates=profiles.filter(p=>p.user_id&&String(p.user_id)!==String(currentUser.id)&&roleMap.get(String(p.user_id))!=='admin'&&roleMap.get(String(p.user_id))!=='manager');
     select.innerHTML='<option value="">اختر موظفًا...</option>'+candidates.map(p=>`<option value="${esc(p.user_id)}">${esc(p.employee_name_ar||'موظف بدون اسم')} — ${esc(p.current_rank||'الرتبة غير مسجلة')}</option>`).join('');
-    if(!managers.length){list.innerHTML='<div class="empty">لا يوجد مسيرون مساعدون حاليًا.</div>';return}
-    list.innerHTML=managers.map(p=>`<div class="manager-row"><div class="manager-info"><div class="manager-avatar"><i data-lucide="user-round-check"></i></div><div><div class="manager-name">${esc(p.employee_name_ar||'موظف')}</div><div class="manager-meta">${esc(p.current_rank||'الرتبة غير مسجلة')} — ${esc(p.user_id)}</div></div></div><div style="display:flex;align-items:center;gap:8px"><span class="manager-role">مسير مساعد</span><button type="button" class="btn danger" data-revoke-manager="${esc(p.user_id)}"><i data-lucide="shield-minus"></i>سحب الصلاحية</button></div></div>`).join('');
+
+    if(!managers.length){list.innerHTML='<div class="empty">لا يوجد مسيرون مساعدين حاليًا.</div>';return;}
+
+    await Promise.all(managers.map(async p=>{
+      try{
+        const rr=await db.rpc('get_manager_permissions',{p_user_id:p.user_id});
+        managerPermissionsCache.set(String(p.user_id),Array.isArray(rr.data)?rr.data:[]);
+      }catch(e){managerPermissionsCache.set(String(p.user_id),[]);}
+    }));
+
+    list.innerHTML=managers.map(p=>{
+      const perms=managerPermissionsCache.get(String(p.user_id))||[];
+      const names=perms.map(x=>x.permission_name_ar||permissionLabel(x.permission_key)).slice(0,6);
+      return `<div class="manager-row">
+        <div class="manager-info">
+          <div class="manager-avatar"><i data-lucide="user-round-check"></i></div>
+          <div><div class="manager-name">${esc(p.employee_name_ar||'موظف')}</div>
+          <div class="manager-meta">${esc(p.current_rank||'الرتبة غير مسجلة')} — ${esc(p.user_id)}</div>
+          <div class="manager-permissions-summary">${names.length?names.map(n=>`<span class="manager-permission-badge">${esc(n)}</span>`).join(''):'<span class="manager-permission-empty">لا توجد صلاحيات تشغيلية ممنوحة حاليًا</span>'}${perms.length>6?`<span class="manager-permission-badge">+${perms.length-6} أخرى</span>`:''}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+          <span class="manager-role">مسير مساعد</span>
+          <button type="button" class="btn primary" data-manage-permissions="${esc(p.user_id)}"><i data-lucide="list-checks"></i>إدارة الصلاحيات</button>
+          <button type="button" class="btn danger" data-revoke-manager="${esc(p.user_id)}"><i data-lucide="shield-minus"></i>سحب الدور</button>
+        </div>
+      </div>`;
+    }).join('');
+
     list.querySelectorAll('[data-revoke-manager]').forEach(b=>b.onclick=()=>revokeManager(b.dataset.revokeManager));
+    list.querySelectorAll('[data-manage-permissions]').forEach(b=>b.onclick=()=>openManagerPermissions(b.dataset.managePermissions));
     if(window.lucide)lucide.createIcons();
-  }catch(e){console.error(e);list.innerHTML='<div class="status error">تعذر تحميل المسيرين: '+esc(e.message||'خطأ غير معروف')+'</div>'}
+  }catch(e){
+    console.error(e);
+    list.innerHTML='<div class="status error">تعذر تحميل المسيرين: '+esc(e.message||'خطأ غير معروف')+'</div>';
+  }
 }
+
 async function grantManager(){
-  if(!isOwner()){alert('هذه الخاصية متاحة لمسؤول المنصة الرئيسي فقط.');return}
+  if(!isOwner()){alert('هذه الخاصية متاحة لمسؤول المنصة الرئيسي فقط.');return;}
   const userId=$('managerEmployeeSelect')?.value,status=$('managerStatus'),btn=$('grantManagerBtn');
-  if(!userId){status.innerHTML='<div class="status error">اختر الموظف أولًا.</div>';return}
+  if(!userId){status.innerHTML='<div class="status error">اختر الموظف أولًا.</div>';return;}
   btn.disabled=true;status.innerHTML='';
   try{
     const r=await db.rpc('set_user_platform_role',{p_user_id:userId,p_role:'manager'});
     if(r.error)throw r.error;
-    status.innerHTML='<div class="status ok">تم منح صلاحية المسير بنجاح. عند تسجيل الدخول من جديد سيظهر له فضاء الإدارة المساعد.</div>';
+    status.innerHTML='<div class="status ok">تم منح دور المسير المساعد بنجاح. افتح «إدارة الصلاحيات» لتحديد صلاحياته التشغيلية.</div>';
     await loadManagers();
-  }catch(e){console.error(e);status.innerHTML='<div class="status error">تعذر منح الصلاحية: '+esc(e.message||'خطأ غير معروف')+'</div>'}
-  finally{btn.disabled=false}
+    await loadAuditLogs();
+  }catch(e){
+    console.error(e);
+    status.innerHTML='<div class="status error">تعذر منح الدور: '+esc(e.message||'خطأ غير معروف')+'</div>';
+  }finally{btn.disabled=false;}
 }
+
 async function revokeManager(userId){
-  if(!isOwner()){alert('هذه الخاصية متاحة لمسؤول المنصة الرئيسي فقط.');return}
-  if(!confirm('هل تريد سحب صلاحية المسير من هذا الحساب؟'))return;
+  if(!isOwner()){alert('هذه الخاصية متاحة لمسؤول المنصة الرئيسي فقط.');return;}
+  if(!confirm('هل تريد سحب دور المسير المساعد من هذا الحساب؟ سيتم الاحتفاظ بسجل التدقيق.'))return;
   try{
     const r=await db.rpc('set_user_platform_role',{p_user_id:userId,p_role:'employee'});
     if(r.error)throw r.error;
-    $('managerStatus').innerHTML='<div class="status ok">تم سحب صلاحية المسير. سيعود الحساب إلى فضاء الموظف عند تسجيل الدخول من جديد.</div>';
+    $('managerStatus').innerHTML='<div class="status ok">تم سحب دور المسير المساعد. سيعود الحساب إلى فضاء الموظف عند تسجيل الدخول من جديد.</div>';
+    managerPermissionsCache.delete(String(userId));
     await loadManagers();
-  }catch(e){console.error(e);$('managerStatus').innerHTML='<div class="status error">تعذر سحب الصلاحية: '+esc(e.message||'خطأ غير معروف')+'</div>'}
+    await loadAuditLogs();
+  }catch(e){
+    console.error(e);
+    $('managerStatus').innerHTML='<div class="status error">تعذر سحب الدور: '+esc(e.message||'خطأ غير معروف')+'</div>';
+  }
 }
+
+async function openManagerPermissions(userId){
+  if(!isOwner())return;
+  const manager=managerProfiles.find(p=>String(p.user_id)===String(userId));
+  if(!manager)return;
+  const modal=$('managerPermissionsModal'),body=$('managerPermissionsBody');
+  $('managerPermissionsTitle').textContent='صلاحيات: '+(manager.employee_name_ar||'المسير المساعد');
+  body.innerHTML='<div class="empty">جارٍ تحميل الصلاحيات...</div>';
+  modal.classList.remove('hidden');
+  try{
+    const r=await db.rpc('get_manager_permissions',{p_user_id:userId});
+    if(r.error)throw r.error;
+    const assigned=new Set((Array.isArray(r.data)?r.data:[]).map(x=>String(x.permission_key)));
+    managerPermissionsCache.set(String(userId),Array.isArray(r.data)?r.data:[]);
+    const available=permissionCatalog.filter(p=>!p.owner_only);
+    body.innerHTML=`<div class="role-permission-note"><b>المسير المساعد:</b> ${esc(manager.employee_name_ar||'—')}<br>حدد فقط الصلاحيات التشغيلية التي يحتاجها. الصلاحيات الخاصة بإدارة المستخدمين والمسيرين وسجل التدقيق والحذف الحساس تبقى محجوزة للمسؤول الرئيسي.</div>
+      <div class="permission-grid">${available.map(p=>`<label class="permission-item"><input type="checkbox" class="manager-permission-check" value="${esc(p.permission_key)}" ${assigned.has(String(p.permission_key))?'checked':''}><span><strong>${esc(p.permission_name_ar||p.permission_key)}</strong><small>${esc(p.description_ar||'')}</small></span></label>`).join('')}</div>
+      <div class="permission-owner-lock"><i data-lucide="lock"></i><span>الصلاحيات المحجوزة للمسؤول الرئيسي: ${permissionCatalog.filter(p=>p.owner_only).map(p=>esc(p.permission_name_ar)).join('، ')||'—'}</span></div>
+      <div class="actions"><button class="btn primary" id="saveManagerPermissionsBtn"><i data-lucide="save"></i>حفظ الصلاحيات</button><button class="btn secondary" id="cancelManagerPermissionsBtn"><i data-lucide="x"></i>إلغاء</button></div>
+      <div id="managerPermissionsStatus" class="result"></div>`;
+    if(window.lucide)lucide.createIcons();
+    $('saveManagerPermissionsBtn').onclick=()=>saveManagerPermissions(userId);
+    $('cancelManagerPermissionsBtn').onclick=closeManagerPermissions;
+  }catch(e){body.innerHTML='<div class="status error">تعذر تحميل الصلاحيات: '+esc(e.message||'خطأ غير معروف')+'</div>';}
+}
+
+async function saveManagerPermissions(userId){
+  if(!isOwner())return;
+  const status=$('managerPermissionsStatus'),btn=$('saveManagerPermissionsBtn');
+  const desired=new Set([...document.querySelectorAll('.manager-permission-check:checked')].map(x=>String(x.value)));
+  const previous=new Set((managerPermissionsCache.get(String(userId))||[]).map(x=>String(x.permission_key)));
+  const available=permissionCatalog.filter(p=>!p.owner_only).map(p=>String(p.permission_key));
+  btn.disabled=true;
+  status.innerHTML='<div class="status">جارٍ حفظ الصلاحيات...</div>';
+  try{
+    for(const key of available){
+      if(desired.has(key)&&!previous.has(key)){
+        const r=await db.rpc('grant_manager_permission',{p_user_id:userId,p_permission_key:key});
+        if(r.error)throw r.error;
+      }
+      if(!desired.has(key)&&previous.has(key)){
+        const r=await db.rpc('revoke_manager_permission',{p_user_id:userId,p_permission_key:key});
+        if(r.error)throw r.error;
+      }
+    }
+    status.innerHTML='<div class="status ok">تم حفظ صلاحيات المسير بنجاح.</div>';
+    await loadManagers();
+    await loadAuditLogs();
+    setTimeout(closeManagerPermissions,700);
+  }catch(e){
+    console.error(e);
+    status.innerHTML='<div class="status error">تعذر حفظ الصلاحيات: '+esc(e.message||'خطأ غير معروف')+'</div>';
+  }finally{btn.disabled=false;}
+}
+
+function closeManagerPermissions(){$('managerPermissionsModal')?.classList.add('hidden');}
+
+async function loadAuditLogs(){
+  if(!isOwner())return;
+  const box=$('auditList'),status=$('auditStatus');
+  if(!box)return;
+  box.innerHTML='<div class="empty">جارٍ تحميل سجل العمليات...</div>';status.innerHTML='';
+  try{
+    const r=await db.rpc('get_career_audit_logs',{p_limit:200,p_offset:0});
+    if(r.error)throw r.error;
+    auditRows=Array.isArray(r.data)?r.data:[];
+    renderAuditLogs();
+  }catch(e){
+    console.error(e);
+    status.innerHTML='<div class="status error">تعذر تحميل سجل التدقيق: '+esc(e.message||'خطأ غير معروف')+'</div>';
+    box.innerHTML='<div class="empty">لا يمكن عرض السجل حاليًا.</div>';
+  }
+}
+
+function renderAuditLogs(){
+  const box=$('auditList');if(!box)return;
+  const q=String($('auditSearch')?.value||'').trim().toLowerCase();
+  const rows=q?auditRows.filter(r=>[r.action,r.entity_type,r.entity_id,r.description,r.actor_role,r.result].some(v=>String(v??'').toLowerCase().includes(q))):auditRows;
+  if(!rows.length){box.innerHTML='<div class="empty">لا توجد عمليات مطابقة في السجل.</div>';return;}
+  box.innerHTML=`<div class="audit-table-wrap"><table class="audit-table"><thead><tr><th>التاريخ والوقت</th><th>الدور</th><th>العملية</th><th>الجهة</th><th>الوصف</th><th>النتيجة</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.created_at?new Date(r.created_at).toLocaleString('ar-DZ'):'—')}</td><td>${esc(r.actor_role||'—')}</td><td class="audit-action">${esc(r.action||'—')}</td><td>${esc(r.entity_type||'—')}${r.entity_id?`<br><small>${esc(r.entity_id)}</small>`:''}</td><td>${esc(r.description||'—')}</td><td><span class="audit-result ${String(r.result||'').toLowerCase()!=='success'?'error':''}">${esc(r.result||'success')}</span></td></tr>`).join('')}</tbody></table></div>`;
+}
+
 $('grantManagerBtn')?.addEventListener('click',grantManager);
 $('refreshManagersBtn')?.addEventListener('click',loadManagers);
+$('closeManagerPermissions')?.addEventListener('click',closeManagerPermissions);
+$('managerPermissionsModal')?.addEventListener('click',e=>{if(e.target.id==='managerPermissionsModal')closeManagerPermissions()});
+$('refreshAuditBtn')?.addEventListener('click',loadAuditLogs);
+$('auditSearch')?.addEventListener('input',renderAuditLogs);
 
 async function checkAdmin(){
   try{
     if(typeof window.supabase==='undefined')throw new Error('مكتبة Supabase غير متاحة.');
     if(typeof SUPABASE_URL==='undefined'||typeof SUPABASE_ANON_KEY==='undefined'||!String(SUPABASE_URL).trim()||!String(SUPABASE_ANON_KEY).trim())throw new Error('إعدادات Supabase غير مكتملة في config.js.');
     db=window.db||window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);window.db=db;
-    const {data,error}=await db.auth.getSession();if(error)throw error;if(!data.session)throw new Error('لا توجد جلسة تسجيل دخول.');
-    currentUser=data.session.user;$('userEmail').textContent=currentUser.email||'';
+
+    const {data,error}=await db.auth.getSession();
+    if(error)throw error;
+    if(!data.session)throw new Error('لا توجد جلسة تسجيل دخول.');
+
+    currentUser=data.session.user;
+    $('userEmail').textContent=currentUser.email||'';
+
+    // الاعتماد على user_roles فقط لتفادي افتراض وجود employees.user_id.
     const roleRes=await db.from('user_roles').select('role').eq('user_id',currentUser.id).maybeSingle();
-    const profileRes=await db.from('employees').select('role').eq('user_id',currentUser.id).maybeSingle();
-    const isAdmin=roleRes.data?.role==='admin'||roleRes.data?.role==='manager'||profileRes.data?.role==='admin';
-    if(!isAdmin)throw new Error('هذا الحساب لا يملك صلاحية المسؤول.');
-    currentRole=roleRes.data?.role||profileRes.data?.role||'admin';
-    const chip=document.querySelector('.admin-role-chip'); if(chip) chip.innerHTML=`<i data-lucide="${currentRole==='manager'?'user-cog':'badge-check'}"></i> ${currentRole==='manager'?'مسير مساعد':'مسؤول النظام'}`;
+    if(roleRes.error)throw roleRes.error;
+
+    currentRole=roleRes.data?.role||'';
+    const allowed=currentRole==='admin'||currentRole==='manager'||isOwner();
+    if(!allowed)throw new Error('هذا الحساب لا يملك صلاحية المسؤول.');
+
+    if(isOwner())currentRole='admin';
+
+    const chip=document.querySelector('.admin-role-chip');
+    if(chip)chip.innerHTML=`<i data-lucide="${currentRole==='manager'?'user-cog':'badge-check'}"></i> ${currentRole==='manager'?'مسير مساعد':'مسؤول النظام'}`;
+
+    const sidebarProfile=document.querySelector('.sidebar-profile-text');
+    if(sidebarProfile)sidebarProfile.innerHTML=currentRole==='manager'?'<strong>مساحة المسير المساعد</strong><span>إدارة حسب الصلاحيات الممنوحة</span>':'<strong>مساحة المسؤول الرئيسي</strong><span>إدارة ومتابعة المنصة</span>';
+
+    await loadPermissionCatalog();
+    await loadMyPermissions();
     showOwnerControls();
-    await loadOptionalGradeRules();await loadEmployees();await loadRequests();await loadNotificationEmployees();await loadNotifications();if(isOwner())await loadManagers();$('loading').classList.add('hidden');const stat=$('statEmployees');if(stat)stat.textContent=String(employees.length);renderNotices();if(window.lucide)lucide.createIcons();
-  }catch(e){console.error(e);$('loading').textContent='⚠️ '+(e.message||'تعذر التحقق من الصلاحيات')+' — سيتم الرجوع إلى صفحة الدخول.';setTimeout(()=>location.href='index.html',2200)}
+    applyRolePermissions();
+
+    if(hasPermission('add_employees'))await loadEmployees();
+    if(hasPermission('view_requests'))await loadRequests();
+    if(hasPermission('send_notifications'))await loadNotificationEmployees();
+    await loadNotifications();
+    if(isOwner()){await loadManagers();await loadAuditLogs();}
+
+    $('loading').classList.add('hidden');
+    const stat=$('statEmployees');if(stat)stat.textContent=String(employees.length);
+    renderNotices();
+    applyRolePermissions();
+    if(window.lucide)lucide.createIcons();
+
+    // إن لم يكن المسير يملك صلاحية الطلبات، لا نحاول تحميلها دوريًا.
+    if(currentRole==='manager'&&!hasPermission('view_requests')){
+      if($('statRequests'))$('statRequests').textContent='0';
+      if($('pendingBadge'))$('pendingBadge').textContent='0';
+    }
+  }catch(e){
+    console.error(e);
+    $('loading').textContent='⚠️ '+(e.message||'تعذر التحقق من الصلاحيات')+' — سيتم الرجوع إلى صفحة الدخول.';
+    setTimeout(()=>location.href='index.html',2200);
+  }
 }
+
 $('logoutBtn').onclick=async()=>{try{if(db)await db.auth.signOut()}finally{location.href='index.html'}};
 checkAdmin();
-setInterval(()=>{if(db&&currentUser){loadNotifications();loadRequests();}},30000);
+setInterval(()=>{if(db&&currentUser){loadNotifications();if(hasPermission('view_requests'))loadRequests();if(isOwner())loadAuditLogs();}},30000);
 })();
 </script>
 
