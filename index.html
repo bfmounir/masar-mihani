@@ -3,1099 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>منصة المسار المهني</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
-
 <style>
-:root{
-  --brand-purple:#6F52A3;
-  --brand-purple-dark:#584084;
-  --brand-purple-deep:#49346F;
-  --brand-gold:#C9A84A;
-  --brand-gold-dark:#AA820A;
-  --brand-gold-light:#F7F0D8;
-  --bg-light:#F7F5FA;
-  --text:#302537;
-  --muted:#75677D;
-  --border:#EADFF0;
-  --shadow-sm:0 4px 15px rgba(74,55,105,.07);
-  --shadow-md:0 12px 32px rgba(74,55,105,.11);
-}
-
-*{
-  box-sizing:border-box;
-}
-
-html,
-body{
-  min-height:100%;
-}
-
-body{
-  margin:0;
-  font-family:Arial,Tahoma,sans-serif;
-  background:
-    radial-gradient(circle at 15% 15%,#F7F0D8 0,#F4F0F8 34%,#FAF7FC 72%);
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:var(--text);
-  padding:24px;
-  position:relative;
-  overflow:auto;
-}
-
-/* =========================
-   الخلفية
-========================= */
-
-body:before,
-body:after{
-  content:"";
-  position:fixed;
-  border-radius:50%;
-  filter:blur(2px);
-  pointer-events:none;
-  z-index:0;
-}
-
-body:before{
-  width:360px;
-  height:360px;
-  background:rgba(111,82,163,.08);
-  top:-150px;
-  right:-100px;
-}
-
-body:after{
-  width:300px;
-  height:300px;
-  background:rgba(201,168,74,.08);
-  bottom:-130px;
-  left:-100px;
-}
-
-/* =========================
-   الحاوية الرئيسية
-========================= */
-
-.login-container{
-  width:100%;
-  max-width:980px;
-  position:relative;
-  z-index:1;
-}
-
-.login-shell{
-  display:grid;
-  grid-template-columns:1fr 1.08fr;
-  background:rgba(255,255,255,.88);
-  backdrop-filter:blur(16px);
-  border:1px solid rgba(201,168,74,.20);
-  border-radius:30px;
-  overflow:hidden;
-  box-shadow:0 25px 70px rgba(74,55,105,.11);
-}
-
-/* =========================
-   الجانب الترحيبي
-========================= */
-
-.welcome{
-  padding:48px 42px;
-  background:linear-gradient(
-    145deg,
-    #8064B2,
-    #6F52A3 55%,
-    #584084
-  );
-  color:#fff;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  position:relative;
-  overflow:hidden;
-}
-
-.welcome:after{
-  content:"";
-  position:absolute;
-  width:220px;
-  height:220px;
-  border:1px solid rgba(212,175,55,.16);
-  border-radius:50%;
-  left:-90px;
-  bottom:-80px;
-}
-
-.brand-mark{
-  width:78px;
-  height:78px;
-  border-radius:24px;
-  background:linear-gradient(
-    135deg,
-    var(--brand-gold),
-    var(--brand-gold-dark)
-  ) !important;
-  border:1px solid rgba(255,255,255,.3) !important;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:36px;
-  font-weight:800;
-  margin-bottom:24px;
-  box-shadow:0 12px 28px rgba(74,55,105,.09);
-  padding:6px;
-  overflow:hidden;
-}
-
-.brand-mark img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  border-radius:18px;
-  display:block;
-  filter:drop-shadow(0 5px 10px rgba(0,0,0,.10));
-}
-
-.welcome h2{
-  margin:0 0 10px;
-  font-size:29px;
-  line-height:1.35;
-}
-
-.welcome .institution{
-  font-size:15px;
-  line-height:1.9;
-  opacity:.9;
-  color:var(--brand-gold-light);
-}
-
-.feature-list{
-  margin:28px 0 0;
-  padding:0;
-  list-style:none;
-  display:grid;
-  gap:12px;
-}
-
-.feature-list li{
-  padding:11px 13px;
-  border-radius:13px;
-  background:rgba(255,255,255,.09);
-  border:1px solid rgba(255,255,255,.10);
-  font-size:13px;
-}
-
-/* =========================
-   بطاقة الدخول
-========================= */
-
-.login-card{
-  background:#fff;
-  padding:42px 40px;
-}
-
-.login-head{
-  text-align:center;
-  margin-bottom:25px;
-}
-
-.login-head h1{
-  margin:0 0 8px;
-  color:var(--brand-purple);
-  font-size:26px;
-}
-
-.login-head p{
-  margin:0;
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.8;
-}
-
-.tabs{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:7px;
-  padding:5px;
-  background:#F3EEF6;
-  border:1px solid var(--border);
-  border-radius:14px;
-  margin-bottom:18px;
-}
-
-.tab{
-  border:0;
-  background:transparent;
-  color:#66586D;
-  padding:12px 8px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:bold;
-  font-size:14px;
-  transition:.2s;
-}
-
-.tab:hover{
-  background:#F1EAF5;
-}
-
-.tab.active{
-  background:linear-gradient(
-    135deg,
-    var(--brand-purple),
-    var(--brand-purple-dark)
-  );
-  color:#fff;
-  box-shadow:0 5px 14px rgba(74,55,105,.13);
-}
-
-.login-types{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-  margin-bottom:20px;
-}
-
-.type-btn{
-  border:1px solid #D9CBE0;
-  background:#FCFAFD;
-  color:#5A4A61;
-  padding:12px;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:bold;
-  font-size:13px;
-  transition:.2s;
-}
-
-.type-btn:hover{
-  border-color:#C6A6D7;
-}
-
-.type-btn.active{
-  background:var(--brand-gold-light);
-  color:var(--brand-purple);
-  border-color:var(--brand-gold);
-}
-
-.form-group{
-  margin-bottom:16px;
-}
-
-label{
-  display:block;
-  margin-bottom:7px;
-  color:#493B50;
-  font-size:13px;
-  font-weight:bold;
-}
-
-input{
-  width:100%;
-  padding:14px 15px;
-  border:1px solid #D9CBE0;
-  border-radius:12px;
-  outline:none;
-  font-size:15px;
-  background:#FCFAFD;
-  direction:ltr;
-  text-align:left;
-  transition:.2s;
-}
-
-input:hover{
-  border-color:#B89AC8;
-}
-
-input:focus{
-  border-color:var(--brand-purple);
-  box-shadow:0 0 0 4px rgba(74,21,112,.09);
-  background:#fff;
-}
-
-.main-btn{
-  width:100%;
-  border:0;
-  background:linear-gradient(
-    135deg,
-    var(--brand-purple),
-    #6A2992
-  );
-  color:#fff;
-  padding:14px;
-  border-radius:12px;
-  cursor:pointer;
-  font-size:15px;
-  font-weight:bold;
-  margin-top:4px;
-  box-shadow:0 9px 20px rgba(74,55,105,.13);
-  transition:transform .18s,box-shadow .18s;
-}
-
-.main-btn:hover{
-  transform:translateY(-1px);
-  box-shadow:0 12px 25px rgba(74,55,105,.17);
-}
-
-.main-btn:disabled{
-  opacity:.6;
-  cursor:not-allowed;
-  transform:none;
-}
-
-.message{
-  display:none;
-  padding:12px 13px;
-  border-radius:11px;
-  margin-bottom:17px;
-  font-size:13px;
-  line-height:1.7;
-}
-
-.message.error{
-  display:block;
-  background:#fff0f0;
-  color:#a52828;
-  border:1px solid #f2d1d1;
-}
-
-.message.success{
-  display:block;
-  background:#eaf8ef;
-  color:#18733c;
-  border:1px solid #ccebd6;
-}
-
-.hidden{
-  display:none !important;
-}
-
-/* =========================
-   أزرار المعلومات
-========================= */
-
-.info-buttons{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-  margin-top:18px;
-}
-
-.about-btn,
-.developer-btn{
-  width:100%;
-  padding:13px 12px;
-  border-radius:13px;
-  font-family:inherit;
-  font-size:13px;
-  font-weight:700;
-  cursor:pointer;
-  transition:.2s ease;
-}
-
-.about-btn{
-  border:1px solid rgba(201,168,74,.55);
-  background:linear-gradient(
-    135deg,
-    #fffaf0,
-    #f8f1df
-  );
-  color:#5d4678;
-  box-shadow:0 5px 14px rgba(74,55,105,.07);
-}
-
-.developer-btn{
-  border:1px solid rgba(111,82,163,.25);
-  background:linear-gradient(
-    135deg,
-    #F7F2FB,
-    #EEE7F5
-  );
-  color:var(--brand-purple);
-  box-shadow:0 5px 14px rgba(74,55,105,.07);
-}
-
-.about-btn:hover,
-.developer-btn:hover{
-  transform:translateY(-1px);
-  box-shadow:0 8px 20px rgba(74,55,105,.11);
-}
-
-.about-btn:hover{
-  border-color:var(--brand-gold);
-}
-
-.developer-btn:hover{
-  border-color:var(--brand-purple);
-}
-
-/* =========================
-   التذييل
-========================= */
-
-.footer{
-  text-align:center;
-  margin-top:20px;
-  color:#8A7B91;
-  font-size:11px;
-  line-height:1.8;
-  border-top:1px solid var(--border);
-  padding-top:16px;
-}
-
-.secure-note{
-  display:flex;
-  justify-content:center;
-  gap:6px;
-  align-items:center;
-  margin-top:9px;
-  color:#75677D;
-  font-size:11px;
-}
-
-.secure-dot{
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:#29a36a;
-  box-shadow:0 0 0 4px rgba(41,163,106,.10);
-}
-
-/* =========================
-   النوافذ المنبثقة
-========================= */
-
-.about-overlay{
-  position:fixed;
-  inset:0;
-  z-index:10000;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  background:rgba(35,25,48,.55);
-  backdrop-filter:blur(7px);
-}
-
-.about-overlay.open{
-  display:flex;
-}
-
-.about-modal{
-  width:min(900px,100%);
-  max-height:92vh;
-  overflow:auto;
-  background:#fff;
-  border:1px solid rgba(201,168,74,.25);
-  border-radius:24px;
-  box-shadow:0 25px 80px rgba(30,20,45,.25);
-  direction:rtl;
-  animation:aboutIn .22s ease-out;
-}
-
-@keyframes aboutIn{
-  from{
-    opacity:0;
-    transform:translateY(12px) scale(.98);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
-}
-
-.about-hero{
-  position:relative;
-  padding:30px 30px 26px;
-  color:#fff;
-  background:linear-gradient(
-    135deg,
-    #8064B2,
-    #6F52A3 55%,
-    #584084
-  );
-}
-
-.about-hero h2{
-  color:#fff;
-}
-
-.close-modal{
-  position:absolute;
-  left:22px;
-  top:18px;
-  border:0;
-  background:rgba(255,255,255,.16);
-  color:#fff;
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  font-size:22px;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.close-modal:hover{
-  background:rgba(255,255,255,.28);
-  transform:rotate(5deg);
-}
-
-/* =========================
-   بطاقات عن المنصة
-========================= */
-
-.about-content{
-  padding:28px;
-}
-
-.about-grid{
-  display:grid;
-  grid-template-columns:repeat(
-    auto-fit,
-    minmax(220px,1fr)
-  );
-  gap:16px;
-}
-
-.about-card{
-  background:#FBF9FD;
-  border:1px solid #EDE5F3;
-  border-radius:18px;
-  padding:20px;
-}
-
-.about-card h3{
-  margin:10px 0 7px;
-  color:#4D376F;
-  font-size:17px;
-}
-
-.about-card p{
-  margin:0;
-  color:#716579;
-  line-height:1.8;
-  font-size:13px;
-}
-
-.about-icon{
-  width:44px;
-  height:44px;
-  border-radius:13px;
-  background:#F0E9F7;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-}
-
-.about-goals{
-  margin-top:20px;
-  padding:22px;
-  border-radius:20px;
-  background:linear-gradient(
-    135deg,
-    #F8F3FB,
-    #FCFAF5
-  );
-  border:1px solid #EDE4F2;
-}
-
-.about-goals h3{
-  margin:0 0 14px;
-  color:#4D376F;
-}
-
-.goal-grid{
-  display:grid;
-  grid-template-columns:repeat(
-    auto-fit,
-    minmax(180px,1fr)
-  );
-  gap:10px;
-}
-
-.goal-grid span{
-  background:#fff;
-  border:1px solid #EEE6F3;
-  border-radius:12px;
-  padding:11px;
-  color:#5D5065;
-  font-size:13px;
-}
-
-.about-note{
-  margin-top:16px;
-  padding:14px 16px;
-  background:#FFF9E9;
-  border-right:4px solid var(--brand-gold);
-  border-radius:12px;
-  color:#695A39;
-  font-size:12px;
-  line-height:1.8;
-}
-
-/* =========================
-   قسم فكرة المنصة
-========================= */
-
-.idea-section{
-  margin-top:20px;
-  padding:24px;
-  border-radius:20px;
-  background:
-    linear-gradient(
-      135deg,
-      #FCFAFF 0%,
-      #F5F0FA 52%,
-      #FFF9E9 100%
-    );
-  border:1px solid #E7DDF0;
-  position:relative;
-  overflow:hidden;
-}
-
-.idea-section:before{
-  content:"";
-  position:absolute;
-  width:150px;
-  height:150px;
-  border:1px solid rgba(201,168,74,.22);
-  border-radius:50%;
-  left:-65px;
-  top:-70px;
-}
-
-.idea-label{
-  color:var(--brand-gold-dark);
-  font-size:11px;
-  font-weight:bold;
-  margin-bottom:7px;
-}
-
-.idea-section h3{
-  margin:0 0 12px;
-  color:var(--brand-purple);
-  font-size:20px;
-}
-
-.idea-section p{
-  margin:0;
-  color:#66586D;
-  font-size:13px;
-  line-height:2;
-}
-
-.idea-highlight{
-  margin-top:16px;
-  padding:14px 17px;
-  border-radius:14px;
-  background:#fff;
-  border:1px solid rgba(201,168,74,.28);
-  color:#4D376F;
-  font-size:14px;
-  font-weight:bold;
-  text-align:center;
-}
-
-/* =========================
-   نافذة المبرمج
-========================= */
-
-.developer-hero{
-  text-align:center;
-  padding-bottom:30px;
-}
-
-.developer-avatar{
-  width:82px;
-  height:82px;
-  margin:0 auto 15px;
-  border-radius:26px;
-  background:linear-gradient(
-    135deg,
-    var(--brand-gold),
-    var(--brand-gold-dark)
-  );
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:35px;
-  box-shadow:0 12px 28px rgba(74,55,105,.20);
-  border:1px solid rgba(255,255,255,.35);
-}
-
-.developer-hero h2{
-  margin:0 0 7px;
-  font-size:27px;
-}
-
-.developer-hero p{
-  margin:0;
-  opacity:.9;
-  font-size:13px;
-}
-
-.developer-card{
-  background:#FBF9FD;
-  border:1px solid #E8E1EF;
-  border-radius:20px;
-  padding:22px;
-}
-
-.developer-info-grid{
-  display:grid;
-  grid-template-columns:repeat(
-    auto-fit,
-    minmax(210px,1fr)
-  );
-  gap:13px;
-}
-
-.developer-info{
-  background:#fff;
-  border:1px solid #EEE7F1;
-  border-radius:14px;
-  padding:13px 14px;
-}
-
-.developer-info small{
-  display:block;
-  color:#91869A;
-  font-size:10px;
-  margin-bottom:4px;
-}
-
-.developer-info strong{
-  color:#49385A;
-  font-size:13px;
-  line-height:1.7;
-}
-
-.developer-info a{
-  color:inherit;
-  text-decoration:none;
-}
-
-.developer-info a:hover{
-  color:var(--brand-purple);
-  text-decoration:underline;
-}
-
-/* =========================
-   رسالة الابتكار
-========================= */
-
-.innovation-box{
-  margin-top:18px;
-  padding:22px;
-  border-radius:18px;
-  background:linear-gradient(
-    135deg,
-    #F7F0D8,
-    #FFFDF6
-  );
-  border:1px solid rgba(201,168,74,.35);
-  text-align:center;
-}
-
-.innovation-box .innovation-icon{
-  font-size:27px;
-  margin-bottom:7px;
-}
-
-.innovation-box h3{
-  margin:0 0 9px;
-  color:#5A4572;
-  font-size:18px;
-}
-
-.innovation-box p{
-  margin:0;
-  color:#6B5C43;
-  font-size:13px;
-  line-height:2;
-}
-
-.innovation-quote{
-  margin-top:14px;
-  color:#4D376F;
-  font-size:15px;
-  font-weight:800;
-}
-
-/* =========================
-   PWA
-========================= */
-
-.pwa-install-banner{
-  position:fixed;
-  z-index:99999;
-  right:18px;
-  left:18px;
-  bottom:18px;
-  max-width:620px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  gap:13px;
-  padding:14px 16px;
-  border:1px solid rgba(109,74,255,.18);
-  border-radius:20px;
-  background:rgba(255,255,255,.97);
-  box-shadow:0 18px 50px rgba(25,20,60,.20);
-  backdrop-filter:blur(14px);
-  font-family:Cairo,Arial,sans-serif;
-  direction:rtl;
-}
-
-.pwa-install-banner[hidden]{
-  display:none!important;
-}
-
-.pwa-install-icon{
-  width:52px;
-  height:52px;
-  flex:0 0 52px;
-  border-radius:15px;
-  overflow:hidden;
-  background:#f5f2ff;
-  display:grid;
-  place-items:center;
-  border:1px solid rgba(109,74,255,.12);
-}
-
-.pwa-install-icon img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-}
-
-.pwa-install-content{
-  flex:1;
-  min-width:0;
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
-
-.pwa-install-content strong{
-  font-size:15px;
-  color:#241d4f;
-}
-
-.pwa-install-content span{
-  font-size:12px;
-  line-height:1.6;
-  color:#6b6780;
-}
-
-.pwa-install-banner button#pwaInstallBtn{
-  border:0;
-  border-radius:12px;
-  padding:10px 15px;
-  background:#6d4aff;
-  color:#fff;
-  font-family:inherit;
-  font-weight:700;
-  cursor:pointer;
-  white-space:nowrap;
-}
-
-.pwa-install-banner button#pwaInstallBtn:hover{
-  filter:brightness(.96);
-}
-
-.pwa-install-close{
-  width:32px;
-  height:32px;
-  border:0;
-  background:transparent;
-  color:#777;
-  font-size:22px;
-  line-height:1;
-  cursor:pointer;
-  padding:0;
-}
-
-.pwa-ios-note{
-  position:fixed;
-  z-index:99998;
-  right:18px;
-  left:18px;
-  bottom:18px;
-  max-width:560px;
-  margin:auto;
-  padding:14px 16px;
-  border-radius:18px;
-  background:#241d4f;
-  color:#fff;
-  font-family:Cairo,Arial,sans-serif;
-  direction:rtl;
-  box-shadow:0 18px 50px rgba(25,20,60,.25);
-  font-size:13px;
-  line-height:1.8;
-}
-
-.pwa-ios-note button{
-  float:left;
-  border:0;
-  background:transparent;
-  color:#fff;
-  font-size:20px;
-  cursor:pointer;
-}
-
-/* =========================
-   الهاتف
-========================= */
-
-@media(max-width:760px){
-
-  body{
-    padding:12px;
-  }
-
-  .login-shell{
-    grid-template-columns:1fr;
-  }
-
-  .welcome{
-    padding:28px 25px;
-  }
-
-  .welcome h2{
-    font-size:23px;
-  }
-
-  .feature-list{
-    display:none;
-  }
-
-  .login-card{
-    padding:30px 22px;
-  }
-
-  .brand-mark{
-    width:64px;
-    height:64px;
-    font-size:30px;
-    margin-bottom:17px;
-  }
-}
-
-@media(max-width:600px){
-
-  .about-overlay{
-    padding:10px;
-  }
-
-  .about-modal{
-    max-height:94vh;
-    border-radius:18px;
-  }
-
-  .about-hero{
-    padding:24px 20px 22px;
-  }
-
-  .about-hero h2{
-    font-size:23px!important;
-  }
-
-  .about-hero p{
-    font-size:13px!important;
-  }
-
-  .about-content{
-    padding:18px;
-  }
-
-  .about-grid{
-    grid-template-columns:1fr;
-  }
-
-  .goal-grid{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .about-card{
-    padding:15px;
-  }
-
-  .developer-info-grid{
-    grid-template-columns:1fr;
-  }
-
-  .info-buttons{
-    grid-template-columns:1fr;
-  }
-
-  .innovation-box{
-    padding:18px;
-  }
-
-  .pwa-install-banner{
-    right:10px;
-    left:10px;
-    bottom:10px;
-    padding:12px;
-  }
-
-  .pwa-install-icon{
-    width:46px;
-    height:46px;
-    flex-basis:46px;
-  }
-
-  .pwa-install-content strong{
-    font-size:13px;
-  }
-
-  .pwa-install-content span{
-    font-size:11px;
-  }
-
-  .pwa-install-banner button#pwaInstallBtn{
-    padding:9px 11px;
-    font-size:12px;
-  }
-}
-
-@media(max-width:430px){
-
-  .login-types{
-    grid-template-columns:1fr;
-  }
-
-  .login-head h1{
-    font-size:23px;
-  }
-
-  .login-card{
-    padding:25px 17px;
-  }
-
-  .welcome{
-    padding:24px 20px;
-  }
-
-  .goal-grid{
-    grid-template-columns:1fr;
-  }
-
-  .developer-hero h2{
-    font-size:23px;
-  }
-}
+:root{--brand-purple:#6F52A3;--brand-purple-dark:#584084;--brand-gold:#C9A84A;--brand-gold-light:#F7F0D8;--bg-light:#F7F5FA;--shadow-sm:0 4px 15px rgba(74,55,105,.07);--shadow-md:0 12px 32px rgba(74,55,105,.11)}
+
+*{box-sizing:border-box}html,body{min-height:100%}body{margin:0;font-family:Arial,Tahoma,sans-serif;background:radial-gradient(circle at 15% 15%,#F7F0D8 0,#F4F0F8 34%,#FAF7FC 72%);min-height:100vh;display:flex;align-items:center;justify-content:center;color:#302537;padding:24px;position:relative;overflow:auto}.about-card{background:#FBF9FD;border:1px solid #EDE5F3;border-radius:18px;padding:20px}.about-card h3{margin:10px 0 7px;color:#4D376F;font-size:17px}.about-card p{margin:0;color:#716579;line-height:1.8;font-size:13px}.about-icon{width:44px;height:44px;border-radius:13px;background:#F0E9F7;display:flex;align-items:center;justify-content:center;font-size:22px}.about-goals{margin-top:20px;padding:22px;border-radius:20px;background:linear-gradient(135deg,#F8F3FB,#FCFAF5);border:1px solid #EDE4F2}.about-goals h3{margin:0 0 14px;color:#4D376F}.goal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.goal-grid span{background:#fff;border:1px solid #EEE6F3;border-radius:12px;padding:11px;color:#5D5065;font-size:13px}.about-note{margin-top:16px;padding:14px 16px;background:#FFF9E9;border-right:4px solid #C9A84A;border-radius:12px;color:#695A39;font-size:12px;line-height:1.8}.about-overlay,body:before,body:after{content:"";position:fixed;border-radius:50%;filter:blur(2px);pointer-events:none;z-index:0}body:before{width:360px;height:360px;background:rgba(111,82,163,.08);top:-150px;right:-100px}body:after{width:300px;height:300px;background:rgba(201,168,74,.08);bottom:-130px;left:-100px}.login-container{width:100%;max-width:980px;position:relative;z-index:1}.login-shell{display:grid;grid-template-columns:1fr 1.08fr;background:rgba(255,255,255,.88);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.85);border-radius:30px;overflow:hidden;box-shadow:0 25px 70px rgba(74,55,105,.11)}.welcome{padding:48px 42px;background:linear-gradient(145deg,#8064B2,#6F52A3 55%,#584084);color:#fff;display:flex;flex-direction:column;justify-content:center;position:relative}.welcome:after{content:"";position:absolute;width:220px;height:220px;border:1px solid rgba(212,175,55,.16);border-radius:50%;left:-90px;bottom:-80px}.brand-mark{width:78px;height:78px;border-radius:24px;background:rgba(212,175,55,.16);border:1px solid rgba(212,175,55,.35);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:800;margin-bottom:24px;box-shadow:0 12px 28px rgba(74,55,105,.09)}.welcome h2{margin:0 0 10px;font-size:29px;line-height:1.35}.welcome .institution{font-size:15px;line-height:1.9;opacity:.9}.feature-list{margin:28px 0 0;padding:0;list-style:none;display:grid;gap:12px}.feature-list li{padding:11px 13px;border-radius:13px;background:rgba(255,255,255,.09);border-color:rgba(212,175,55,.20);border:1px solid rgba(255,255,255,.10);font-size:13px}.login-card{background:#fff;padding:42px 40px}.login-head{text-align:center;margin-bottom:25px}.login-head h1{margin:0 0 8px;color:#6F52A3;font-size:26px}.login-head p{margin:0;color:#75677D;font-size:13px;line-height:1.8}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:5px;background:#F3EEF6;border:1px solid #EADFF0;border-radius:14px;margin-bottom:18px}.tab{border:0;background:transparent;color:#66586D;padding:12px 8px;border-radius:10px;cursor:pointer;font-weight:bold;font-size:14px;transition:.2s}.tab:hover{background:#F1EAF5}.tab.active{background:#6F52A3;color:#fff;box-shadow:0 5px 14px rgba(74,55,105,.13)}.login-types{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px}.type-btn{border:1px solid #D9CBE0;background:#FCFAFD;color:#5A4A61;padding:12px;border-radius:12px;cursor:pointer;font-weight:bold;font-size:13px;transition:.2s}.type-btn:hover{border-color:#C6A6D7}.type-btn.active{background:#F1EAF5;color:#6F52A3;border-color:#6F52A3}.form-group{margin-bottom:16px}label{display:block;margin-bottom:7px;color:#493B50;font-size:13px;font-weight:bold}input{width:100%;padding:14px 15px;border:1px solid #D9CBE0;border-radius:12px;outline:none;font-size:15px;background:#FCFAFD;direction:ltr;text-align:left;transition:.2s}input:hover{border-color:#B89AC8}input:focus{border-color:#6F52A3;box-shadow:0 0 0 4px rgba(74,21,112,.09);background:#fff}.main-btn{width:100%;border:0;background:linear-gradient(135deg,#6F52A3,#6A2992);color:#fff;padding:14px;border-radius:12px;cursor:pointer;font-size:15px;font-weight:bold;margin-top:4px;box-shadow:0 9px 20px rgba(74,55,105,.13);transition:transform .18s,box-shadow .18s}.main-btn:hover{transform:translateY(-1px);box-shadow:0 12px 25px rgba(74,55,105,.17)}.main-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}.message{display:none;padding:12px 13px;border-radius:11px;margin-bottom:17px;font-size:13px;line-height:1.7}.message.error{display:block;background:#fff0f0;color:#a52828;border:1px solid #f2d1d1}.message.success{display:block;background:#eaf8ef;color:#18733c;border:1px solid #ccebd6}.hidden{display:none}.footer{text-align:center;margin-top:20px;color:#8A7B91;font-size:11px;line-height:1.8;border-top:1px solid #EEE7F1;padding-top:16px}.secure-note{display:flex;justify-content:center;gap:6px;align-items:center;margin-top:9px;color:#75677D;font-size:11px}.secure-dot{width:7px;height:7px;border-radius:50%;background:#29a36a;box-shadow:0 0 0 4px rgba(41,163,106,.10)}@media(max-width:760px){body{padding:12px}.login-shell{grid-template-columns:1fr}.welcome{padding:28px 25px}.welcome h2{font-size:23px}.feature-list{display:none}.login-card{padding:30px 22px}.brand-mark{width:64px;height:64px;font-size:30px;margin-bottom:17px}}@media(max-width:430px){.login-types{grid-template-columns:1fr}.login-head h1{font-size:23px}.login-card{padding:25px 17px}.welcome{padding:24px 20px}}
+
+.welcome .institution{color:var(--brand-gold-light)}
+.brand-mark{background:linear-gradient(135deg,var(--brand-gold),#AA820A)!important;color:#fff;border-color:rgba(255,255,255,.3)!important}
+.login-shell{border-color:rgba(212,175,55,.20)}
+.tab.active{background:linear-gradient(135deg,var(--brand-purple),var(--brand-purple-dark));box-shadow:0 5px 14px rgba(74,55,105,.13)}
+.type-btn.active{background:#F7F0D8;color:var(--brand-purple);border-color:var(--brand-gold)}
+.footer{border-top-color:#EADFF0}
+.brand-mark{padding:6px;overflow:hidden}.brand-mark img{width:100%;height:100%;object-fit:contain;border-radius:18px;display:block;filter:drop-shadow(0 5px 10px rgba(0,0,0,.10))}
 </style>
 
-<!-- PWA -->
+<!-- PWA: منصة المسار المهني -->
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#6d4aff">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1105,1751 +30,291 @@ input:focus{
 <link rel="apple-touch-icon" href="./logo%20(2).png">
 
 </head>
-
 <body>
-
-<div class="login-container">
-
-  <div class="login-shell">
-
-    <!-- =========================
-         الجانب الترحيبي
-    ========================== -->
-
-    <div class="welcome">
-
-      <div class="brand-mark">
-        <img
-          src="./logo%20(2).png"
-          alt="شعار منصة المسار المهني"
-        >
-      </div>
-
-      <h2>منصة المسار المهني</h2>
-
-      <div class="institution">
-        المؤسسة العمومية الإستشفائية بأولف<br>
-        نظام رقمي لإدارة ومتابعة المسار المهني للموظفين
-      </div>
-
-      <ul class="feature-list">
-        <li>👤 إدخال ومتابعة البيانات الأساسية</li>
-        <li>⏳ متابعة الأقدمية والاستحقاق الزمني</li>
-        <li>🔔 التنبيهات الداخلية والمتابعة الإدارية</li>
-      </ul>
-
-    </div>
-
-
-    <!-- =========================
-         بطاقة تسجيل الدخول
-    ========================== -->
-
-    <div class="login-card">
-
-      <div class="login-head">
-        <h1>تسجيل الدخول</h1>
-        <p>
-          الوصول الآمن إلى نظام إدارة الموظفين والمسار المهني
-        </p>
-      </div>
-
-
-      <div class="tabs">
-
-        <button
-          id="loginTab"
-          class="tab active"
-          type="button"
-          onclick="showMode('login')"
-        >
-          تسجيل الدخول
-        </button>
-
-        <button
-          id="signupTab"
-          class="tab"
-          type="button"
-          onclick="showMode('signup')"
-        >
-          إنشاء حساب موظف
-        </button>
-
-      </div>
-
-
-      <div id="message" class="message"></div>
-
-      <button
-        id="resendBtn"
-        type="button"
-        class="main-btn hidden"
-        style="margin-bottom:16px;background:linear-gradient(135deg,#C9A84A,#AA820A)"
-        onclick="resendConfirmation()"
-      >
-        إعادة إرسال رسالة تأكيد البريد
-      </button>
-
-
-      <!-- تسجيل الدخول -->
-
-      <div id="loginPanel">
-
-        <div class="login-types">
-
-          <button
-            type="button"
-            id="employeeType"
-            class="type-btn active"
-            onclick="selectLoginType('employee')"
-          >
-            دخول الموظف
-          </button>
-
-          <button
-            type="button"
-            id="adminType"
-            class="type-btn"
-            onclick="selectLoginType('admin')"
-          >
-            دخول المسؤول
-          </button>
-
-        </div>
-
-
-        <form onsubmit="login(event)">
-
-          <div class="form-group">
-
-            <label>البريد الإلكتروني</label>
-
-            <input
-              type="email"
-              id="loginEmail"
-              placeholder="example@email.com"
-              autocomplete="email"
-              required
-            >
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>كلمة المرور</label>
-
-            <input
-              type="password"
-              id="loginPassword"
-              placeholder="أدخل كلمة المرور"
-              autocomplete="current-password"
-              required
-            >
-
-          </div>
-
-
-          <button
-            id="loginBtn"
-            class="main-btn"
-            type="submit"
-          >
-            تسجيل الدخول
-          </button>
-
-        </form>
-
-      </div>
-
-
-      <!-- إنشاء الحساب -->
-
-      <div id="signupPanel" class="hidden">
-
-        <form onsubmit="signUp(event)">
-
-          <div class="form-group">
-
-            <label>البريد الإلكتروني</label>
-
-            <input
-              type="email"
-              id="signupEmail"
-              placeholder="example@email.com"
-              autocomplete="email"
-              required
-            >
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>كلمة المرور</label>
-
-            <input
-              type="password"
-              id="signupPassword"
-              placeholder="اختر كلمة مرور لا تقل عن 6 أحرف"
-              minlength="6"
-              autocomplete="new-password"
-              required
-            >
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label>تأكيد كلمة المرور</label>
-
-            <input
-              type="password"
-              id="confirmPassword"
-              placeholder="أعد كتابة كلمة المرور"
-              minlength="6"
-              autocomplete="new-password"
-              required
-            >
-
-          </div>
-
-
-          <button
-            id="signupBtn"
-            class="main-btn"
-            type="submit"
-          >
-            إنشاء الحساب والانتقال لإدخال المعلومات
-          </button>
-
-        </form>
-
-      </div>
-
-
-      <!-- =========================
-           أزرار المعلومات الجديدة
-      ========================== -->
-
-      <div class="info-buttons">
-
-        <button
-          class="about-btn"
-          type="button"
-          onclick="openAbout()"
-        >
-          ℹ️ عن المنصة
-        </button>
-
-
-        <button
-          class="developer-btn"
-          type="button"
-          onclick="openDeveloper()"
-        >
-          👨‍💻 المبرمج وصاحب الفكرة
-        </button>
-
-      </div>
-
-
-      <div class="footer">
-
-        بعد إنشاء الحساب، يقوم الموظف بإدخال معلوماته بنفسه،
-        وتبقى المراجعة والمتابعة للمسؤول.
-
-        <div class="secure-note">
-          <span class="secure-dot"></span>
-          جلسة دخول محمية عبر نظام المصادقة
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
+<div class="login-container"><div class="login-shell">
+<div class="welcome"><div class="brand-mark"><img src="./logo%20(2).png" alt="شعار منصة المسار المهني"></div><h2>منصة المسار المهني</h2><div class="institution">المؤسسة العمومية الإستشفائية بأولف<br>نظام رقمي لإدارة ومتابعة المسار المهني للموظفين</div><ul class="feature-list"><li>👤 إدخال ومتابعة البيانات الأساسية</li><li>⏳ متابعة الأقدمية والاستحقاق الزمني</li><li>🔔 التنبيهات الداخلية والمتابعة الإدارية</li></ul></div><div class="login-card">
+<div class="login-head"><h1>تسجيل الدخول</h1><p>الوصول الآمن إلى نظام إدارة الموظفين والمسار المهني</p></div>
+
+<div class="tabs">
+<button id="loginTab" class="tab active" type="button" onclick="showMode('login')">تسجيل الدخول</button>
+<button id="signupTab" class="tab" type="button" onclick="showMode('signup')">إنشاء حساب موظف</button>
 </div>
 
+<div id="message" class="message"></div><button id="resendBtn" type="button" class="main-btn hidden" style="margin-bottom:16px;background:linear-gradient(135deg,#C9A84A,#AA820A)" onclick="resendConfirmation()">إعادة إرسال رسالة تأكيد البريد</button>
 
-<!-- =====================================================
-     نافذة عن المنصة
-===================================================== -->
+<div id="loginPanel">
+<div class="login-types">
+<button type="button" id="employeeType" class="type-btn active" onclick="selectLoginType('employee')">دخول الموظف</button>
+<button type="button" id="adminType" class="type-btn" onclick="selectLoginType('admin')">دخول المسؤول</button>
+</div>
+<form onsubmit="login(event)">
+<div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="loginEmail" placeholder="example@email.com" autocomplete="email" required></div>
+<div class="form-group"><label>كلمة المرور</label><input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" autocomplete="current-password" required></div>
+<button id="loginBtn" class="main-btn" type="submit">تسجيل الدخول</button>
+</form>
+</div>
 
-<div
-  id="aboutOverlay"
-  class="about-overlay"
-  onclick="closeAbout(event)"
->
+<div id="signupPanel" class="hidden">
+<form onsubmit="signUp(event)">
+<div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="signupEmail" placeholder="example@email.com" autocomplete="email" required></div>
+<div class="form-group"><label>كلمة المرور</label><input type="password" id="signupPassword" placeholder="اختر كلمة مرور لا تقل عن 6 أحرف" minlength="6" autocomplete="new-password" required></div>
+<div class="form-group"><label>تأكيد كلمة المرور</label><input type="password" id="confirmPassword" placeholder="أعد كتابة كلمة المرور" minlength="6" autocomplete="new-password" required></div>
+<button id="signupBtn" class="main-btn" type="submit">إنشاء الحساب والانتقال لإدخال المعلومات</button>
+</form>
+</div>
 
-  <div
-    class="about-modal"
-    onclick="event.stopPropagation()"
-  >
+<button class="about-btn" type="button" onclick="openAbout()">ℹ️ عن المنصة والدعم</button><div class="footer">بعد إنشاء الحساب، يقوم الموظف بإدخال معلوماته بنفسه، وتبقى المراجعة والمتابعة للمسؤول.<div class="secure-note"><span class="secure-dot"></span> جلسة دخول محمية عبر نظام المصادقة</div></div>
+</div></div></div>
 
+<div id="aboutOverlay" class="about-overlay" onclick="closeAbout(event)">
+  <div class="about-modal" onclick="event.stopPropagation()">
     <div class="about-hero">
-
-      <button
-        type="button"
-        class="close-modal"
-        onclick="closeAbout()"
-        aria-label="إغلاق"
-      >
-        ×
-      </button>
-
-      <div
-        style="font-size:13px;opacity:.85;font-weight:700;margin-bottom:8px"
-      >
-        التعريف بالمنصة
-      </div>
-
-      <h2
-        style="margin:0 0 10px;font-size:30px"
-      >
-        منصة المسار المهني
-      </h2>
-
-      <p
-        style="margin:0;max-width:760px;line-height:1.9;font-size:15px;opacity:.95"
-      >
-        منظومة رقمية لمتابعة المسار المهني للموظف وتسهيل
-        التواصل الإداري، تجمع المعلومات المهنية والأقدمية
-        والطلبات والمراجعات والإشعارات في فضاء موحد.
-      </p>
-
+      <button type="button" onclick="closeAbout()" aria-label="إغلاق" style="position:absolute;left:22px;top:18px;border:0;background:rgba(255,255,255,.16);color:#fff;width:42px;height:42px;border-radius:50%;font-size:22px;cursor:pointer">×</button>
+      <div style="font-size:13px;opacity:.85;font-weight:700;margin-bottom:8px">التعريف بالمنصة</div>
+      <h2 style="margin:0 0 10px;font-size:30px">منصة المسار المهني</h2>
+      <p style="margin:0;max-width:760px;line-height:1.9;font-size:15px;opacity:.95">منظومة رقمية لمتابعة المسار المهني للموظف وتسهيل التواصل الإداري، تجمع المعلومات المهنية والأقدمية والطلبات والمراجعات والإشعارات في فضاء موحد.</p>
     </div>
-
-
-    <div class="about-content">
-
-      <div class="about-grid">
-
-        <div class="about-card">
-          <div class="about-icon">👤</div>
-          <h3>فضاء الموظف</h3>
-          <p>
-            متابعة البيانات المهنية، الأقدمية، الطلبات،
-            الإشعارات ونتائج دراسة المسؤول.
-          </p>
-        </div>
-
-
-        <div class="about-card">
-          <div class="about-icon">🏢</div>
-          <h3>فضاء المسؤول</h3>
-          <p>
-            إدارة الموظفين والطلبات، فتح الملفات، الدراسة،
-            الإجابة والأرشفة بطريقة منظمة.
-          </p>
-        </div>
-
-
-        <div class="about-card">
-          <div class="about-icon">☀️</div>
-          <h3>أقدمية الجنوب</h3>
-          <p>
-            عرض الأقدمية الفعلية والإضافية والمحتسبة،
-            مع إمكانية اعتماد النتيجة من المسؤول.
-          </p>
-        </div>
-
-
-        <div class="about-card">
-          <div class="about-icon">📥</div>
-          <h3>نظام الطلبات</h3>
-          <p>
-            طلبات مهيكلة ومختصرة بدل المراسلات الطويلة،
-            مع متابعة الحالة حتى المعالجة.
-          </p>
-        </div>
-
-
-        <div class="about-card">
-          <div class="about-icon">🔔</div>
-          <h3>الإشعارات</h3>
-          <p>
-            تنبيهات حول الطلبات الجديدة، طلب المعلومات،
-            انتهاء الدراسة وصدور الإجابة.
-          </p>
-        </div>
-
-
-        <div class="about-card">
-          <div class="about-icon">🔐</div>
-          <h3>الخصوصية والصلاحيات</h3>
-          <p>
-            فصل واضح بين وظائف الموظف وصلاحيات المسؤول
-            لحماية المعلومات المهنية.
-          </p>
-        </div>
-
+    <div style="padding:28px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+        <div class="about-card"><div class="about-icon">👤</div><h3>فضاء الموظف</h3><p>متابعة البيانات المهنية، الأقدمية، الطلبات، الإشعارات ونتائج دراسة المسؤول.</p></div>
+        <div class="about-card"><div class="about-icon">🏢</div><h3>فضاء المسؤول</h3><p>إدارة الموظفين والطلبات، فتح الملفات، الدراسة، الإجابة والأرشفة بطريقة منظمة.</p></div>
+        <div class="about-card"><div class="about-icon">☀️</div><h3>أقدمية الجنوب</h3><p>عرض الأقدمية الفعلية والإضافية والمحتسبة، مع إمكانية اعتماد النتيجة من المسؤول.</p></div>
+        <div class="about-card"><div class="about-icon">📥</div><h3>نظام الطلبات</h3><p>طلبات مهيكلة ومختصرة بدل المراسلات الطويلة، مع متابعة الحالة حتى المعالجة.</p></div>
+        <div class="about-card"><div class="about-icon">🔔</div><h3>الإشعارات</h3><p>تنبيهات حول الطلبات الجديدة، طلب المعلومات، انتهاء الدراسة وصدور الإجابة.</p></div>
+        <div class="about-card"><div class="about-icon">🔐</div><h3>الخصوصية والصلاحيات</h3><p>فصل واضح بين وظائف الموظف وصلاحيات المسؤول لحماية المعلومات المهنية.</p></div>
       </div>
-
-
-      <!-- الأهداف -->
-
-      <div class="about-goals">
-
-        <h3>🎯 أهداف المنصة</h3>
-
-        <div class="goal-grid">
-
-          <span>رقمنة الإجراءات المهنية</span>
-          <span>تنظيم المعلومات والطلبات</span>
-          <span>تسريع دراسة الطلبات</span>
-          <span>تسهيل متابعة الأقدمية</span>
-          <span>تحسين التواصل الإداري</span>
-          <span>الحفاظ على سجل منظم</span>
-
-        </div>
-
-      </div>
-
-
-      <!-- من الفكرة إلى المنصة -->
-
-      <div class="idea-section">
-
-        <div class="idea-label">
-          من الفكرة إلى الواقع
-        </div>
-
-        <h3>
-          💡 فكرة تتحول إلى مشروع رقمي
-        </h3>
-
-        <p>
-          لم تبدأ هذه المنصة كمجرد برنامج أو مجموعة من الصفحات،
-          بل بدأت بفكرة انطلقت من ملاحظة الحاجة إلى أسلوب أكثر
-          تنظيمًا ومرونة في متابعة المسار المهني للموظفين.
-          ثم تحولت هذه الفكرة تدريجيًا إلى تصور، ومن التصور
-          إلى تصميم، ومن التصميم إلى منصة رقمية قابلة للتطوير.
-        </p>
-
-        <p style="margin-top:10px">
-
-          وهي تجسيد لفكرة تؤمن بأن التطور الرقمي لا يقتصر
-          على استخدام التكنولوجيا، بل يبدأ من القدرة على
-          اكتشاف الحاجة، واقتراح الحل، ثم تحويل الفكرة إلى
-          واقع يمكن أن يخدم الإنسان والمؤسسة.
-        </p>
-
-        <div class="idea-highlight">
-          «فكرة تُبدع، وتقنية تُجسّد، ومنصة تصنع أثرًا.»
-        </div>
-
-      </div>
-
-
-      <div class="about-note">
-
-        المنصة أداة للمساعدة في المتابعة والحساب والتنظيم،
-        ولا تحل محل القرارات أو الإجراءات الإدارية والقانونية
-        المعتمدة من الجهة المختصة.
-
-      </div>
-
+      <div class="about-goals"><h3>🎯 أهداف المنصة</h3><div class="goal-grid"><span>رقمنة الإجراءات المهنية</span><span>تنظيم المعلومات والطلبات</span><span>تسريع دراسة الطلبات</span><span>تسهيل متابعة الأقدمية</span><span>تحسين التواصل الإداري</span><span>الحفاظ على سجل منظم</span></div></div>
+      <div class="about-note">المنصة أداة للمساعدة في المتابعة والحساب والتنظيم، ولا تحل محل القرارات أو الإجراءات الإدارية والقانونية المعتمدة من الجهة المختصة.</div>
+      <div class="platform-contact" style="margin-top:18px;padding:18px;border:1px solid #E8E1EF;border-radius:16px;background:#FBF9FD"><h3 style="margin:0 0 12px;color:#5A4572">👨‍💻 معلومات مسؤول المنصة والمبرمج</h3><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px"><div><small style="display:block;color:#91869A;font-size:10px">الاسم</small><strong>بن صغير منير</strong></div><div><small style="display:block;color:#91869A;font-size:10px">بالإنجليزية</small><strong>Benseghir Mounir</strong></div><div><small style="display:block;color:#91869A;font-size:10px">الصفة</small><strong>رئيس مكتب التكوين</strong></div><div><small style="display:block;color:#91869A;font-size:10px">المؤسسة</small><strong>المؤسسة العمومية الإستشفائية بأولف</strong></div><div><small style="display:block;color:#91869A;font-size:10px">الهاتف</small><strong><a href="tel:0660484373" style="color:inherit;text-decoration:none">0660.48.43.73</a></strong></div><div><small style="display:block;color:#91869A;font-size:10px">البريد الإلكتروني</small><strong><a href="mailto:bfmounir@gmail.com" style="color:inherit;text-decoration:none">bfmounir@gmail.com</a></strong></div><div style="grid-column:1/-1"><small style="display:block;color:#91869A;font-size:10px">الدور في المنصة</small><strong>مسؤول المنصة ومبرمجها</strong></div></div></div>
     </div>
-
   </div>
-
 </div>
-
-
-<!-- =====================================================
-     نافذة المبرمج وصاحب الفكرة
-===================================================== -->
-
-<div
-  id="developerOverlay"
-  class="about-overlay"
-  onclick="closeDeveloper(event)"
->
-
-  <div
-    class="about-modal"
-    onclick="event.stopPropagation()"
-  >
-
-    <div class="about-hero developer-hero">
-
-      <button
-        type="button"
-        class="close-modal"
-        onclick="closeDeveloper()"
-        aria-label="إغلاق"
-      >
-        ×
-      </button>
-
-
-      <div class="developer-avatar">
-        👨‍💻
-      </div>
-
-
-      <h2>
-        المبرمج وصاحب فكرة المنصة
-      </h2>
-
-      <p>
-        من الفكرة إلى التصميم والتطوير
-      </p>
-
-    </div>
-
-
-    <div class="about-content">
-
-
-      <!-- معلومات صاحب الفكرة -->
-
-      <div class="developer-card">
-
-        <div class="developer-info-grid">
-
-
-          <div class="developer-info">
-
-            <small>الاسم</small>
-
-            <strong>
-              بن صغير منير
-            </strong>
-
-          </div>
-
-
-          <div class="developer-info">
-
-            <small>بالإنجليزية</small>
-
-            <strong>
-              Benseghir Mounir
-            </strong>
-
-          </div>
-
-
-          <div class="developer-info">
-
-            <small>الصفة</small>
-
-            <strong>
-              رئيس مكتب التكوين
-            </strong>
-
-          </div>
-
-
-          <div class="developer-info">
-
-            <small>المؤسسة</small>
-
-            <strong>
-              المؤسسة العمومية الإستشفائية بأولف
-            </strong>
-
-          </div>
-
-
-          <div class="developer-info">
-
-            <small>الهاتف</small>
-
-            <strong>
-              <a href="tel:0660484373">
-                0660.48.43.73
-              </a>
-            </strong>
-
-          </div>
-
-
-          <div class="developer-info">
-
-            <small>البريد الإلكتروني</small>
-
-            <strong>
-              <a href="mailto:bfmounir@gmail.com">
-                bfmounir@gmail.com
-              </a>
-            </strong>
-
-          </div>
-
-
-          <div
-            class="developer-info"
-            style="grid-column:1/-1"
-          >
-
-            <small>
-              الدور في المنصة
-            </small>
-
-            <strong>
-              صاحب فكرة المنصة ومسؤولها ومبرمجها
-            </strong>
-
-          </div>
-
-
-        </div>
-
-      </div>
-
-
-      <!-- الرسالة الفكرية -->
-
-      <div class="innovation-box">
-
-        <div class="innovation-icon">
-          💡
-        </div>
-
-        <h3>
-          من أين بدأت الفكرة؟
-        </h3>
-
-        <p>
-
-          انطلقت فكرة المنصة من قناعة بأن الموارد البشرية
-          تمثل أحد أهم عناصر نجاح أي مؤسسة، وأن الرقمنة يمكن
-          أن تمنحها أدوات أكثر تنظيمًا ووضوحًا وفعالية.
-
-        </p>
-
-        <p style="margin-top:9px">
-
-          لذلك جاءت الفكرة لتوظيف الإمكانات الرقمية في
-          خدمة الموظف والمسؤول، وتحويل جزء من الإجراءات
-          والمتابعة المهنية إلى فضاء رقمي منظم قابل للتطوير
-          والتوسع مستقبلًا.
-
-        </p>
-
-
-        <div class="innovation-quote">
-
-          «الإبداع الحقيقي هو أن ترى الحاجة،
-          وتولد الفكرة، ثم تملك الإرادة لتحويلها إلى واقع.»
-
-        </div>
-
-      </div>
-
-
-      <!-- الرؤية المستقبلية -->
-
-      <div class="idea-section">
-
-        <div class="idea-label">
-          الرؤية
-        </div>
-
-        <h3>
-          🚀 نحو موارد بشرية أكثر رقمية
-        </h3>
-
-        <p>
-
-          لا تهدف المنصة إلى أن تكون مجرد أداة لتخزين
-          المعلومات، وإنما تسعى إلى أن تكون نواة لتطوير
-          أساليب تسيير الموارد البشرية، والاستفادة من
-          التحول الرقمي في تحسين المتابعة، تنظيم المعلومات،
-          تسهيل الإجراءات، ودعم اتخاذ القرار الإداري.
-
-        </p>
-
-        <p style="margin-top:10px">
-
-          ومع تطور التكنولوجيا، يمكن أن تتوسع هذه الرؤية
-          مستقبلًا لتشمل أدوات أكثر ذكاءً تساعد المؤسسة
-          والموظف على حد سواء.
-
-        </p>
-
-        <div class="idea-highlight">
-
-          «حين تتحول الفكرة إلى تقنية،
-          يصبح الابتكار وسيلة لصناعة أثر حقيقي.»
-
-        </div>
-
-      </div>
-
-
-    </div>
-
-  </div>
-
-</div>
-
 
 <script>
 (function(){
-
-  /* =====================================================
-     Supabase
-  ===================================================== */
-
-  const client =
-    window.db ||
-    window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
-
+  // عميل محلي داخل نطاق مغلق لتجنب أي تعارض مع config.js أو الصفحات الأخرى.
+  const client = window.db || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   let loginType = "employee";
 
-
-  /* =====================================================
-     تبديل وضع الدخول / التسجيل
-  ===================================================== */
-
   function showMode(mode){
-
     clearMessage();
-
-    document
-      .getElementById("loginPanel")
-      .classList
-      .toggle("hidden", mode !== "login");
-
-    document
-      .getElementById("signupPanel")
-      .classList
-      .toggle("hidden", mode !== "signup");
-
-    document
-      .getElementById("loginTab")
-      .classList
-      .toggle("active", mode === "login");
-
-    document
-      .getElementById("signupTab")
-      .classList
-      .toggle("active", mode === "signup");
+    document.getElementById("loginPanel").classList.toggle("hidden", mode !== "login");
+    document.getElementById("signupPanel").classList.toggle("hidden", mode !== "signup");
+    document.getElementById("loginTab").classList.toggle("active", mode === "login");
+    document.getElementById("signupTab").classList.toggle("active", mode === "signup");
   }
-
-
-  /* =====================================================
-     نوع الدخول
-  ===================================================== */
 
   function selectLoginType(type){
-
     loginType = type;
-
-    document
-      .getElementById("employeeType")
-      .classList
-      .toggle("active", type === "employee");
-
-    document
-      .getElementById("adminType")
-      .classList
-      .toggle("active", type === "admin");
-
+    document.getElementById("employeeType").classList.toggle("active", type === "employee");
+    document.getElementById("adminType").classList.toggle("active", type === "admin");
     clearMessage();
   }
-
-
-  /* =====================================================
-     الرسائل
-  ===================================================== */
 
   function showError(t){
-
-    const m =
-      document.getElementById("message");
-
-    m.className =
-      "message error";
-
+    const m = document.getElementById("message");
+    m.className = "message error";
     m.textContent = t;
   }
-
 
   function showSuccess(t){
-
-    const m =
-      document.getElementById("message");
-
-    m.className =
-      "message success";
-
+    const m = document.getElementById("message");
+    m.className = "message success";
     m.textContent = t;
   }
 
-
   function clearMessage(){
-
-    const m =
-      document.getElementById("message");
-
-    m.className =
-      "message";
-
+    const m = document.getElementById("message");
+    m.className = "message";
     m.textContent = "";
-
-    const r =
-      document.getElementById("resendBtn");
-
-    if(r){
-      r.classList.add("hidden");
-    }
+    const r=document.getElementById("resendBtn"); if(r)r.classList.add("hidden");
   }
-
-
-  /* =====================================================
-     تسجيل الدخول
-  ===================================================== */
 
   async function login(event){
-
     event.preventDefault();
-
     clearMessage();
-
-    const email =
-      document
-        .getElementById("loginEmail")
-        .value
-        .trim();
-
-    const password =
-      document
-        .getElementById("loginPassword")
-        .value;
-
-    const btn =
-      document.getElementById("loginBtn");
-
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    const btn = document.getElementById("loginBtn");
     btn.disabled = true;
-
-    btn.textContent =
-      "جاري تسجيل الدخول...";
-
-
+    btn.textContent = "جاري تسجيل الدخول...";
     try{
+      const {data, error} = await client.auth.signInWithPassword({email, password});
+      if(error) throw error;
+      // التحقق من صلاحية المسؤول من جدول user_roles، مع إبقاء employees
+      // كمصدر احتياطي للتوافق مع الحسابات القديمة.
+      const {data: roleRow, error: roleError} = await client
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", data.user.id)
+        .maybeSingle();
+      if(roleError) console.warn("تعذر قراءة user_roles:", roleError);
 
-      const {
-        data,
-        error
-      } =
-        await client.auth.signInWithPassword({
-          email,
-          password
-        });
+      const {data: profile, error: profileError} = await client
+        .from("employees")
+        .select("role")
+        .eq("user_id", data.user.id)
+        .maybeSingle();
+      if(profileError) console.warn("تعذر قراءة دور الموظف:", profileError);
 
-
-      if(error){
-        throw error;
-      }
-
-
-      /* التحقق من صلاحيات المسؤول */
-
-      const {
-        data:roleRow,
-        error:roleError
-      } =
-        await client
-          .from("user_roles")
-          .select("role")
-          .eq("user_id",data.user.id)
-          .maybeSingle();
-
-
-      if(roleError){
-        console.warn(
-          "تعذر قراءة user_roles:",
-          roleError
-        );
-      }
-
-
-      /* المصدر الاحتياطي */
-
-      const {
-        data:profile,
-        error:profileError
-      } =
-        await client
-          .from("employees")
-          .select("role")
-          .eq("user_id",data.user.id)
-          .maybeSingle();
-
-
-      if(profileError){
-
-        console.warn(
-          "تعذر قراءة دور الموظف:",
-          profileError
-        );
-
-      }
-
-
-      const isAdmin =
-        roleRow?.role === "admin" ||
-        roleRow?.role === "manager" ||
-        profile?.role === "admin";
-
+      const isAdmin = roleRow?.role === "admin" || roleRow?.role === "manager" || profile?.role === "admin";
 
       if(loginType === "admin"){
-
         if(!isAdmin){
-
           await client.auth.signOut();
-
-          showError(
-            "هذا الحساب ليس لديه صلاحيات المسؤول."
-          );
-
+          showError("هذا الحساب ليس لديه صلاحيات المسؤول.");
           return;
         }
-
-
-        location.href =
-          "./admin.html";
-
+        location.href = "./admin.html";
         return;
       }
-
 
       if(isAdmin){
-
         await client.auth.signOut();
-
-        showError(
-          "هذا حساب مسؤول. اختر دخول المسؤول."
-        );
-
+        showError("هذا حساب مسؤول. اختر دخول المسؤول.");
         return;
       }
 
-
-      location.href =
-        "./employees.html";
-
-    }
-
-
-    catch(e){
-
+      location.href = "./employees.html";
+    }catch(e){
       console.error(e);
-
-      showError(
-        e.message?.includes(
-          "Invalid login credentials"
-        )
-        ?
-        "البريد الإلكتروني أو كلمة المرور غير صحيحة."
-        :
-        (
-          e.message ||
-          "حدث خطأ أثناء تسجيل الدخول."
-        )
-      );
-
-    }
-
-
-    finally{
-
+      showError(e.message?.includes("Invalid login credentials")
+        ? "البريد الإلكتروني أو كلمة المرور غير صحيحة."
+        : (e.message || "حدث خطأ أثناء تسجيل الدخول."));
+    }finally{
       btn.disabled = false;
-
-      btn.textContent =
-        "تسجيل الدخول";
+      btn.textContent = "تسجيل الدخول";
     }
   }
-
-
-  /* =====================================================
-     إنشاء الحساب
-  ===================================================== */
 
   async function signUp(event){
-
     event.preventDefault();
-
     clearMessage();
-
-    const email =
-      document
-        .getElementById("signupEmail")
-        .value
-        .trim();
-
-    const password =
-      document
-        .getElementById("signupPassword")
-        .value;
-
-    const confirmPassword =
-      document
-        .getElementById("confirmPassword")
-        .value;
-
-
+    const email = document.getElementById("signupEmail").value.trim();
+    const password = document.getElementById("signupPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
     if(password !== confirmPassword){
-
-      showError(
-        "كلمتا المرور غير متطابقتين."
-      );
-
+      showError("كلمتا المرور غير متطابقتين.");
       return;
     }
-
-
-    const btn =
-      document.getElementById("signupBtn");
-
+    const btn = document.getElementById("signupBtn");
     btn.disabled = true;
-
-    btn.textContent =
-      "جاري إنشاء الحساب...";
-
-
+    btn.textContent = "جاري إنشاء الحساب...";
     try{
-
-      const {
-        data,
-        error
-      } =
-        await client.auth.signUp({
-          email,
-          password
-        });
-
-
-      if(error){
-        throw error;
-      }
-
-
+      const {data, error} = await client.auth.signUp({email, password});
+      if(error) throw error;
       if(data.session){
-
-        location.href =
-          "./employees.html";
-
+        location.href = "./employees.html";
         return;
       }
-
-
-      showSuccess(
-        "تم إنشاء الحساب بنجاح. تحقق من بريدك الإلكتروني واضغط رابط التأكيد قبل تسجيل الدخول. إذا لم تصل الرسالة، يمكنك إعادة إرسالها."
-      );
-
-
-      const resend =
-        document.getElementById("resendBtn");
-
-      if(resend){
-        resend.classList.remove("hidden");
-      }
-
-
+      showSuccess("تم إنشاء الحساب بنجاح. تحقق من بريدك الإلكتروني واضغط رابط التأكيد قبل تسجيل الدخول. إذا لم تصل الرسالة، يمكنك إعادة إرسالها.");
+      const resend=document.getElementById("resendBtn"); if(resend)resend.classList.remove("hidden");
       showMode("login");
-
-      document
-        .getElementById("loginEmail")
-        .value = email;
-
-    }
-
-
-    catch(e){
-
+      document.getElementById("loginEmail").value = email;
+    }catch(e){
       console.error(e);
-
-      showError(
-        e.message ||
-        "تعذر إنشاء الحساب."
-      );
-
-    }
-
-
-    finally{
-
+      showError(e.message || "تعذر إنشاء الحساب.");
+    }finally{
       btn.disabled = false;
-
-      btn.textContent =
-        "إنشاء الحساب والانتقال لإدخال المعلومات";
+      btn.textContent = "إنشاء الحساب والانتقال لإدخال المعلومات";
     }
   }
-
-
-  /* =====================================================
-     إعادة إرسال التأكيد
-  ===================================================== */
 
   async function resendConfirmation(){
-
     clearMessage();
-
-    const email =
-      document
-        .getElementById("loginEmail")
-        .value
-        .trim()
-      ||
-      document
-        .getElementById("signupEmail")
-        .value
-        .trim();
-
-
-    if(!email){
-
-      showError(
-        "أدخل البريد الإلكتروني أولًا."
-      );
-
-      return;
-    }
-
-
-    const btn =
-      document.getElementById("resendBtn");
-
-    btn.disabled = true;
-
-    btn.textContent =
-      "جاري إرسال الرسالة...";
-
-
-    try{
-
-      const {error} =
-        await client.auth.resend({
-          type:"signup",
-          email
-        });
-
-
-      if(error){
-        throw error;
-      }
-
-
-      showSuccess(
-        "تمت إعادة إرسال رسالة تأكيد البريد. افحص البريد الوارد ومجلد الرسائل غير المرغوب فيها."
-      );
-
-    }
-
-
-    catch(e){
-
-      showError(
-        e.message ||
-        "تعذر إعادة إرسال رسالة التأكيد."
-      );
-
-    }
-
-
-    finally{
-
-      btn.disabled = false;
-
-      btn.textContent =
-        "إعادة إرسال رسالة تأكيد البريد";
-    }
+    const email=document.getElementById("loginEmail").value.trim()||document.getElementById("signupEmail").value.trim();
+    if(!email){showError("أدخل البريد الإلكتروني أولًا.");return;}
+    const btn=document.getElementById("resendBtn");btn.disabled=true;btn.textContent="جاري إرسال الرسالة...";
+    try{const {error}=await client.auth.resend({type:"signup",email});if(error)throw error;showSuccess("تمت إعادة إرسال رسالة تأكيد البريد. افحص البريد الوارد ومجلد الرسائل غير المرغوب فيها.");}
+    catch(e){showError(e.message||"تعذر إعادة إرسال رسالة التأكيد.");}
+    finally{btn.disabled=false;btn.textContent="إعادة إرسال رسالة تأكيد البريد";}
   }
-
-
-  /* =====================================================
-     التحقق من الجلسة الحالية
-  ===================================================== */
 
   async function checkExistingSession(){
-
     try{
+      const {data} = await client.auth.getSession();
+      const session = data?.session;
+      if(!session?.user) return;
+      // نتحقق من جدول user_roles أولاً لأنه المصدر الأساسي لصلاحيات المسؤول.
+      // جدول employees يبقى مصدرًا احتياطيًا للحسابات القديمة فقط.
+      const {data: roleRow, error: roleError} = await client
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .maybeSingle();
+      if(roleError) console.warn("تعذر قراءة user_roles أثناء استعادة الجلسة:", roleError);
 
-      const {data} =
-        await client.auth.getSession();
+      const {data: profile, error: profileError} = await client
+        .from("employees")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .maybeSingle();
+      if(profileError) console.warn("تعذر قراءة دور الموظف أثناء استعادة الجلسة:", profileError);
 
-      const session =
-        data?.session;
-
-
-      if(!session?.user){
-        return;
-      }
-
-
-      const {
-        data:roleRow,
-        error:roleError
-      } =
-        await client
-          .from("user_roles")
-          .select("role")
-          .eq(
-            "user_id",
-            session.user.id
-          )
-          .maybeSingle();
-
-
-      if(roleError){
-
-        console.warn(
-          "تعذر قراءة user_roles أثناء استعادة الجلسة:",
-          roleError
-        );
-
-      }
-
-
-      const {
-        data:profile,
-        error:profileError
-      } =
-        await client
-          .from("employees")
-          .select("role")
-          .eq(
-            "user_id",
-            session.user.id
-          )
-          .maybeSingle();
-
-
-      if(profileError){
-
-        console.warn(
-          "تعذر قراءة دور الموظف أثناء استعادة الجلسة:",
-          profileError
-        );
-
-      }
-
-
-      const isAdmin =
-        roleRow?.role === "admin" ||
-        roleRow?.role === "manager" ||
-        profile?.role === "admin";
-
-
-      location.href =
-        isAdmin
-        ? "./admin.html"
-        : "./employees.html";
-
-    }
-
-
-    catch(e){
-
+      const isAdmin = roleRow?.role === "admin" || roleRow?.role === "manager" || profile?.role === "admin";
+      location.href = isAdmin ? "./admin.html" : "./employees.html";
+    }catch(e){
       console.error(e);
-
     }
   }
 
-
-  /* =====================================================
-     نافذة عن المنصة
-  ===================================================== */
-
-  function openAbout(){
-
-    const overlay =
-      document.getElementById(
-        "aboutOverlay"
-      );
-
-    if(!overlay){
-      return;
-    }
-
-    closeDeveloper();
-
-    overlay.classList.add("open");
-
-    document.body.style.overflow =
-      "hidden";
-  }
-
-
-  function closeAbout(event){
-
-    if(
-      event &&
-      event.target &&
-      event.target.id !== "aboutOverlay"
-    ){
-      return;
-    }
-
-
-    const overlay =
-      document.getElementById(
-        "aboutOverlay"
-      );
-
-    if(!overlay){
-      return;
-    }
-
-    overlay.classList.remove("open");
-
-    document.body.style.overflow =
-      "";
-  }
-
-
-  /* =====================================================
-     نافذة المبرمج
-  ===================================================== */
-
-  function openDeveloper(){
-
-    const overlay =
-      document.getElementById(
-        "developerOverlay"
-      );
-
-    if(!overlay){
-      return;
-    }
-
-    closeAbout();
-
-    overlay.classList.add("open");
-
-    document.body.style.overflow =
-      "hidden";
-  }
-
-
-  function closeDeveloper(event){
-
-    if(
-      event &&
-      event.target &&
-      event.target.id !== "developerOverlay"
-    ){
-      return;
-    }
-
-
-    const overlay =
-      document.getElementById(
-        "developerOverlay"
-      );
-
-    if(!overlay){
-      return;
-    }
-
-    overlay.classList.remove("open");
-
-    document.body.style.overflow =
-      "";
-  }
-
-
-  /* =====================================================
-     زر Escape
-  ===================================================== */
-
-  document.addEventListener(
-    "keydown",
-    function(event){
-
-      if(event.key === "Escape"){
-
-        closeAbout();
-
-        closeDeveloper();
-
-      }
-
-    }
-  );
-
-
-  /* =====================================================
-     تعريض الدوال للـ HTML
-  ===================================================== */
-
-  window.showMode =
-    showMode;
-
-  window.selectLoginType =
-    selectLoginType;
-
-  window.login =
-    login;
-
-  window.signUp =
-    signUp;
-
-  window.resendConfirmation =
-    resendConfirmation;
-
-  window.openAbout =
-    openAbout;
-
-  window.closeAbout =
-    closeAbout;
-
-  window.openDeveloper =
-    openDeveloper;
-
-  window.closeDeveloper =
-    closeDeveloper;
-
-
-  /* =====================================================
-     فحص الجلسة
-  ===================================================== */
+  // الدوال التالية تُعرّض فقط للـ HTML inline handlers، بينما يبقى عميل Supabase محلياً.
+  window.showMode = showMode;
+  window.selectLoginType = selectLoginType;
+  window.login = login;
+  window.signUp = signUp;
+  window.resendConfirmation = resendConfirmation;
 
   checkExistingSession();
-
 })();
 </script>
 
-
-<!-- =====================================================
-     PWA Install Banner
-===================================================== -->
-
-<div
-  id="pwaInstallBanner"
-  class="pwa-install-banner"
-  hidden
->
-
-  <div class="pwa-install-icon">
-
-    <img
-      src="./logo%20(2).png"
-      alt="شعار منصة المسار المهني"
-    >
-
-  </div>
-
-
+<!-- PWA Install Banner -->
+<div id="pwaInstallBanner" class="pwa-install-banner" hidden>
+  <div class="pwa-install-icon"><img src="./logo%20(2).png" alt="شعار منصة المسار المهني"></div>
   <div class="pwa-install-content">
-
-    <strong>
-      ثبّت منصة المسار المهني
-    </strong>
-
-    <span>
-      أضف المنصة إلى هاتفك للوصول إليها بسرعة من الشاشة الرئيسية.
-    </span>
-
+    <strong>ثبّت منصة المسار المهني</strong>
+    <span>أضف المنصة إلى هاتفك للوصول إليها بسرعة من الشاشة الرئيسية.</span>
   </div>
-
-
-  <button
-    id="pwaInstallBtn"
-    type="button"
-  >
-    تثبيت التطبيق
-  </button>
-
-
-  <button
-    id="pwaInstallClose"
-    class="pwa-install-close"
-    type="button"
-    aria-label="إغلاق"
-  >
-    ×
-  </button>
-
+  <button id="pwaInstallBtn" type="button">تثبيت التطبيق</button>
+  <button id="pwaInstallClose" class="pwa-install-close" type="button" aria-label="إغلاق">×</button>
 </div>
-
-
+<style>
+.pwa-install-banner{position:fixed;z-index:99999;right:18px;left:18px;bottom:18px;max-width:620px;margin:auto;display:flex;align-items:center;gap:13px;padding:14px 16px;border:1px solid rgba(109,74,255,.18);border-radius:20px;background:rgba(255,255,255,.97);box-shadow:0 18px 50px rgba(25,20,60,.20);backdrop-filter:blur(14px);font-family:Cairo,Arial,sans-serif;direction:rtl}.pwa-install-banner[hidden]{display:none!important}.pwa-install-icon{width:52px;height:52px;flex:0 0 52px;border-radius:15px;overflow:hidden;background:#f5f2ff;display:grid;place-items:center;border:1px solid rgba(109,74,255,.12)}.pwa-install-icon img{width:100%;height:100%;object-fit:contain}.pwa-install-content{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.pwa-install-content strong{font-size:15px;color:#241d4f}.pwa-install-content span{font-size:12px;line-height:1.6;color:#6b6780}.pwa-install-banner button#pwaInstallBtn{border:0;border-radius:12px;padding:10px 15px;background:#6d4aff;color:#fff;font-family:inherit;font-weight:700;cursor:pointer;white-space:nowrap}.pwa-install-banner button#pwaInstallBtn:hover{filter:brightness(.96)}.pwa-install-close{width:32px;height:32px;border:0;background:transparent;color:#777;font-size:22px;line-height:1;cursor:pointer;padding:0}.pwa-ios-note{position:fixed;z-index:99998;right:18px;left:18px;bottom:18px;max-width:560px;margin:auto;padding:14px 16px;border-radius:18px;background:#241d4f;color:#fff;font-family:Cairo,Arial,sans-serif;direction:rtl;box-shadow:0 18px 50px rgba(25,20,60,.25);font-size:13px;line-height:1.8}.pwa-ios-note button{float:left;border:0;background:transparent;color:#fff;font-size:20px;cursor:pointer}
+@media(max-width:600px){.pwa-install-banner{right:10px;left:10px;bottom:10px;padding:12px}.pwa-install-icon{width:46px;height:46px;flex-basis:46px}.pwa-install-content strong{font-size:13px}.pwa-install-content span{font-size:11px}.pwa-install-banner button#pwaInstallBtn{padding:9px 11px;font-size:12px}}
+</style>
 <script>
-
 (function(){
-
-  const swPath =
-    "./sw.js";
-
-
-  if("serviceWorker" in navigator){
-
-    window.addEventListener(
-      "load",
-      () =>
-        navigator.serviceWorker
-          .register(
-            swPath,
-            {scope:"./"}
-          )
-          .catch(()=>{})
-    );
-
+  const swPath='./sw.js';
+  if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>navigator.serviceWorker.register(swPath,{scope:'./'}).catch(()=>{}));
   }
-
-
-  let deferredPrompt = null;
-
-
-  const banner =
-    () =>
-      document.getElementById(
-        "pwaInstallBanner"
-      );
-
-
-  const installBtn =
-    () =>
-      document.getElementById(
-        "pwaInstallBtn"
-      );
-
-
-  const closeBtn =
-    () =>
-      document.getElementById(
-        "pwaInstallClose"
-      );
-
-
-  const isStandalone =
-    () =>
-      window.matchMedia(
-        "(display-mode: standalone)"
-      ).matches
-      ||
-      window.navigator.standalone === true;
-
-
-  const wasDismissed =
-    () => {
-
-      try{
-
-        return (
-          sessionStorage.getItem(
-            "pwaInstallDismissed"
-          ) === "1"
-        );
-
-      }
-
-      catch(e){
-
-        return false;
-
-      }
-
-    };
-
-
-  const show =
-    () => {
-
-      if(
-        !isStandalone() &&
-        !wasDismissed() &&
-        banner()
-      ){
-
-        banner().hidden = false;
-
-      }
-
-    };
-
-
-  const hide =
-    () => {
-
-      if(banner()){
-
-        banner().hidden = true;
-
-      }
-
-    };
-
-
-  window.addEventListener(
-    "beforeinstallprompt",
-    e => {
-
-      e.preventDefault();
-
-      deferredPrompt = e;
-
-      show();
-
+  let deferredPrompt=null;
+  const banner=()=>document.getElementById('pwaInstallBanner');
+  const installBtn=()=>document.getElementById('pwaInstallBtn');
+  const closeBtn=()=>document.getElementById('pwaInstallClose');
+  const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+  const wasDismissed=()=>{try{return sessionStorage.getItem('pwaInstallDismissed')==='1'}catch(e){return false}};
+  const show=()=>{if(!isStandalone()&&!wasDismissed()&&banner()) banner().hidden=false};
+  const hide=()=>{if(banner()) banner().hidden=true};
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;show()});
+  window.addEventListener('appinstalled',()=>{deferredPrompt=null;hide()});
+  document.addEventListener('click',e=>{
+    if(e.target && e.target.id==='pwaInstallBtn'){
+      if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.finally(()=>{deferredPrompt=null;hide()})}
+      else {showIOSHint()}
     }
-  );
-
-
-  window.addEventListener(
-    "appinstalled",
-    () => {
-
-      deferredPrompt = null;
-
-      hide();
-
-    }
-  );
-
-
-  document.addEventListener(
-    "click",
-    e => {
-
-      if(
-        e.target &&
-        e.target.id ===
-        "pwaInstallBtn"
-      ){
-
-        if(deferredPrompt){
-
-          deferredPrompt
-            .prompt();
-
-          deferredPrompt
-            .userChoice
-            .finally(
-              () => {
-
-                deferredPrompt = null;
-
-                hide();
-
-              }
-            );
-
-        }
-        else{
-
-          showIOSHint();
-
-        }
-
-      }
-
-
-      if(
-        e.target &&
-        e.target.id ===
-        "pwaInstallClose"
-      ){
-
-        try{
-
-          sessionStorage.setItem(
-            "pwaInstallDismissed",
-            "1"
-          );
-
-        }
-
-        catch(err){}
-
-        hide();
-
-      }
-
-    }
-  );
-
-
+    if(e.target && e.target.id==='pwaInstallClose'){try{sessionStorage.setItem('pwaInstallDismissed','1')}catch(err){} hide()}
+  });
   function showIOSHint(){
-
-    if(
-      !/iphone|ipad|ipod/i.test(
-        navigator.userAgent
-      )
-    ){
-
-      return;
-
-    }
-
-
-    if(
-      document.getElementById(
-        "pwaIosNote"
-      )
-    ){
-
-      return;
-
-    }
-
-
-    const n =
-      document.createElement(
-        "div"
-      );
-
-
-    n.id =
-      "pwaIosNote";
-
-    n.className =
-      "pwa-ios-note";
-
-
-    n.innerHTML =
-      '<button aria-label="إغلاق">×</button>' +
-      '<strong>لتثبيت المنصة على iPhone</strong><br>' +
-      'اضغط على زر المشاركة ثم اختر ' +
-      '<b>إضافة إلى الشاشة الرئيسية</b>.';
-
-
-    n.querySelector(
-      "button"
-    ).onclick =
-      () => n.remove();
-
-
-    document.body.appendChild(n);
-
+    if(!/iphone|ipad|ipod/i.test(navigator.userAgent)) return;
+    if(document.getElementById('pwaIosNote')) return;
+    const n=document.createElement('div');n.id='pwaIosNote';n.className='pwa-ios-note';
+    n.innerHTML='<button aria-label="إغلاق">×</button><strong>لتثبيت المنصة على iPhone</strong><br>اضغط على زر المشاركة ثم اختر <b>إضافة إلى الشاشة الرئيسية</b>.';
+    n.querySelector('button').onclick=()=>n.remove();document.body.appendChild(n);
   }
-
-
-  window.addEventListener(
-    "load",
-    () =>
-      setTimeout(
-        () => {
-
-          if(
-            !isStandalone() &&
-            !wasDismissed() &&
-            /Android/i.test(
-              navigator.userAgent
-            )
-          ){
-
-            show();
-
-          }
-
-        },
-        1200
-      )
-  );
-
+  window.addEventListener('load',()=>setTimeout(()=>{if(!isStandalone()&&!wasDismissed()&&/Android/i.test(navigator.userAgent))show()},1200));
 })();
-
 </script>
 
 </body>
