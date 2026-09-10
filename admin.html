@@ -10,9 +10,14 @@
 
 <title>منصة المسار المهني</title>
 
+<!-- =========================================================
+     Supabase
+========================================================= -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="config.js"></script>
+
 
 <style>
 
@@ -50,7 +55,11 @@ body{
 
 body{
   margin:0;
-  font-family:Arial,Tahoma,sans-serif;
+
+  font-family:
+    Arial,
+    Tahoma,
+    sans-serif;
 
   background:
     radial-gradient(
@@ -63,7 +72,9 @@ body{
   min-height:100vh;
 
   display:flex;
+
   align-items:center;
+
   justify-content:center;
 
   color:#302537;
@@ -99,7 +110,8 @@ body:before{
   width:360px;
   height:360px;
 
-  background:rgba(111,82,163,.08);
+  background:
+    rgba(111,82,163,.08);
 
   top:-150px;
   right:-100px;
@@ -109,7 +121,8 @@ body:after{
   width:300px;
   height:300px;
 
-  background:rgba(201,168,74,.08);
+  background:
+    rgba(201,168,74,.08);
 
   bottom:-130px;
   left:-100px;
@@ -122,6 +135,7 @@ body:after{
 
 .login-container{
   width:100%;
+
   max-width:980px;
 
   position:relative;
@@ -135,18 +149,22 @@ body:after{
   grid-template-columns:
     1fr 1.08fr;
 
-  background:rgba(255,255,255,.88);
+  background:
+    rgba(255,255,255,.88);
 
   backdrop-filter:blur(16px);
 
-  border:1px solid rgba(212,175,55,.20);
+  border:
+    1px solid
+    rgba(212,175,55,.20);
 
   border-radius:30px;
 
   overflow:hidden;
 
   box-shadow:
-    0 25px 70px rgba(74,55,105,.11);
+    0 25px 70px
+    rgba(74,55,105,.11);
 }
 
 
@@ -168,7 +186,9 @@ body:after{
   color:#fff;
 
   display:flex;
+
   flex-direction:column;
+
   justify-content:center;
 
   position:relative;
@@ -189,6 +209,7 @@ body:after{
   border-radius:50%;
 
   left:-90px;
+
   bottom:-80px;
 }
 
@@ -203,17 +224,20 @@ body:after{
       135deg,
       var(--brand-gold),
       #AA820A
-    ) !important;
+    );
 
   border:
     1px solid
-    rgba(255,255,255,.3) !important;
+    rgba(255,255,255,.3);
 
   display:flex;
+
   align-items:center;
+
   justify-content:center;
 
   font-size:36px;
+
   font-weight:800;
 
   margin-bottom:24px;
@@ -342,7 +366,9 @@ body:after{
 
   background:#F3EEF6;
 
-  border:1px solid #EADFF0;
+  border:
+    1px solid
+    #EADFF0;
 
   border-radius:14px;
 
@@ -433,9 +459,11 @@ body:after{
 .type-btn.active{
   background:#F7F0D8;
 
-  color:var(--brand-purple);
+  color:
+    var(--brand-purple);
 
-  border-color:var(--brand-gold);
+  border-color:
+    var(--brand-gold);
 }
 
 
@@ -654,7 +682,7 @@ input:focus{
 
 
 /* =========================================================
-   زر عن المنصة
+   زر عن المنصة والدعم
 ========================================================= */
 
 .about-btn{
@@ -712,580 +740,429 @@ input:focus{
     rgba(201,168,74,.16);
 }
 
-<!-- =======================================================
-     نافذة معلومات المنصة والدعم
-======================================================= -->
-
-<div
-  id="aboutOverlay"
-  class="about-overlay"
-  aria-hidden="true">
-
-  <div class="about-modal">
-
-    <!-- رأس النافذة -->
-    <div class="about-hero">
-
-      <button
-        id="aboutCloseBtn"
-        type="button"
-        aria-label="إغلاق"
-        style="
-          position:absolute;
-          left:22px;
-          top:18px;
-          border:0;
-          background:rgba(255,255,255,.16);
-          color:#fff;
-          width:42px;
-          height:42px;
-          border-radius:50%;
-          font-size:22px;
-          cursor:pointer;
-        ">
-        ×
-      </button>
-
-      <div
-        style="
-          font-size:13px;
-          opacity:.85;
-          font-weight:700;
-          margin-bottom:8px;
-        ">
-        التعريف بالمنصة
-      </div>
-
-      <h2
-        style="
-          margin:0 0 10px;
-          font-size:30px;
-        ">
-        منصة المسار المهني
-      </h2>
-
-      <p
-        style="
-          margin:0;
-          max-width:760px;
-          line-height:1.9;
-          font-size:15px;
-          opacity:.95;
-        ">
-        منظومة رقمية لمتابعة المسار المهني للموظف
-        وتسهيل التواصل الإداري، تجمع المعلومات المهنية
-        والأقدمية والطلبات والمراجعات والإشعارات في فضاء موحد.
-      </p>
-
-    </div>
-
-
-    <!-- محتوى النافذة -->
-    <div style="padding:28px;">
-
-      <!-- وظائف المنصة -->
 
-      <div
-        style="
-          display:grid;
-          grid-template-columns:
-          repeat(auto-fit,minmax(220px,1fr));
-          gap:16px;
-        ">
+/* =========================================================
+   نافذة معلومات المنصة
+========================================================= */
 
-        <div class="about-card">
+.about-overlay{
+  position:fixed;
 
-          <div class="about-icon">
-            👤
-          </div>
+  inset:0;
 
-          <h3>
-            فضاء الموظف
-          </h3>
+  z-index:100000;
 
-          <p>
-            متابعة البيانات المهنية، الأقدمية،
-            الطلبات، الإشعارات ونتائج دراسة المسؤول.
-          </p>
+  display:none;
 
-        </div>
+  align-items:center;
 
+  justify-content:center;
 
-        <div class="about-card">
+  padding:20px;
 
-          <div class="about-icon">
-            🏢
-          </div>
+  background:
+    rgba(35,25,48,.58);
 
-          <h3>
-            فضاء المسؤول
-          </h3>
+  backdrop-filter:blur(7px);
+}
 
-          <p>
-            إدارة الموظفين والطلبات، فتح الملفات،
-            الدراسة، الإجابة والأرشفة بطريقة منظمة.
-          </p>
+.about-overlay.open{
+  display:flex;
+}
 
-        </div>
+.about-modal{
+  width:
+    min(900px,100%);
 
+  max-height:92vh;
 
-        <div class="about-card">
+  overflow:auto;
 
-          <div class="about-icon">
-            ☀️
-          </div>
+  background:#fff;
 
-          <h3>
-            أقدمية الجنوب
-          </h3>
+  border:
+    1px solid
+    rgba(201,168,74,.25);
 
-          <p>
-            عرض الأقدمية الفعلية والإضافية والمحتسبة،
-            مع إمكانية اعتماد النتيجة من المسؤول.
-          </p>
+  border-radius:24px;
 
-        </div>
+  box-shadow:
+    0 25px 80px
+    rgba(30,20,45,.30);
 
+  direction:rtl;
 
-        <div class="about-card">
+  animation:
+    aboutIn .22s ease-out;
+}
 
-          <div class="about-icon">
-            📥
-          </div>
+@keyframes aboutIn{
 
-          <h3>
-            نظام الطلبات
-          </h3>
+  from{
+    opacity:0;
 
-          <p>
-            طلبات مهيكلة ومختصرة بدل المراسلات الطويلة،
-            مع متابعة الحالة حتى المعالجة.
-          </p>
+    transform:
+      translateY(12px)
+      scale(.98);
+  }
 
-        </div>
+  to{
+    opacity:1;
 
+    transform:
+      translateY(0)
+      scale(1);
+  }
 
-        <div class="about-card">
+}
 
-          <div class="about-icon">
-            🔔
-          </div>
 
-          <h3>
-            الإشعارات
-          </h3>
+/* =========================================================
+   رأس نافذة المعلومات
+========================================================= */
 
-          <p>
-            تنبيهات حول الطلبات الجديدة، طلب المعلومات،
-            انتهاء الدراسة وصدور الإجابة.
-          </p>
+.about-hero{
+  position:relative;
 
-        </div>
+  padding:30px 30px 26px;
 
+  color:#fff;
 
-        <div class="about-card">
+  background:
+    linear-gradient(
+      135deg,
+      #8064B2,
+      #6F52A3 55%,
+      #584084
+    );
+}
 
-          <div class="about-icon">
-            🔐
-          </div>
+.about-hero h2{
+  color:#fff;
+}
 
-          <h3>
-            الخصوصية والصلاحيات
-          </h3>
+.about-close{
+  position:absolute;
 
-          <p>
-            فصل واضح بين وظائف الموظف وصلاحيات المسؤول
-            لحماية المعلومات المهنية.
-          </p>
+  left:22px;
 
-        </div>
+  top:18px;
 
-      </div>
+  border:0;
 
+  background:
+    rgba(255,255,255,.16);
 
-      <!-- أهداف المنصة -->
+  color:#fff;
 
-      <div class="about-goals">
+  width:42px;
 
-        <h3>
-          🎯 أهداف المنصة
-        </h3>
+  height:42px;
 
-        <div class="goal-grid">
+  border-radius:50%;
 
-          <span>
-            رقمنة الإجراءات المهنية
-          </span>
+  font-size:22px;
 
-          <span>
-            تنظيم المعلومات والطلبات
-          </span>
+  cursor:pointer;
 
-          <span>
-            تسريع دراسة الطلبات
-          </span>
+  display:flex;
 
-          <span>
-            تسهيل متابعة الأقدمية
-          </span>
+  align-items:center;
 
-          <span>
-            تحسين التواصل الإداري
-          </span>
+  justify-content:center;
 
-          <span>
-            الحفاظ على سجل منظم
-          </span>
+  transition:.2s;
+}
 
-        </div>
+.about-close:hover{
+  background:
+    rgba(255,255,255,.28);
 
-      </div>
+  transform:scale(1.05);
+}
 
 
-      <!-- الملاحظة -->
+/* =========================================================
+   بطاقات المعلومات
+========================================================= */
 
-      <div class="about-note">
+.about-content{
+  padding:28px;
+}
 
-        المنصة أداة للمساعدة في المتابعة والحساب والتنظيم،
-        ولا تحل محل القرارات أو الإجراءات الإدارية والقانونية
-        المعتمدة من الجهة المختصة.
+.about-grid{
+  display:grid;
 
-      </div>
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(220px,1fr)
+    );
 
+  gap:16px;
+}
 
-      <!-- =================================================
-           معلومات مسؤول المنصة والمبرمج
-      ================================================= -->
+.about-card{
+  background:#FBF9FD;
 
-      <div
-        class="platform-contact"
-        style="
-          display:block !important;
-          visibility:visible !important;
-          opacity:1 !important;
-          margin-top:20px;
-          padding:22px;
-          border:1px solid #E2D8EA;
-          border-radius:18px;
-          background:#FBF9FD;
-        ">
+  border:
+    1px solid
+    #EDE5F3;
 
-        <h3
-          style="
-            margin:0 0 18px;
-            color:#5A4572;
-            font-size:18px;
-            display:block;
-          ">
+  border-radius:18px;
 
-          👨‍💻 معلومات مسؤول المنصة والمبرمج
+  padding:20px;
 
-        </h3>
+  transition:
+    transform .2s,
+    box-shadow .2s;
+}
 
+.about-card:hover{
+  transform:translateY(-2px);
 
-        <div
-          style="
-            display:grid;
-            grid-template-columns:
-            repeat(auto-fit,minmax(220px,1fr));
-            gap:14px;
-          ">
+  box-shadow:
+    0 8px 22px
+    rgba(74,55,105,.08);
+}
 
+.about-card h3{
+  margin:
+    10px 0 7px;
 
-          <!-- الاسم -->
+  color:#4D376F;
 
-          <div
-            style="
-              background:#fff;
-              border:1px solid #EEE6F3;
-              border-radius:12px;
-              padding:13px;
-            ">
+  font-size:17px;
+}
 
-            <small
-              style="
-                display:block;
-                color:#91869A;
-                font-size:11px;
-                margin-bottom:5px;
-              ">
+.about-card p{
+  margin:0;
 
-              الاسم
+  color:#716579;
 
-            </small>
+  line-height:1.8;
 
-            <strong
-              style="
-                display:block;
-                color:#49385A;
-                font-size:14px;
-              ">
+  font-size:13px;
+}
 
-              بن صغير منير
+.about-icon{
+  width:44px;
 
-            </strong>
+  height:44px;
 
-          </div>
+  border-radius:13px;
 
+  background:#F0E9F7;
 
-          <!-- الاسم بالإنجليزية -->
+  display:flex;
 
-          <div
-            style="
-              background:#fff;
-              border:1px solid #EEE6F3;
-              border-radius:12px;
-              padding:13px;
-            ">
+  align-items:center;
 
-            <small
-              style="
-                display:block;
-                color:#91869A;
-                font-size:11px;
-                margin-bottom:5px;
-              ">
+  justify-content:center;
 
-              بالإنجليزية
+  font-size:22px;
+}
 
-            </small>
 
-            <strong
-              style="
-                display:block;
-                color:#49385A;
-                font-size:14px;
-                direction:ltr;
-                text-align:right;
-              ">
+/* =========================================================
+   أهداف المنصة
+========================================================= */
 
-              Benseghir Mounir
+.about-goals{
+  margin-top:20px;
 
-            </strong>
+  padding:22px;
 
-          </div>
+  border-radius:20px;
 
+  background:
+    linear-gradient(
+      135deg,
+      #F8F3FB,
+      #FCFAF5
+    );
 
-          <!-- الصفة -->
+  border:
+    1px solid
+    #EDE4F2;
+}
 
-          <div
-            style="
-              background:#fff;
-              border:1px solid #EEE6F3;
-              border-radius:12px;
-              padding:13px;
-            ">
+.about-goals h3{
+  margin:
+    0 0 14px;
 
-            <small
-              style="
-                display:block;
-                color:#91869A;
-                font-size:11px;
-                margin-bottom:5px;
-              ">
+  color:#4D376F;
+}
 
-              الصفة
+.goal-grid{
+  display:grid;
 
-            </small>
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(180px,1fr)
+    );
 
-            <strong
-              style="
-                display:block;
-                color:#49385A;
-                font-size:14px;
-              ">
+  gap:10px;
+}
 
-              رئيس مكتب التكوين
+.goal-grid span{
+  background:#fff;
 
-            </strong>
+  border:
+    1px solid
+    #EEE6F3;
 
-          </div>
+  border-radius:12px;
 
+  padding:11px;
 
-          <!-- المؤسسة -->
+  color:#5D5065;
 
-          <div
-            style="
-              background:#fff;
-              border:1px solid #EEE6F3;
-              border-radius:12px;
-              padding:13px;
-            ">
+  font-size:13px;
+}
 
-            <small
-              style="
-                display:block;
-                color:#91869A;
-                font-size:11px;
-                margin-bottom:5px;
-              ">
 
-              المؤسسة
+/* =========================================================
+   الملاحظة
+========================================================= */
 
-            </small>
+.about-note{
+  margin-top:16px;
 
-            <strong
-              style="
-                display:block;
-                color:#49385A;
-                font-size:14px;
-                line-height:1.7;
-              ">
+  padding:14px 16px;
 
-              المؤسسة العمومية الإستشفائية بأولف ولاية أدرار
+  background:#FFF9E9;
 
-            </strong>
+  border-right:
+    4px solid
+    #C9A84A;
 
-          </div>
+  border-radius:12px;
 
+  color:#695A39;
 
-          <!-- الهاتف -->
+  font-size:12px;
 
-          <div
-            style="
-              background:#fff;
-              border:1px solid #EEE6F3;
-              border-radius:12px;
-              padding:13px;
-            ">
+  line-height:1.8;
+}
 
-            <small
-              style="
-                display:block;
-                color:#91869A;
-                font-size:11px;
-                margin-bottom:5px;
-              ">
 
-              الهاتف
+/* =========================================================
+   معلومات مسؤول المنصة والمبرمج
+========================================================= */
 
-            </small>
+.platform-contact{
+  margin-top:20px;
 
-            <strong
-              style="
-                display:block;
-                font-size:14px;
-                direction:ltr;
-                text-align:right;
-              ">
+  padding:22px;
 
-              <a
-                href="tel:0660484373"
-                style="
-                  color:#49385A;
-                  text-decoration:none;
-                  font-weight:bold;
-                ">
+  border:
+    1px solid
+    #E2D8EA;
 
-                0660.48.43.73
+  border-radius:18px;
 
-              </a>
+  background:#FBF9FD;
 
-            </strong>
+  display:block;
 
-          </div>
+  visibility:visible;
 
+  opacity:1;
+}
 
-          <!-- البريد -->
+.platform-contact-title{
+  margin:
+    0 0 18px;
 
-          <div
-            style="
-              background:#fff;
-              border:1px solid #EEE6F3;
-              border-radius:12px;
-              padding:13px;
-            ">
+  color:#5A4572;
 
-            <small
-              style="
-                display:block;
-                color:#91869A;
-                font-size:11px;
-                margin-bottom:5px;
-              ">
+  font-size:18px;
 
-              البريد الإلكتروني
+  display:block;
+}
 
-            </small>
+.platform-info-grid{
+  display:grid;
 
-            <strong
-              style="
-                display:block;
-                font-size:14px;
-                direction:ltr;
-                text-align:right;
-              ">
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(220px,1fr)
+    );
 
-              <a
-                href="mailto:bfmounir@gmail.com"
-                style="
-                  color:#49385A;
-                  text-decoration:none;
-                  font-weight:bold;
-                ">
+  gap:12px;
+}
 
-                bfmounir@gmail.com
+.platform-info-item{
+  background:#fff;
 
-              </a>
+  border:
+    1px solid
+    #EEE6F3;
 
-            </strong>
+  border-radius:12px;
 
-          </div>
+  padding:14px;
 
+  min-width:0;
+}
 
-          <!-- الدور -->
+.platform-info-item small{
+  display:block;
 
-          <div
-            style="
-              grid-column:1/-1;
-              background:
-                linear-gradient(
-                  135deg,
-                  #F8F3FB,
-                  #FCFAF5
-                );
-              border:1px solid #E8DDED;
-              border-radius:14px;
-              padding:15px;
-            ">
+  color:#91869A;
 
-            <small
-              style="
-                display:block;
-                color:#91869A;
-                font-size:11px;
-                margin-bottom:5px;
-              ">
+  font-size:10px;
 
-              الدور في المنصة
+  margin-bottom:6px;
+}
 
-            </small>
+.platform-info-item strong{
+  display:block;
 
-            <strong
-              style="
-                display:block;
-                color:#6F52A3;
-                font-size:14px;
-                line-height:1.7;
-              ">
+  color:#49385A;
 
-              مسؤول المنصة ومبرمجها
+  font-size:14px;
 
-            </strong>
+  line-height:1.7;
 
-          </div>
+  word-break:break-word;
+}
 
+.platform-info-item.full{
+  grid-column:1/-1;
 
-        </div>
+  background:
+    linear-gradient(
+      135deg,
+      #F8F3FB,
+      #FCFAF5
+    );
 
-      </div>
+  border-color:#E8DDED;
+}
 
+.platform-info-item.full strong{
+  color:#6F52A3;
+}
 
-    </div>
+.platform-info-item a{
+  color:#49385A;
 
-  </div>
+  text-decoration:none;
 
-</div>
+  font-weight:bold;
+}
+
+.platform-info-item a:hover{
+  color:#6F52A3;
+
+  text-decoration:underline;
+}
+
+
 /* =========================================================
    PWA
 ========================================================= */
@@ -1296,7 +1173,9 @@ input:focus{
   z-index:99999;
 
   right:18px;
+
   left:18px;
+
   bottom:18px;
 
   max-width:620px;
@@ -1340,6 +1219,7 @@ input:focus{
 
 .pwa-install-icon{
   width:52px;
+
   height:52px;
 
   flex:0 0 52px;
@@ -1361,6 +1241,7 @@ input:focus{
 
 .pwa-install-icon img{
   width:100%;
+
   height:100%;
 
   object-fit:contain;
@@ -1418,6 +1299,7 @@ input:focus{
 
 .pwa-install-close{
   width:32px;
+
   height:32px;
 
   border:0;
@@ -1441,7 +1323,9 @@ input:focus{
   z-index:99998;
 
   right:18px;
+
   left:18px;
+
   bottom:18px;
 
   max-width:560px;
@@ -1519,6 +1403,7 @@ input:focus{
 
   .brand-mark{
     width:64px;
+
     height:64px;
 
     font-size:30px;
@@ -1527,6 +1412,11 @@ input:focus{
   }
 
 }
+
+
+/* =========================================================
+   شاشات الهاتف الصغيرة
+========================================================= */
 
 @media(max-width:600px){
 
@@ -1552,8 +1442,8 @@ input:focus{
     font-size:13px !important;
   }
 
-  .about-modal>div:nth-child(2){
-    padding:18px !important;
+  .about-content{
+    padding:18px;
   }
 
   .goal-grid{
@@ -1564,17 +1454,19 @@ input:focus{
     padding:15px;
   }
 
-  .platform-contact>div{
-    grid-template-columns:1fr !important;
+  .platform-info-grid{
+    grid-template-columns:1fr;
   }
 
-  .platform-contact>div>div[style*="grid-column"]{
-    grid-column:auto !important;
+  .platform-info-item.full{
+    grid-column:auto;
   }
 
   .pwa-install-banner{
     right:10px;
+
     left:10px;
+
     bottom:10px;
 
     padding:12px;
@@ -1582,6 +1474,7 @@ input:focus{
 
   .pwa-install-icon{
     width:46px;
+
     height:46px;
 
     flex-basis:46px;
@@ -1602,6 +1495,11 @@ input:focus{
   }
 
 }
+
+
+/* =========================================================
+   هاتف صغير جدًا
+========================================================= */
 
 @media(max-width:430px){
 
@@ -1630,9 +1528,15 @@ input:focus{
 </style>
 
 
-<link rel="manifest" href="./manifest.json">
+<!-- =========================================================
+     PWA Metadata
+========================================================= -->
 
-<meta name="theme-color" content="#6d4aff">
+<link rel="manifest"
+      href="./manifest.json">
+
+<meta name="theme-color"
+      content="#6d4aff">
 
 <meta name="mobile-web-app-capable"
       content="yes">
@@ -1664,7 +1568,9 @@ input:focus{
   <div class="login-shell">
 
 
-    <!-- القسم الترحيبي -->
+    <!-- ===================================================
+         القسم الترحيبي
+    =================================================== -->
 
     <div class="welcome">
 
@@ -1684,7 +1590,7 @@ input:focus{
 
       <div class="institution">
 
-        المؤسسة العمومية الإستشفائية بأولف
+        المؤسسة العمومية الإستشفائية بأولف ولاية أدرار
 
         <br>
 
@@ -1712,7 +1618,9 @@ input:focus{
     </div>
 
 
-    <!-- بطاقة تسجيل الدخول -->
+    <!-- ===================================================
+         بطاقة تسجيل الدخول
+    =================================================== -->
 
     <div class="login-card">
 
@@ -1785,9 +1693,9 @@ input:focus{
       </button>
 
 
-      <!-- ===================================================
+      <!-- =================================================
            تسجيل الدخول
-      =================================================== -->
+      ================================================= -->
 
       <div id="loginPanel">
 
@@ -1821,7 +1729,7 @@ input:focus{
 
           <div class="form-group">
 
-            <label>
+            <label for="loginEmail">
               البريد الإلكتروني
             </label>
 
@@ -1837,7 +1745,7 @@ input:focus{
 
           <div class="form-group">
 
-            <label>
+            <label for="loginPassword">
               كلمة المرور
             </label>
 
@@ -1866,9 +1774,9 @@ input:focus{
       </div>
 
 
-      <!-- ===================================================
+      <!-- =================================================
            إنشاء الحساب
-      =================================================== -->
+      ================================================= -->
 
       <div
         id="signupPanel"
@@ -1880,7 +1788,7 @@ input:focus{
 
           <div class="form-group">
 
-            <label>
+            <label for="signupEmail">
               البريد الإلكتروني
             </label>
 
@@ -1896,7 +1804,7 @@ input:focus{
 
           <div class="form-group">
 
-            <label>
+            <label for="signupPassword">
               كلمة المرور
             </label>
 
@@ -1913,7 +1821,7 @@ input:focus{
 
           <div class="form-group">
 
-            <label>
+            <label for="confirmPassword">
               تأكيد كلمة المرور
             </label>
 
@@ -1943,10 +1851,9 @@ input:focus{
       </div>
 
 
-      <!-- ===================================================
+      <!-- =================================================
            زر معلومات المنصة
-           لا يعتمد على Supabase
-      =================================================== -->
+      ================================================= -->
 
       <button
         id="aboutBtn"
@@ -1985,6 +1892,7 @@ input:focus{
 
 <!-- =======================================================
      نافذة معلومات المنصة والدعم
+     مهم: هذه النافذة خارج STYLE
 ======================================================= -->
 
 <div
@@ -1994,31 +1902,24 @@ input:focus{
 
 
   <div
-    class="about-modal">
+    class="about-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="aboutTitle">
 
 
-    <!-- رأس النافذة -->
+    <!-- =================================================
+         رأس النافذة
+    ================================================= -->
 
     <div class="about-hero">
 
 
       <button
         id="aboutCloseBtn"
+        class="about-close"
         type="button"
-        aria-label="إغلاق"
-        style="
-          position:absolute;
-          left:22px;
-          top:18px;
-          border:0;
-          background:rgba(255,255,255,.16);
-          color:#fff;
-          width:42px;
-          height:42px;
-          border-radius:50%;
-          font-size:22px;
-          cursor:pointer;
-        ">
+        aria-label="إغلاق">
 
         ×
 
@@ -2039,6 +1940,7 @@ input:focus{
 
 
       <h2
+        id="aboutTitle"
         style="
           margin:0 0 10px;
           font-size:30px;
@@ -2068,21 +1970,18 @@ input:focus{
     </div>
 
 
-    <!-- محتوى النافذة -->
+    <!-- =================================================
+         محتوى النافذة
+    ================================================= -->
 
-    <div style="padding:28px;">
+    <div class="about-content">
 
 
-      <div
-        style="
-          display:grid;
-          grid-template-columns:
-            repeat(
-              auto-fit,
-              minmax(220px,1fr)
-            );
-          gap:16px;
-        ">
+      <!-- =================================================
+           وظائف المنصة
+      ================================================= -->
+
+      <div class="about-grid">
 
 
         <div class="about-card">
@@ -2196,7 +2095,9 @@ input:focus{
       </div>
 
 
-      <!-- الأهداف -->
+      <!-- =================================================
+           أهداف المنصة
+      ================================================= -->
 
       <div class="about-goals">
 
@@ -2238,7 +2139,9 @@ input:focus{
       </div>
 
 
-      <!-- الملاحظة القانونية -->
+      <!-- =================================================
+           الملاحظة
+      ================================================= -->
 
       <div class="about-note">
 
@@ -2250,40 +2153,28 @@ input:focus{
 
 
       <!-- =================================================
-           معلومات المسؤول والمبرمج
+           معلومات مسؤول المنصة والمبرمج
       ================================================= -->
 
       <div class="platform-contact">
 
 
-        <h3>
+        <h3 class="platform-contact-title">
+
           👨‍💻 معلومات مسؤول المنصة والمبرمج
+
         </h3>
 
 
-        <div
-          style="
-            display:grid;
-            grid-template-columns:
-              repeat(
-                auto-fit,
-                minmax(220px,1fr)
-              );
-            gap:10px;
-          ">
+        <div class="platform-info-grid">
 
 
-          <div>
+          <!-- الاسم -->
 
-            <small
-              style="
-                display:block;
-                color:#91869A;
-                font-size:10px;
-              ">
+          <div class="platform-info-item">
 
+            <small>
               الاسم
-
             </small>
 
             <strong>
@@ -2293,37 +2184,33 @@ input:focus{
           </div>
 
 
-          <div>
+          <!-- الاسم بالإنجليزية -->
 
-            <small
-              style="
-                display:block;
-                color:#91869A;
-                font-size:10px;
-              ">
+          <div class="platform-info-item">
 
+            <small>
               بالإنجليزية
-
             </small>
 
-            <strong>
+            <strong
+              style="
+                direction:ltr;
+                text-align:right;
+              ">
+
               Benseghir Mounir
+
             </strong>
 
           </div>
 
 
-          <div>
+          <!-- الصفة -->
 
-            <small
-              style="
-                display:block;
-                color:#91869A;
-                font-size:10px;
-              ">
+          <div class="platform-info-item">
 
+            <small>
               الصفة
-
             </small>
 
             <strong>
@@ -2333,47 +2220,37 @@ input:focus{
           </div>
 
 
-          <div>
+          <!-- المؤسسة -->
 
-            <small
-              style="
-                display:block;
-                color:#91869A;
-                font-size:10px;
-              ">
+          <div class="platform-info-item">
 
+            <small>
               المؤسسة
-
             </small>
 
             <strong>
-              المؤسسة العمومية الإستشفائية بأولف
+              المؤسسة العمومية الإستشفائية بأولف ولاية أدرار
             </strong>
 
           </div>
 
 
-          <div>
+          <!-- الهاتف -->
 
-            <small
-              style="
-                display:block;
-                color:#91869A;
-                font-size:10px;
-              ">
+          <div class="platform-info-item">
 
+            <small>
               الهاتف
-
             </small>
 
-            <strong>
+            <strong
+              style="
+                direction:ltr;
+                text-align:right;
+              ">
 
               <a
-                href="tel:0660484373"
-                style="
-                  color:inherit;
-                  text-decoration:none;
-                ">
+                href="tel:0660484373">
 
                 0660.48.43.73
 
@@ -2384,27 +2261,22 @@ input:focus{
           </div>
 
 
-          <div>
+          <!-- البريد الإلكتروني -->
 
-            <small
-              style="
-                display:block;
-                color:#91869A;
-                font-size:10px;
-              ">
+          <div class="platform-info-item">
 
+            <small>
               البريد الإلكتروني
-
             </small>
 
-            <strong>
+            <strong
+              style="
+                direction:ltr;
+                text-align:right;
+              ">
 
               <a
-                href="mailto:bfmounir@gmail.com"
-                style="
-                  color:inherit;
-                  text-decoration:none;
-                ">
+                href="mailto:bfmounir@gmail.com">
 
                 bfmounir@gmail.com
 
@@ -2415,20 +2287,13 @@ input:focus{
           </div>
 
 
+          <!-- الدور -->
+
           <div
-            style="
-              grid-column:1/-1;
-            ">
+            class="platform-info-item full">
 
-            <small
-              style="
-                display:block;
-                color:#91869A;
-                font-size:10px;
-              ">
-
+            <small>
               الدور في المنصة
-
             </small>
 
             <strong>
@@ -2452,7 +2317,7 @@ input:focus{
 
 
 <!-- =======================================================
-     PWA
+     PWA INSTALL BANNER
 ======================================================= -->
 
 <div
@@ -2506,34 +2371,44 @@ input:focus{
 </div>
 
 
-<script>
+<!-- =======================================================
+     JavaScript — نافذة معلومات المنصة
+     مستقلة تمامًا عن Supabase
+======================================================= -->
 
-/* =========================================================
-   التحكم في نافذة "عن المنصة والدعم"
-   مستقل تمامًا عن Supabase
-========================================================= */
+<script>
 
 (function(){
 
-  const overlay =
-    document.getElementById("aboutOverlay");
+  "use strict";
+
 
   const aboutBtn =
     document.getElementById("aboutBtn");
+
+  const overlay =
+    document.getElementById("aboutOverlay");
 
   const closeBtn =
     document.getElementById("aboutCloseBtn");
 
 
+  /* =====================================================
+     فتح النافذة
+  ===================================================== */
+
   function openAbout(){
 
     if(!overlay){
+
       console.error(
-        "نافذة معلومات المنصة غير موجودة."
+        "aboutOverlay غير موجود في الصفحة."
       );
 
       return;
+
     }
+
 
     overlay.classList.add("open");
 
@@ -2548,11 +2423,16 @@ input:focus{
   }
 
 
+  /* =====================================================
+     إغلاق النافذة
+  ===================================================== */
+
   function closeAbout(){
 
     if(!overlay){
       return;
     }
+
 
     overlay.classList.remove("open");
 
@@ -2567,6 +2447,10 @@ input:focus{
   }
 
 
+  /* =====================================================
+     زر الفتح
+  ===================================================== */
+
   if(aboutBtn){
 
     aboutBtn.addEventListener(
@@ -2576,6 +2460,10 @@ input:focus{
 
   }
 
+
+  /* =====================================================
+     زر الإغلاق
+  ===================================================== */
 
   if(closeBtn){
 
@@ -2587,6 +2475,10 @@ input:focus{
   }
 
 
+  /* =====================================================
+     الضغط خارج النافذة
+  ===================================================== */
+
   if(overlay){
 
     overlay.addEventListener(
@@ -2594,7 +2486,9 @@ input:focus{
       function(event){
 
         if(event.target === overlay){
+
           closeAbout();
+
         }
 
       }
@@ -2603,11 +2497,19 @@ input:focus{
   }
 
 
+  /* =====================================================
+     زر Escape
+  ===================================================== */
+
   document.addEventListener(
     "keydown",
     function(event){
 
-      if(event.key === "Escape"){
+      if(
+        event.key === "Escape" &&
+        overlay &&
+        overlay.classList.contains("open")
+      ){
 
         closeAbout();
 
@@ -2617,27 +2519,41 @@ input:focus{
   );
 
 
+  /* =====================================================
+     إتاحة الدوال عالميًا عند الحاجة
+  ===================================================== */
+
+  window.openAbout =
+    openAbout;
+
+  window.closeAbout =
+    closeAbout;
+
+
 })();
 
 </script>
 
 
+<!-- =======================================================
+     JavaScript — نظام الدخول والتسجيل
+======================================================= -->
+
 <script>
 
-/* =========================================================
-   نظام الدخول والتسجيل
-========================================================= */
-
 (function(){
+
+  "use strict";
+
 
   let client = null;
 
   let loginType = "employee";
 
 
-  /* =======================================================
-     الاتصال بـ Supabase
-  ======================================================= */
+  /* =====================================================
+     تهيئة Supabase
+  ===================================================== */
 
   try{
 
@@ -2652,7 +2568,8 @@ input:focus{
 
     if(window.db){
 
-      client = window.db;
+      client =
+        window.db;
 
     }else{
 
@@ -2686,9 +2603,81 @@ input:focus{
   }
 
 
-  /* =======================================================
-     عرض وضع الدخول أو التسجيل
-  ======================================================= */
+  /* =====================================================
+     الرسائل
+  ===================================================== */
+
+  function showError(text){
+
+    const message =
+      document.getElementById("message");
+
+    if(!message){
+      return;
+    }
+
+
+    message.className =
+      "message error";
+
+    message.textContent =
+      text;
+
+  }
+
+
+  function showSuccess(text){
+
+    const message =
+      document.getElementById("message");
+
+    if(!message){
+      return;
+    }
+
+
+    message.className =
+      "message success";
+
+    message.textContent =
+      text;
+
+  }
+
+
+  function clearMessage(){
+
+    const message =
+      document.getElementById("message");
+
+    if(message){
+
+      message.className =
+        "message";
+
+      message.textContent =
+        "";
+
+    }
+
+
+    const resendBtn =
+      document.getElementById("resendBtn");
+
+    if(resendBtn){
+
+      resendBtn.classList.add(
+        "hidden"
+      );
+
+    }
+
+  }
+
+
+  /* =====================================================
+     تغيير وضع الدخول / التسجيل
+  ===================================================== */
 
   function showMode(mode){
 
@@ -2696,24 +2685,16 @@ input:focus{
 
 
     const loginPanel =
-      document.getElementById(
-        "loginPanel"
-      );
+      document.getElementById("loginPanel");
 
     const signupPanel =
-      document.getElementById(
-        "signupPanel"
-      );
+      document.getElementById("signupPanel");
 
     const loginTab =
-      document.getElementById(
-        "loginTab"
-      );
+      document.getElementById("loginTab");
 
     const signupTab =
-      document.getElementById(
-        "signupTab"
-      );
+      document.getElementById("signupTab");
 
 
     if(loginPanel){
@@ -2758,24 +2739,21 @@ input:focus{
   }
 
 
-  /* =======================================================
-     نوع الحساب
-  ======================================================= */
+  /* =====================================================
+     اختيار نوع الحساب
+  ===================================================== */
 
   function selectLoginType(type){
 
-    loginType = type;
+    loginType =
+      type;
 
 
     const employeeType =
-      document.getElementById(
-        "employeeType"
-      );
+      document.getElementById("employeeType");
 
     const adminType =
-      document.getElementById(
-        "adminType"
-      );
+      document.getElementById("adminType");
 
 
     if(employeeType){
@@ -2803,89 +2781,9 @@ input:focus{
   }
 
 
-  /* =======================================================
-     الرسائل
-  ======================================================= */
-
-  function showError(text){
-
-    const message =
-      document.getElementById(
-        "message"
-      );
-
-    if(!message){
-      return;
-    }
-
-
-    message.className =
-      "message error";
-
-    message.textContent =
-      text;
-
-  }
-
-
-  function showSuccess(text){
-
-    const message =
-      document.getElementById(
-        "message"
-      );
-
-    if(!message){
-      return;
-    }
-
-
-    message.className =
-      "message success";
-
-    message.textContent =
-      text;
-
-  }
-
-
-  function clearMessage(){
-
-    const message =
-      document.getElementById(
-        "message"
-      );
-
-    if(message){
-
-      message.className =
-        "message";
-
-      message.textContent =
-        "";
-
-    }
-
-
-    const resendBtn =
-      document.getElementById(
-        "resendBtn"
-      );
-
-    if(resendBtn){
-
-      resendBtn.classList.add(
-        "hidden"
-      );
-
-    }
-
-  }
-
-
-  /* =======================================================
+  /* =====================================================
      تسجيل الدخول
-  ======================================================= */
+  ===================================================== */
 
   async function login(event){
 
@@ -2905,23 +2803,33 @@ input:focus{
     }
 
 
-    const email =
-      document
-        .getElementById("loginEmail")
-        .value
-        .trim();
+    const emailElement =
+      document.getElementById("loginEmail");
 
+    const passwordElement =
+      document.getElementById("loginPassword");
+
+
+    if(!emailElement || !passwordElement){
+
+      showError(
+        "تعذر العثور على حقول تسجيل الدخول."
+      );
+
+      return;
+
+    }
+
+
+    const email =
+      emailElement.value.trim();
 
     const password =
-      document
-        .getElementById("loginPassword")
-        .value;
+      passwordElement.value;
 
 
     const btn =
-      document.getElementById(
-        "loginBtn"
-      );
+      document.getElementById("loginBtn");
 
 
     if(btn){
@@ -2941,8 +2849,11 @@ input:focus{
         error
       } =
         await client.auth.signInWithPassword({
+
           email,
+
           password
+
         });
 
 
@@ -2953,7 +2864,10 @@ input:focus{
       }
 
 
-      if(!data || !data.user){
+      if(
+        !data ||
+        !data.user
+      ){
 
         throw new Error(
           "تعذر الحصول على بيانات الحساب."
@@ -2962,9 +2876,9 @@ input:focus{
       }
 
 
-      /* -----------------------------------------------
-         قراءة دور الحساب من user_roles
-      ------------------------------------------------ */
+      /* =================================================
+         قراءة الدور من user_roles
+      ================================================= */
 
       const {
         data:roleRow,
@@ -2990,9 +2904,9 @@ input:focus{
       }
 
 
-      /* -----------------------------------------------
+      /* =================================================
          قراءة الدور من employees
-      ------------------------------------------------ */
+      ================================================= */
 
       const {
         data:profile,
@@ -3021,12 +2935,13 @@ input:focus{
       const isAdmin =
         roleRow?.role === "admin" ||
         roleRow?.role === "manager" ||
+        roleRow?.role === "assistant_admin" ||
         profile?.role === "admin";
 
 
-      /* -----------------------------------------------
+      /* =================================================
          دخول المسؤول
-      ------------------------------------------------ */
+      ================================================= */
 
       if(loginType === "admin"){
 
@@ -3051,9 +2966,9 @@ input:focus{
       }
 
 
-      /* -----------------------------------------------
+      /* =================================================
          دخول الموظف
-      ------------------------------------------------ */
+      ================================================= */
 
       if(isAdmin){
 
@@ -3116,9 +3031,9 @@ input:focus{
   }
 
 
-  /* =======================================================
+  /* =====================================================
      إنشاء حساب
-  ======================================================= */
+  ===================================================== */
 
   async function signUp(event){
 
@@ -3138,23 +3053,39 @@ input:focus{
     }
 
 
-    const email =
-      document
-        .getElementById("signupEmail")
-        .value
-        .trim();
+    const emailElement =
+      document.getElementById("signupEmail");
 
+    const passwordElement =
+      document.getElementById("signupPassword");
+
+    const confirmElement =
+      document.getElementById("confirmPassword");
+
+
+    if(
+      !emailElement ||
+      !passwordElement ||
+      !confirmElement
+    ){
+
+      showError(
+        "تعذر العثور على حقول إنشاء الحساب."
+      );
+
+      return;
+
+    }
+
+
+    const email =
+      emailElement.value.trim();
 
     const password =
-      document
-        .getElementById("signupPassword")
-        .value;
-
+      passwordElement.value;
 
     const confirmPassword =
-      document
-        .getElementById("confirmPassword")
-        .value;
+      confirmElement.value;
 
 
     if(password !== confirmPassword){
@@ -3169,9 +3100,7 @@ input:focus{
 
 
     const btn =
-      document.getElementById(
-        "signupBtn"
-      );
+      document.getElementById("signupBtn");
 
 
     if(btn){
@@ -3191,8 +3120,11 @@ input:focus{
         error
       } =
         await client.auth.signUp({
+
           email,
+
           password
+
         });
 
 
@@ -3203,9 +3135,9 @@ input:focus{
       }
 
 
-      /* -----------------------------------------------
-         إذا كان التسجيل أعاد جلسة مباشرة
-      ------------------------------------------------ */
+      /* =================================================
+         إذا كانت الجلسة متاحة مباشرة
+      ================================================= */
 
       if(data.session){
 
@@ -3217,9 +3149,24 @@ input:focus{
       }
 
 
-      /* -----------------------------------------------
-         التسجيل يحتاج تأكيد البريد
-      ------------------------------------------------ */
+      /* =================================================
+         يحتاج إلى تأكيد البريد
+      ================================================= */
+
+      showMode("login");
+
+
+      const loginEmail =
+        document.getElementById("loginEmail");
+
+
+      if(loginEmail){
+
+        loginEmail.value =
+          email;
+
+      }
+
 
       showSuccess(
         "تم إنشاء الحساب بنجاح. تحقق من بريدك الإلكتروني واضغط رابط التأكيد قبل تسجيل الدخول. إذا لم تصل الرسالة، يمكنك إعادة إرسالها."
@@ -3227,9 +3174,7 @@ input:focus{
 
 
       const resendBtn =
-        document.getElementById(
-          "resendBtn"
-        );
+        document.getElementById("resendBtn");
 
 
       if(resendBtn){
@@ -3237,23 +3182,6 @@ input:focus{
         resendBtn.classList.remove(
           "hidden"
         );
-
-      }
-
-
-      showMode("login");
-
-
-      const loginEmail =
-        document.getElementById(
-          "loginEmail"
-        );
-
-
-      if(loginEmail){
-
-        loginEmail.value =
-          email;
 
       }
 
@@ -3288,9 +3216,9 @@ input:focus{
   }
 
 
-  /* =======================================================
-     إعادة إرسال تأكيد البريد
-  ======================================================= */
+  /* =====================================================
+     إعادة إرسال رسالة التأكيد
+  ===================================================== */
 
   async function resendConfirmation(){
 
@@ -3309,15 +3237,10 @@ input:focus{
 
 
     const loginEmailElement =
-      document.getElementById(
-        "loginEmail"
-      );
-
+      document.getElementById("loginEmail");
 
     const signupEmailElement =
-      document.getElementById(
-        "signupEmail"
-      );
+      document.getElementById("signupEmail");
 
 
     const email =
@@ -3337,9 +3260,7 @@ input:focus{
 
 
     const btn =
-      document.getElementById(
-        "resendBtn"
-      );
+      document.getElementById("resendBtn");
 
 
     if(btn){
@@ -3358,8 +3279,11 @@ input:focus{
         error
       } =
         await client.auth.resend({
+
           type:"signup",
+
           email
+
         });
 
 
@@ -3405,9 +3329,9 @@ input:focus{
   }
 
 
-  /* =======================================================
+  /* =====================================================
      التحقق من الجلسة الحالية
-  ======================================================= */
+  ===================================================== */
 
   async function checkExistingSession(){
 
@@ -3437,9 +3361,9 @@ input:focus{
       }
 
 
-      /* -----------------------------------------------
-         قراءة الدور
-      ------------------------------------------------ */
+      /* =================================================
+         قراءة الدور من user_roles
+      ================================================= */
 
       const {
         data:roleRow,
@@ -3465,9 +3389,9 @@ input:focus{
       }
 
 
-      /* -----------------------------------------------
-         قراءة ملف الموظف
-      ------------------------------------------------ */
+      /* =================================================
+         قراءة الدور من employees
+      ================================================= */
 
       const {
         data:profile,
@@ -3496,6 +3420,7 @@ input:focus{
       const isAdmin =
         roleRow?.role === "admin" ||
         roleRow?.role === "manager" ||
+        roleRow?.role === "assistant_admin" ||
         profile?.role === "admin";
 
 
@@ -3517,15 +3442,13 @@ input:focus{
   }
 
 
-  /* =======================================================
+  /* =====================================================
      ربط الأحداث
-     بدون onclick
-  ======================================================= */
+  ===================================================== */
+
 
   const loginTab =
-    document.getElementById(
-      "loginTab"
-    );
+    document.getElementById("loginTab");
 
   if(loginTab){
 
@@ -3542,9 +3465,7 @@ input:focus{
 
 
   const signupTab =
-    document.getElementById(
-      "signupTab"
-    );
+    document.getElementById("signupTab");
 
   if(signupTab){
 
@@ -3561,9 +3482,7 @@ input:focus{
 
 
   const employeeType =
-    document.getElementById(
-      "employeeType"
-    );
+    document.getElementById("employeeType");
 
   if(employeeType){
 
@@ -3582,9 +3501,7 @@ input:focus{
 
 
   const adminType =
-    document.getElementById(
-      "adminType"
-    );
+    document.getElementById("adminType");
 
   if(adminType){
 
@@ -3603,9 +3520,7 @@ input:focus{
 
 
   const loginForm =
-    document.getElementById(
-      "loginForm"
-    );
+    document.getElementById("loginForm");
 
   if(loginForm){
 
@@ -3618,9 +3533,7 @@ input:focus{
 
 
   const signupForm =
-    document.getElementById(
-      "signupForm"
-    );
+    document.getElementById("signupForm");
 
   if(signupForm){
 
@@ -3633,9 +3546,7 @@ input:focus{
 
 
   const resendBtn =
-    document.getElementById(
-      "resendBtn"
-    );
+    document.getElementById("resendBtn");
 
   if(resendBtn){
 
@@ -3647,11 +3558,9 @@ input:focus{
   }
 
 
-  /*
-     أبقينا الدوال متاحة عالميًا
-     في حال كانت صفحات أو أكواد أخرى
-     تعتمد عليها.
-  */
+  /* =====================================================
+     إتاحة الدوال عالميًا
+  ===================================================== */
 
   window.showMode =
     showMode;
@@ -3669,9 +3578,9 @@ input:focus{
     resendConfirmation;
 
 
-  /* =======================================================
-     التحقق من الجلسة
-  ======================================================= */
+  /* =====================================================
+     فحص الجلسة
+  ===================================================== */
 
   checkExistingSession();
 
@@ -3681,21 +3590,24 @@ input:focus{
 </script>
 
 
+<!-- =======================================================
+     JavaScript — PWA
+======================================================= -->
+
 <script>
 
-/* =========================================================
-   PWA
-========================================================= */
-
 (function(){
+
+  "use strict";
+
 
   const swPath =
     "./sw.js";
 
 
-  /* =======================================================
+  /* =====================================================
      Service Worker
-  ======================================================= */
+  ===================================================== */
 
   if("serviceWorker" in navigator){
 
@@ -3730,28 +3642,14 @@ input:focus{
   let deferredPrompt = null;
 
 
+  /* =====================================================
+     عناصر Banner
+  ===================================================== */
+
   function banner(){
 
     return document.getElementById(
       "pwaInstallBanner"
-    );
-
-  }
-
-
-  function installBtn(){
-
-    return document.getElementById(
-      "pwaInstallBtn"
-    );
-
-  }
-
-
-  function closeBtn(){
-
-    return document.getElementById(
-      "pwaInstallClose"
     );
 
   }
@@ -3825,9 +3723,9 @@ input:focus{
   }
 
 
-  /* =======================================================
+  /* =====================================================
      Android / Chrome
-  ======================================================= */
+  ===================================================== */
 
   window.addEventListener(
     "beforeinstallprompt",
@@ -3857,24 +3755,26 @@ input:focus{
   );
 
 
-  /* =======================================================
+  /* =====================================================
      زر التثبيت والإغلاق
-  ======================================================= */
+  ===================================================== */
 
   document.addEventListener(
     "click",
     function(event){
 
+      const target =
+        event.target;
+
+
       if(
-        event.target &&
-        event.target.id ===
-        "pwaInstallBtn"
+        target &&
+        target.id === "pwaInstallBtn"
       ){
 
         if(deferredPrompt){
 
-          deferredPrompt
-            .prompt();
+          deferredPrompt.prompt();
 
 
           deferredPrompt
@@ -3900,9 +3800,8 @@ input:focus{
 
 
       if(
-        event.target &&
-        event.target.id ===
-        "pwaInstallClose"
+        target &&
+        target.id === "pwaInstallClose"
       ){
 
         try{
@@ -3923,9 +3822,9 @@ input:focus{
   );
 
 
-  /* =======================================================
+  /* =====================================================
      تعليمات iPhone
-  ======================================================= */
+  ===================================================== */
 
   function showIOSHint(){
 
@@ -3968,6 +3867,7 @@ input:focus{
     note.innerHTML =
       `
         <button
+          type="button"
           aria-label="إغلاق">
           ×
         </button>
@@ -4012,9 +3912,9 @@ input:focus{
   }
 
 
-  /* =======================================================
+  /* =====================================================
      إظهار Banner على Android
-  ======================================================= */
+  ===================================================== */
 
   window.addEventListener(
     "load",
