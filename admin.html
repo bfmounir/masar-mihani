@@ -108,17 +108,6 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
   .employee-modal{width:100%;max-height:90vh;padding:16px}
 }
 @media(max-width:420px){.stats-grid{grid-template-columns:1fr}.contact-grid{grid-template-columns:1fr}}
-
-/* ===== إدارة المسيرين ===== */
-.manager-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid #EEE7F1}
-.manager-row:last-child{border-bottom:0}
-.manager-info{display:flex;align-items:center;gap:11px;min-width:0}
-.manager-avatar{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#F0E9F7;color:#684A98;flex:0 0 42px}
-.manager-name{font-weight:900;color:#463752;font-size:13px}
-.manager-meta{font-size:11px;color:#8A7E91;margin-top:3px;line-height:1.6}
-.manager-role{font-size:10px;padding:6px 9px;border-radius:10px;background:#F7F0D8;color:#6D5720;border:1px solid #E8D99E;font-weight:900;white-space:nowrap}
-@media(max-width:650px){.manager-row{align-items:flex-start;flex-direction:column}.manager-row .btn{width:100%}}
-
 </style>
 
 <!-- PWA: منصة المسار المهني -->
@@ -148,7 +137,6 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
   <button class="menu-item" data-section="requestsSection"><i data-lucide="inbox"></i><span>طلبات الموظفين <span id="pendingBadge" class="badge" style="margin-right:4px">0</span></span></button>
   <div class="menu-title">المتابعة</div>
   <button class="menu-item" data-section="employeesSection"><i data-lucide="user-round-plus"></i><span>إضافة موظف</span></button>
-  <button class="menu-item owner-only" data-section="managersSection"><i data-lucide="shield-user"></i><span>إدارة المسيرين</span></button>
   <button class="menu-item" data-section="southSection"><i data-lucide="sun-medium"></i><span>أقدمية الجنوب</span></button>
   <button class="menu-item" data-section="retirementSection"><i data-lucide="calendar-clock"></i><span>التقاعد</span></button>
 </aside>
@@ -199,6 +187,17 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
     <div class="actions"><button class="btn primary" id="sendNotificationBtn"><i data-lucide="send"></i>إرسال التنبيه</button><button class="btn secondary" id="refreshNotificationEmployeesBtn"><i data-lucide="refresh-cw"></i>تحديث قائمة الموظفين</button></div>
     <div id="notificationSendStatus" class="result"></div>
   </div>
+  <div class="card platform-contact-card" style="margin-top:14px">
+    <div class="notice-head"><strong><i data-lucide="contact-round"></i> معلومات المسؤول والمبرمج</strong><span class="badge">الدعم والمتابعة</span></div>
+    <div class="contact-grid">
+      <div><small>الاسم</small><strong>بن صغير منير</strong></div>
+      <div><small>بالإنجليزية</small><strong>Benseghir Mounir</strong></div>
+      <div><small>الصفة</small><strong>رئيس مكتب التكوين</strong></div>
+      <div><small>المؤسسة</small><strong>المؤسسة العمومية الإستشفائية بأولف</strong></div>
+      <div class="full"><small>الدور في المنصة</small><strong>مسؤول المنصة ومبرمجها</strong></div>
+    </div>
+  </div>
+  </div>
 </section>
 <section id="requestsSection" class="section">
   <div class="header"><h2><i data-lucide="inbox"></i>مركز طلبات الموظفين</h2><p>واجهة منظمة لاستقبال الطلبات، فتح ملف الموظف، معالجة الطلب، ثم نقله تلقائيًا إلى الأرشيف مع الاحتفاظ الكامل بسجل الإجابة.</p></div>
@@ -229,21 +228,6 @@ button,input,select,textarea{font-family:"Cairo",Tahoma,Arial,sans-serif}
     <div class="actions"><button class="btn primary" id="saveEmployeeBtn"><i data-lucide="save"></i>حفظ الموظف</button><button class="btn secondary" id="clearEmployeeBtn"><i data-lucide="eraser"></i>مسح</button></div>
     <div id="employeeStatus" class="result"></div>
     <div id="employeeCalculation" class="result"><div class="empty">بعد حفظ الموظف سيظهر حساب الاستحقاق الزمني هنا.</div></div>
-  </div>
-</section>
-<section id="managersSection" class="section owner-only-section">
-  <div class="header"><h2><i data-lucide="shield-user"></i>إدارة المسيرين</h2><p>إضافة مسيرين مساعدين من الموظفين المسجلين في المنصة لمساعدتك في متابعة الطلبات والرد على تساؤلات الموظفين.</p></div>
-  <div class="section-note"><i data-lucide="shield-check"></i><div>المسير المساعد يحصل على صلاحيات الإدارة ومعالجة طلبات الموظفين. التحكم في إضافة أو سحب صلاحية المسير يبقى حصريًا لمسؤول المنصة الرئيسي.</div></div>
-  <div class="card">
-    <div class="form-grid">
-      <div class="field full"><label>الموظف الذي سيصبح مسيرًا *</label><select id="managerEmployeeSelect"><option value="">جارٍ تحميل الموظفين...</option></select></div>
-    </div>
-    <div class="actions"><button class="btn primary" id="grantManagerBtn"><i data-lucide="shield-plus"></i>منح صلاحية مسير</button><button class="btn secondary" id="refreshManagersBtn"><i data-lucide="refresh-cw"></i>تحديث القائمة</button></div>
-    <div id="managerStatus" class="result"></div>
-  </div>
-  <div class="card" style="margin-top:14px">
-    <div class="notice-head"><strong><i data-lucide="users-round"></i>المسيرون الحاليون</strong><span class="badge">صلاحيات الإدارة المساعدة</span></div>
-    <div id="managersList" class="result"><div class="empty">جارٍ تحميل المسيرين...</div></div>
   </div>
 </section>
 <section id="southSection" class="section">
@@ -494,66 +478,6 @@ $('refreshNotificationsBtn').onclick=loadNotifications;
 $('markNotificationsBtn').onclick=markNotificationsRead;
 $('refreshRetirementBtn').onclick=loadRetirement;
 
-
-const OWNER_EMAIL='bfmounir@gmail.com';
-let currentRole='admin';
-let managerProfiles=[];
-function isOwner(){return String(currentUser?.email||'').toLowerCase()===OWNER_EMAIL}
-function showOwnerControls(){
-  const visible=isOwner();
-  document.querySelectorAll('.owner-only,.owner-only-section').forEach(el=>el.style.display=visible?'':'none');
-}
-async function loadManagers(){
-  const list=$('managersList'),select=$('managerEmployeeSelect');
-  if(!list||!select)return;
-  if(!isOwner())return;
-  list.innerHTML='<div class="empty">جارٍ تحميل المسيرين...</div>';
-  try{
-    const [pRes,rRes]=await Promise.all([
-      db.from('career_profiles').select('*').order('employee_name_ar',{ascending:true}),
-      db.from('user_roles').select('user_id,role')
-    ]);
-    if(pRes.error)throw pRes.error;
-    if(rRes.error)throw rRes.error;
-    const profiles=Array.isArray(pRes.data)?pRes.data:[];
-    const roles=Array.isArray(rRes.data)?rRes.data:[];
-    const roleMap=new Map(roles.map(r=>[String(r.user_id),r.role]));
-    const managers=profiles.filter(p=>roleMap.get(String(p.user_id))==='manager');
-    managerProfiles=managers;
-    const candidates=profiles.filter(p=>p.user_id && String(p.user_id)!==String(currentUser.id) && roleMap.get(String(p.user_id))!=='admin' && roleMap.get(String(p.user_id))!=='manager');
-    select.innerHTML='<option value="">اختر موظفًا...</option>'+candidates.map(p=>`<option value="${esc(p.user_id)}">${esc(p.employee_name_ar||'موظف بدون اسم')} — ${esc(p.current_rank||'الرتبة غير مسجلة')}</option>`).join('');
-    if(!managers.length){list.innerHTML='<div class="empty">لا يوجد مسيرون مساعدون حاليًا.</div>';return}
-    list.innerHTML=managers.map(p=>`<div class="manager-row"><div class="manager-info"><div class="manager-avatar"><i data-lucide="user-round-check"></i></div><div><div class="manager-name">${esc(p.employee_name_ar||'موظف')}</div><div class="manager-meta">${esc(p.current_rank||'الرتبة غير مسجلة')} — ${esc(p.user_id)}</div></div></div><div style="display:flex;align-items:center;gap:8px"><span class="manager-role">مسير مساعد</span><button type="button" class="btn danger" data-revoke-manager="${esc(p.user_id)}"><i data-lucide="shield-minus"></i>سحب الصلاحية</button></div></div>`).join('');
-    list.querySelectorAll('[data-revoke-manager]').forEach(b=>b.onclick=()=>revokeManager(b.dataset.revokeManager));
-    if(window.lucide)lucide.createIcons();
-  }catch(e){console.error(e);list.innerHTML='<div class="status error">تعذر تحميل المسيرين: '+esc(e.message||'خطأ غير معروف')+'</div>'}
-}
-async function grantManager(){
-  if(!isOwner()){alert('هذه الخاصية متاحة لمسؤول المنصة الرئيسي فقط.');return}
-  const userId=$('managerEmployeeSelect')?.value,status=$('managerStatus'),btn=$('grantManagerBtn');
-  if(!userId){status.innerHTML='<div class="status error">اختر الموظف أولًا.</div>';return}
-  btn.disabled=true;status.innerHTML='';
-  try{
-    const r=await db.rpc('set_user_platform_role',{p_user_id:userId,p_role:'manager'});
-    if(r.error)throw r.error;
-    status.innerHTML='<div class="status ok">تم منح صلاحية المسير بنجاح. عند تسجيل الدخول من جديد سيظهر له فضاء الإدارة المساعد.</div>';
-    await loadManagers();
-  }catch(e){console.error(e);status.innerHTML='<div class="status error">تعذر منح الصلاحية: '+esc(e.message||'خطأ غير معروف')+'</div>'}
-  finally{btn.disabled=false}
-}
-async function revokeManager(userId){
-  if(!isOwner()){alert('هذه الخاصية متاحة لمسؤول المنصة الرئيسي فقط.');return}
-  if(!confirm('هل تريد سحب صلاحية المسير من هذا الحساب؟'))return;
-  try{
-    const r=await db.rpc('set_user_platform_role',{p_user_id:userId,p_role:'employee'});
-    if(r.error)throw r.error;
-    $('managerStatus').innerHTML='<div class="status ok">تم سحب صلاحية المسير. سيعود الحساب إلى فضاء الموظف عند تسجيل الدخول من جديد.</div>';
-    await loadManagers();
-  }catch(e){console.error(e);$('managerStatus').innerHTML='<div class="status error">تعذر سحب الصلاحية: '+esc(e.message||'خطأ غير معروف')+'</div>'}
-}
-$('grantManagerBtn')?.addEventListener('click',grantManager);
-$('refreshManagersBtn')?.addEventListener('click',loadManagers);
-
 async function checkAdmin(){
   try{
     if(typeof window.supabase==='undefined')throw new Error('مكتبة Supabase غير متاحة.');
@@ -563,12 +487,9 @@ async function checkAdmin(){
     currentUser=data.session.user;$('userEmail').textContent=currentUser.email||'';
     const roleRes=await db.from('user_roles').select('role').eq('user_id',currentUser.id).maybeSingle();
     const profileRes=await db.from('employees').select('role').eq('user_id',currentUser.id).maybeSingle();
-    const isAdmin=roleRes.data?.role==='admin'||roleRes.data?.role==='manager'||profileRes.data?.role==='admin';
+    const isAdmin=roleRes.data?.role==='admin'||profileRes.data?.role==='admin';
     if(!isAdmin)throw new Error('هذا الحساب لا يملك صلاحية المسؤول.');
-    currentRole=roleRes.data?.role||profileRes.data?.role||'admin';
-    const chip=document.querySelector('.admin-role-chip'); if(chip) chip.innerHTML=`<i data-lucide="${currentRole==='manager'?'user-cog':'badge-check'}"></i> ${currentRole==='manager'?'مسير مساعد':'مسؤول النظام'}`;
-    showOwnerControls();
-    await loadOptionalGradeRules();await loadEmployees();await loadRequests();await loadNotificationEmployees();await loadNotifications();if(isOwner())await loadManagers();$('loading').classList.add('hidden');const stat=$('statEmployees');if(stat)stat.textContent=String(employees.length);renderNotices();if(window.lucide)lucide.createIcons();
+    await loadOptionalGradeRules();await loadEmployees();await loadRequests();await loadNotificationEmployees();await loadNotifications();$('loading').classList.add('hidden');const stat=$('statEmployees');if(stat)stat.textContent=String(employees.length);renderNotices();if(window.lucide)lucide.createIcons();
   }catch(e){console.error(e);$('loading').textContent='⚠️ '+(e.message||'تعذر التحقق من الصلاحيات')+' — سيتم الرجوع إلى صفحة الدخول.';setTimeout(()=>location.href='index.html',2200)}
 }
 $('logoutBtn').onclick=async()=>{try{if(db)await db.auth.signOut()}finally{location.href='index.html'}};
