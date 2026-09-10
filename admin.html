@@ -712,262 +712,580 @@ input:focus{
     rgba(201,168,74,.16);
 }
 
+<!-- =======================================================
+     نافذة معلومات المنصة والدعم
+======================================================= -->
+
+<div
+  id="aboutOverlay"
+  class="about-overlay"
+  aria-hidden="true">
+
+  <div class="about-modal">
+
+    <!-- رأس النافذة -->
+    <div class="about-hero">
+
+      <button
+        id="aboutCloseBtn"
+        type="button"
+        aria-label="إغلاق"
+        style="
+          position:absolute;
+          left:22px;
+          top:18px;
+          border:0;
+          background:rgba(255,255,255,.16);
+          color:#fff;
+          width:42px;
+          height:42px;
+          border-radius:50%;
+          font-size:22px;
+          cursor:pointer;
+        ">
+        ×
+      </button>
+
+      <div
+        style="
+          font-size:13px;
+          opacity:.85;
+          font-weight:700;
+          margin-bottom:8px;
+        ">
+        التعريف بالمنصة
+      </div>
+
+      <h2
+        style="
+          margin:0 0 10px;
+          font-size:30px;
+        ">
+        منصة المسار المهني
+      </h2>
+
+      <p
+        style="
+          margin:0;
+          max-width:760px;
+          line-height:1.9;
+          font-size:15px;
+          opacity:.95;
+        ">
+        منظومة رقمية لمتابعة المسار المهني للموظف
+        وتسهيل التواصل الإداري، تجمع المعلومات المهنية
+        والأقدمية والطلبات والمراجعات والإشعارات في فضاء موحد.
+      </p>
+
+    </div>
+
+
+    <!-- محتوى النافذة -->
+    <div style="padding:28px;">
+
+      <!-- وظائف المنصة -->
 
-/* =========================================================
-   نافذة معلومات المنصة
-========================================================= */
+      <div
+        style="
+          display:grid;
+          grid-template-columns:
+          repeat(auto-fit,minmax(220px,1fr));
+          gap:16px;
+        ">
 
-.about-overlay{
-  position:fixed;
+        <div class="about-card">
 
-  inset:0;
+          <div class="about-icon">
+            👤
+          </div>
 
-  z-index:10000;
+          <h3>
+            فضاء الموظف
+          </h3>
 
-  display:none;
+          <p>
+            متابعة البيانات المهنية، الأقدمية،
+            الطلبات، الإشعارات ونتائج دراسة المسؤول.
+          </p>
 
-  align-items:center;
+        </div>
 
-  justify-content:center;
 
-  padding:20px;
+        <div class="about-card">
 
-  background:
-    rgba(35,25,48,.55);
+          <div class="about-icon">
+            🏢
+          </div>
 
-  backdrop-filter:blur(7px);
-}
+          <h3>
+            فضاء المسؤول
+          </h3>
 
-.about-overlay.open{
-  display:flex;
-}
+          <p>
+            إدارة الموظفين والطلبات، فتح الملفات،
+            الدراسة، الإجابة والأرشفة بطريقة منظمة.
+          </p>
 
-.about-modal{
-  width:min(900px,100%);
+        </div>
 
-  max-height:92vh;
 
-  overflow:auto;
+        <div class="about-card">
 
-  background:#fff;
+          <div class="about-icon">
+            ☀️
+          </div>
 
-  border:
-    1px solid
-    rgba(201,168,74,.25);
+          <h3>
+            أقدمية الجنوب
+          </h3>
 
-  border-radius:24px;
+          <p>
+            عرض الأقدمية الفعلية والإضافية والمحتسبة،
+            مع إمكانية اعتماد النتيجة من المسؤول.
+          </p>
 
-  box-shadow:
-    0 25px 80px
-    rgba(30,20,45,.25);
+        </div>
 
-  direction:rtl;
 
-  animation:
-    aboutIn .22s ease-out;
-}
+        <div class="about-card">
 
-@keyframes aboutIn{
+          <div class="about-icon">
+            📥
+          </div>
 
-  from{
-    opacity:0;
+          <h3>
+            نظام الطلبات
+          </h3>
 
-    transform:
-      translateY(12px)
-      scale(.98);
-  }
+          <p>
+            طلبات مهيكلة ومختصرة بدل المراسلات الطويلة،
+            مع متابعة الحالة حتى المعالجة.
+          </p>
 
-  to{
-    opacity:1;
+        </div>
 
-    transform:
-      translateY(0)
-      scale(1);
-  }
 
-}
+        <div class="about-card">
 
-.about-hero{
-  position:relative;
+          <div class="about-icon">
+            🔔
+          </div>
 
-  padding:30px 30px 26px;
+          <h3>
+            الإشعارات
+          </h3>
 
-  color:#fff;
+          <p>
+            تنبيهات حول الطلبات الجديدة، طلب المعلومات،
+            انتهاء الدراسة وصدور الإجابة.
+          </p>
 
-  background:
-    linear-gradient(
-      135deg,
-      #8064B2,
-      #6F52A3 55%,
-      #584084
-    );
-}
+        </div>
 
-.about-hero h2{
-  color:#fff;
-}
 
-.about-card{
-  background:#FBF9FD;
+        <div class="about-card">
 
-  border:
-    1px solid
-    #EDE5F3;
+          <div class="about-icon">
+            🔐
+          </div>
 
-  border-radius:18px;
+          <h3>
+            الخصوصية والصلاحيات
+          </h3>
 
-  padding:20px;
-}
+          <p>
+            فصل واضح بين وظائف الموظف وصلاحيات المسؤول
+            لحماية المعلومات المهنية.
+          </p>
 
-.about-card h3{
-  margin:10px 0 7px;
+        </div>
 
-  color:#4D376F;
+      </div>
 
-  font-size:17px;
-}
 
-.about-card p{
-  margin:0;
+      <!-- أهداف المنصة -->
 
-  color:#716579;
+      <div class="about-goals">
 
-  line-height:1.8;
+        <h3>
+          🎯 أهداف المنصة
+        </h3>
 
-  font-size:13px;
-}
+        <div class="goal-grid">
 
-.about-icon{
-  width:44px;
-  height:44px;
+          <span>
+            رقمنة الإجراءات المهنية
+          </span>
 
-  border-radius:13px;
+          <span>
+            تنظيم المعلومات والطلبات
+          </span>
 
-  background:#F0E9F7;
+          <span>
+            تسريع دراسة الطلبات
+          </span>
 
-  display:flex;
+          <span>
+            تسهيل متابعة الأقدمية
+          </span>
 
-  align-items:center;
+          <span>
+            تحسين التواصل الإداري
+          </span>
 
-  justify-content:center;
+          <span>
+            الحفاظ على سجل منظم
+          </span>
 
-  font-size:22px;
-}
+        </div>
 
-.about-goals{
-  margin-top:20px;
+      </div>
 
-  padding:22px;
 
-  border-radius:20px;
+      <!-- الملاحظة -->
 
-  background:
-    linear-gradient(
-      135deg,
-      #F8F3FB,
-      #FCFAF5
-    );
+      <div class="about-note">
 
-  border:
-    1px solid
-    #EDE4F2;
-}
+        المنصة أداة للمساعدة في المتابعة والحساب والتنظيم،
+        ولا تحل محل القرارات أو الإجراءات الإدارية والقانونية
+        المعتمدة من الجهة المختصة.
 
-.about-goals h3{
-  margin:0 0 14px;
+      </div>
 
-  color:#4D376F;
-}
 
-.goal-grid{
-  display:grid;
+      <!-- =================================================
+           معلومات مسؤول المنصة والمبرمج
+      ================================================= -->
 
-  grid-template-columns:
-    repeat(
-      auto-fit,
-      minmax(180px,1fr)
-    );
+      <div
+        class="platform-contact"
+        style="
+          display:block !important;
+          visibility:visible !important;
+          opacity:1 !important;
+          margin-top:20px;
+          padding:22px;
+          border:1px solid #E2D8EA;
+          border-radius:18px;
+          background:#FBF9FD;
+        ">
 
-  gap:10px;
-}
+        <h3
+          style="
+            margin:0 0 18px;
+            color:#5A4572;
+            font-size:18px;
+            display:block;
+          ">
 
-.goal-grid span{
-  background:#fff;
+          👨‍💻 معلومات مسؤول المنصة والمبرمج
 
-  border:
-    1px solid
-    #EEE6F3;
+        </h3>
 
-  border-radius:12px;
 
-  padding:11px;
+        <div
+          style="
+            display:grid;
+            grid-template-columns:
+            repeat(auto-fit,minmax(220px,1fr));
+            gap:14px;
+          ">
 
-  color:#5D5065;
 
-  font-size:13px;
-}
+          <!-- الاسم -->
 
-.about-note{
-  margin-top:16px;
+          <div
+            style="
+              background:#fff;
+              border:1px solid #EEE6F3;
+              border-radius:12px;
+              padding:13px;
+            ">
 
-  padding:14px 16px;
+            <small
+              style="
+                display:block;
+                color:#91869A;
+                font-size:11px;
+                margin-bottom:5px;
+              ">
 
-  background:#FFF9E9;
+              الاسم
 
-  border-right:
-    4px solid
-    #C9A84A;
+            </small>
 
-  border-radius:12px;
+            <strong
+              style="
+                display:block;
+                color:#49385A;
+                font-size:14px;
+              ">
 
-  color:#695A39;
+              بن صغير منير
 
-  font-size:12px;
+            </strong>
 
-  line-height:1.8;
-}
+          </div>
 
-.platform-contact{
-  margin-top:18px;
 
-  padding:18px;
+          <!-- الاسم بالإنجليزية -->
 
-  border:
-    1px solid
-    #E8E1EF;
+          <div
+            style="
+              background:#fff;
+              border:1px solid #EEE6F3;
+              border-radius:12px;
+              padding:13px;
+            ">
 
-  border-radius:16px;
+            <small
+              style="
+                display:block;
+                color:#91869A;
+                font-size:11px;
+                margin-bottom:5px;
+              ">
 
-  background:#FBF9FD;
+              بالإنجليزية
 
-  box-shadow:
-    0 7px 20px
-    rgba(74,55,105,.05);
-}
+            </small>
 
-.platform-contact h3{
-  margin:0 0 12px;
+            <strong
+              style="
+                display:block;
+                color:#49385A;
+                font-size:14px;
+                direction:ltr;
+                text-align:right;
+              ">
 
-  color:#5A4572;
+              Benseghir Mounir
 
-  font-size:16px;
-}
+            </strong>
 
-.platform-contact strong{
-  color:#49385a;
+          </div>
 
-  font-size:13px;
 
-  line-height:1.7;
-}
+          <!-- الصفة -->
 
-.platform-contact a:hover{
-  color:#6F52A3 !important;
+          <div
+            style="
+              background:#fff;
+              border:1px solid #EEE6F3;
+              border-radius:12px;
+              padding:13px;
+            ">
 
-  text-decoration:underline !important;
-}
+            <small
+              style="
+                display:block;
+                color:#91869A;
+                font-size:11px;
+                margin-bottom:5px;
+              ">
 
+              الصفة
 
+            </small>
+
+            <strong
+              style="
+                display:block;
+                color:#49385A;
+                font-size:14px;
+              ">
+
+              رئيس مكتب التكوين
+
+            </strong>
+
+          </div>
+
+
+          <!-- المؤسسة -->
+
+          <div
+            style="
+              background:#fff;
+              border:1px solid #EEE6F3;
+              border-radius:12px;
+              padding:13px;
+            ">
+
+            <small
+              style="
+                display:block;
+                color:#91869A;
+                font-size:11px;
+                margin-bottom:5px;
+              ">
+
+              المؤسسة
+
+            </small>
+
+            <strong
+              style="
+                display:block;
+                color:#49385A;
+                font-size:14px;
+                line-height:1.7;
+              ">
+
+              المؤسسة العمومية الإستشفائية بأولف ولاية أدرار
+
+            </strong>
+
+          </div>
+
+
+          <!-- الهاتف -->
+
+          <div
+            style="
+              background:#fff;
+              border:1px solid #EEE6F3;
+              border-radius:12px;
+              padding:13px;
+            ">
+
+            <small
+              style="
+                display:block;
+                color:#91869A;
+                font-size:11px;
+                margin-bottom:5px;
+              ">
+
+              الهاتف
+
+            </small>
+
+            <strong
+              style="
+                display:block;
+                font-size:14px;
+                direction:ltr;
+                text-align:right;
+              ">
+
+              <a
+                href="tel:0660484373"
+                style="
+                  color:#49385A;
+                  text-decoration:none;
+                  font-weight:bold;
+                ">
+
+                0660.48.43.73
+
+              </a>
+
+            </strong>
+
+          </div>
+
+
+          <!-- البريد -->
+
+          <div
+            style="
+              background:#fff;
+              border:1px solid #EEE6F3;
+              border-radius:12px;
+              padding:13px;
+            ">
+
+            <small
+              style="
+                display:block;
+                color:#91869A;
+                font-size:11px;
+                margin-bottom:5px;
+              ">
+
+              البريد الإلكتروني
+
+            </small>
+
+            <strong
+              style="
+                display:block;
+                font-size:14px;
+                direction:ltr;
+                text-align:right;
+              ">
+
+              <a
+                href="mailto:bfmounir@gmail.com"
+                style="
+                  color:#49385A;
+                  text-decoration:none;
+                  font-weight:bold;
+                ">
+
+                bfmounir@gmail.com
+
+              </a>
+
+            </strong>
+
+          </div>
+
+
+          <!-- الدور -->
+
+          <div
+            style="
+              grid-column:1/-1;
+              background:
+                linear-gradient(
+                  135deg,
+                  #F8F3FB,
+                  #FCFAF5
+                );
+              border:1px solid #E8DDED;
+              border-radius:14px;
+              padding:15px;
+            ">
+
+            <small
+              style="
+                display:block;
+                color:#91869A;
+                font-size:11px;
+                margin-bottom:5px;
+              ">
+
+              الدور في المنصة
+
+            </small>
+
+            <strong
+              style="
+                display:block;
+                color:#6F52A3;
+                font-size:14px;
+                line-height:1.7;
+              ">
+
+              مسؤول المنصة ومبرمجها
+
+            </strong>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+</div>
 /* =========================================================
    PWA
 ========================================================= */
